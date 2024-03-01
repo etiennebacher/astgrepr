@@ -11,3 +11,5 @@ Encoding: UTF-8
 LazyData: true
 Config/rextendr/version: 0.3.1
 RoxygenNote: 7.3.1
+URL: https://github.com/etiennebacher/astgrepr
+BugReports: https://github.com/etiennebacher/astgrepr/issues
