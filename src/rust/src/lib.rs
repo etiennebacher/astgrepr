@@ -1,21 +1,12 @@
 use extendr_api::prelude::*;
-
 pub mod node;
 mod range;
+pub mod ser;
 use node::SgNode;
-use range::{Pos, Range};
+// use range::{Pos, Range};
 
 use ast_grep_core::{AstGrep, Language, NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
-
-// #[extendr]
-// fn ast_grep_r(_py: Python, m: &PyModule) -> Result<()> {
-//   // m.add_class::SgRoot()?;
-//   m.add_class::<SgNode>()?;
-//   m.add_class::<Range>()?;
-//   m.add_class::<Pos>()?;
-//   Ok(())
-// }
 
 #[derive(Clone)]
 pub struct SgRoot {
@@ -26,7 +17,7 @@ pub struct SgRoot {
 #[extendr]
 impl SgRoot {
     fn new(src: &str, lang: &str) -> Self {
-        let lang: SupportLang = lang.parse().unwrap();
+        let lang = SupportLang::from(lang.parse().unwrap());
         let inner = lang.ast_grep(src);
         Self {
             inner,
@@ -48,6 +39,12 @@ impl SgRoot {
     }
 }
 
+#[extendr]
+fn test() {
+    let r_lang = tree_sitter_r::language();
+    let ast_r_lang = ast_grep_core::language::TSLanguage::from(r_lang);
+    rprintln!("{:?}", ast_r_lang);
+}
 // Macro to generate exports.
 // This ensures exported functions are registered with R.
 // See corresponding C code in `entrypoint.c`.
@@ -56,4 +53,6 @@ extendr_module! {
     // fn ast_grep_r;
     impl SgRoot;
     use node;
+    use ser;
+    // fn test;
 }

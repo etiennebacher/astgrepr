@@ -1,17 +1,10 @@
-use crate::range::RResult;
 use crate::range::Range;
 use crate::SgRoot;
-use ast_grep_core::Pattern;
 use extendr_api::prelude::*;
 
-use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRule, SerializableRuleCore};
+use ast_grep_config::{DeserializeEnv, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
-
-use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
-
-use anyhow::Context;
 
 #[extendr]
 pub struct SgNode {
@@ -52,10 +45,25 @@ impl SgNode {
     }
 
     /*---------- Search Refinement  ----------*/
-    // fn matches(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
-    //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;
-    //     Ok(self.inner.matches(matcher))
-    // }
+    fn matches(&self, patterns: List) -> SgNode {
+        let rule = crate::ser::new_rule(patterns.into());
+        let rule_core = SerializableRuleCore {
+            rule,
+            constraints: None,
+            utils: None,
+            transform: None,
+            fix: None,
+        };
+
+        let env = DeserializeEnv::new(*self.inner.lang());
+
+        let matcher = rule_core.get_matcher(env).unwrap();
+        let res = self.inner.find(matcher).unwrap();
+        SgNode {
+            inner: res,
+            root: self.root.clone(),
+        }
+    }
 
     // fn inside(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
     //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;

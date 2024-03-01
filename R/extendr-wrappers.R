@@ -39,6 +39,8 @@ SgNode$kind <- function() .Call(wrap__SgNode__kind, self)
 
 SgNode$text <- function() .Call(wrap__SgNode__text, self)
 
+SgNode$matches <- function(patterns) .Call(wrap__SgNode__matches, self, patterns)
+
 SgNode$get_transformed <- function(meta_var) .Call(wrap__SgNode__get_transformed, self, meta_var)
 
 SgNode$get_root <- function() .Call(wrap__SgNode__get_root, self)

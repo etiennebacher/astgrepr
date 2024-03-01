@@ -8,3 +8,5 @@ root = SgRoot(src, "python").root()
 node = root.find(pattern="print($A)")
 
 root.next()
+
+print("Hellooooo world!")

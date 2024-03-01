@@ -98,6 +98,8 @@ dependencies = [
  "ast-grep-language",
  "extendr-api",
  "once_cell",
+ "serde",
+ "tree-sitter-r",
 ]
 
 [[package]]
@@ -190,6 +192,7 @@ dependencies = [
  "libR-sys",
  "once_cell",
  "paste",
+ "serde",
 ]
 
 [[package]]
@@ -644,6 +647,16 @@ name = "tree-sitter-python"
 version = "0.20.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6c93b1b1fbd0d399db3445f51fd3058e43d0b4dcff62ddbdb46e66550978aa5"
+dependencies = [
+ "cc",
+ "tree-sitter",
+]
+
+[[package]]
+name = "tree-sitter-r"
+version = "0.19.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "522c13f4cc46213148b19d4ad40a988ffabd51fd90eb7de759844fbde49bda0c"
 dependencies = [
  "cc",
  "tree-sitter",

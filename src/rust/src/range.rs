@@ -1,7 +1,7 @@
 use ast_grep_core::{Doc, Node};
 use extendr_api::prelude::*;
 use std::collections::hash_map::DefaultHasher;
-use std::fmt::{self, Debug, Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use std::hash::{Hash, Hasher};
 
 pub type RResult<T> = core::result::Result<T, std::fmt::Error>;
