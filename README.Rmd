@@ -30,5 +30,7 @@ node = x$root()
 node$matches(list(kind = "call"))
   
 node$find(list(pattern = "print($A)"))$get_match("A")$text()
+
+lapply(node$find(list(pattern = "logger($$$ARGS)"))$get_multiple_matches("ARGS"), \(x) x$text())
 ```
 

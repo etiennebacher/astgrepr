@@ -51,11 +51,15 @@ SgNode$follows <- function(rule) .Call(wrap__SgNode__follows, self, rule)
 
 SgNode$get_match <- function(meta_var) .Call(wrap__SgNode__get_match, self, meta_var)
 
+SgNode$get_multiple_matches <- function(meta_var) .Call(wrap__SgNode__get_multiple_matches, self, meta_var)
+
 SgNode$get_transformed <- function(meta_var) .Call(wrap__SgNode__get_transformed, self, meta_var)
 
 SgNode$get_root <- function() .Call(wrap__SgNode__get_root, self)
 
 SgNode$find <- function(rule) .Call(wrap__SgNode__find, self, rule)
+
+SgNode$find_all <- function(rule) .Call(wrap__SgNode__find_all, self, rule)
 
 SgNode$field <- function(name) .Call(wrap__SgNode__field, self, name)
 
@@ -63,9 +67,17 @@ SgNode$parent <- function() .Call(wrap__SgNode__parent, self)
 
 SgNode$child <- function(nth) .Call(wrap__SgNode__child, self, nth)
 
+SgNode$ancestors <- function() .Call(wrap__SgNode__ancestors, self)
+
+SgNode$children <- function() .Call(wrap__SgNode__children, self)
+
 SgNode$next_ <- function() .Call(wrap__SgNode__next_, self)
 
+SgNode$next_all <- function() .Call(wrap__SgNode__next_all, self)
+
 SgNode$prev <- function() .Call(wrap__SgNode__prev, self)
+
+SgNode$prev_all <- function() .Call(wrap__SgNode__prev_all, self)
 
 #' @export
 `$.SgNode` <- function (self, name) { func <- SgNode[[name]]; environment(func) <- environment(); func }

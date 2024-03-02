@@ -82,17 +82,17 @@ impl SgNode {
             .unwrap()
     }
 
-    // fn get_multiple_matches(&self, meta_var: &str) -> Vec<SgNode> {
-    //     self.inner
-    //         .get_env()
-    //         .get_multiple_matches(meta_var)
-    //         .into_iter()
-    //         .map(|n| Self {
-    //             inner: NodeMatch::from(n),
-    //             root: self.root.clone(),
-    //         })
-    //         .collect()
-    // }
+    fn get_multiple_matches(&self, meta_var: &str) -> List {
+        self.inner
+            .get_env()
+            .get_multiple_matches(meta_var)
+            .into_iter()
+            .map(|n| Self {
+                inner: NodeMatch::from(n),
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 
     fn get_transformed(&self, meta_var: &str) -> Option<String> {
         self.inner
@@ -144,17 +144,16 @@ impl SgNode {
         }
     }
 
-    // fn find_all(&self, config: Option<&PyDict>, rule: Option<&PyDict>) -> RResult<Vec<Self>> {
-    //     let matcher = self.get_matcher(config, rule)?;
-    //     Ok(self
-    //         .inner
-    //         .find_all(matcher)
-    //         .map(|n| Self {
-    //             inner: n,
-    //             root: self.root.clone(),
-    //         })
-    //         .collect())
-    // }
+    fn find_all(&self, rule: List) -> List {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        self.inner
+            .find_all(matcher)
+            .map(|n| Self {
+                inner: n,
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 
     fn field(&self, name: &str) -> SgNode {
         self.inner
@@ -196,25 +195,25 @@ impl SgNode {
             .unwrap()
     }
 
-    // fn ancestors(&self) -> Vec<SgNode> {
-    //     self.inner
-    //         .ancestors()
-    //         .map(|inner| Self {
-    //             inner: inner.into(),
-    //             root: self.root.clone(),
-    //         })
-    //         .collect()
-    // }
+    fn ancestors(&self) -> List {
+        self.inner
+            .ancestors()
+            .map(|inner| Self {
+                inner: inner.into(),
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 
-    // fn children(&self) -> Vec<SgNode> {
-    //     self.inner
-    //         .children()
-    //         .map(|inner| Self {
-    //             inner: inner.into(),
-    //             root: self.root.clone(),
-    //         })
-    //         .collect()
-    // }
+    fn children(&self) -> List {
+        self.inner
+            .children()
+            .map(|inner| Self {
+                inner: inner.into(),
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 
     fn next_(&self) -> SgNode {
         self.inner
@@ -226,15 +225,15 @@ impl SgNode {
             .unwrap()
     }
 
-    // fn next_all(&self) -> Vec<SgNode> {
-    //     self.inner
-    //         .next_all()
-    //         .map(|inner| Self {
-    //             inner: inner.into(),
-    //             root: self.root.clone(),
-    //         })
-    //         .collect()
-    // }
+    fn next_all(&self) -> List {
+        self.inner
+            .next_all()
+            .map(|inner| Self {
+                inner: inner.into(),
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 
     fn prev(&self) -> SgNode {
         self.inner
@@ -246,15 +245,15 @@ impl SgNode {
             .unwrap()
     }
 
-    // fn prev_all(&self) -> Vec<SgNode> {
-    //     self.inner
-    //         .prev_all()
-    //         .map(|inner| Self {
-    //             inner: inner.into(),
-    //             root: self.root.clone(),
-    //         })
-    //         .collect()
-    // }
+    fn prev_all(&self) -> List {
+        self.inner
+            .prev_all()
+            .map(|inner| Self {
+                inner: inner.into(),
+                root: self.root.clone(),
+            })
+            .collect()
+    }
 }
 
 fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportLang> {

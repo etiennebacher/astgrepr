@@ -20,4 +20,20 @@ node$matches(list(kind = "call"))
   
 node$find(list(pattern = "print($A)"))$get_match("A")$text()
 #> [1] "'hello'"
+
+lapply(node$find(list(pattern = "logger($$$ARGS)"))$get_multiple_matches("ARGS"), \(x) x$text())
+#> [[1]]
+#> [1] "'hello'"
+#> 
+#> [[2]]
+#> [1] ","
+#> 
+#> [[3]]
+#> [1] "'world'"
+#> 
+#> [[4]]
+#> [1] ","
+#> 
+#> [[5]]
+#> [1] "'!'"
 ```
