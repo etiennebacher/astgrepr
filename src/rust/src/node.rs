@@ -2,7 +2,7 @@ use crate::range::Range;
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
-use ast_grep_config::{DeserializeEnv, SerializableRuleCore};
+use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
 
@@ -45,24 +45,14 @@ impl SgNode {
     }
 
     /*---------- Search Refinement  ----------*/
-    fn matches(&self, patterns: List) -> SgNode {
-        let rule = crate::ser::new_rule(patterns.into());
-        let rule_core = SerializableRuleCore {
-            rule,
-            constraints: None,
-            utils: None,
-            transform: None,
-            fix: None,
-        };
-
-        let env = DeserializeEnv::new(*self.inner.lang());
-
-        let matcher = rule_core.get_matcher(env).unwrap();
-        let res = self.inner.find(matcher).unwrap();
-        SgNode {
-            inner: res,
-            root: self.root.clone(),
-        }
+    fn matches(&self, rule: List) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        // let res = self.inner.matches(matcher);
+        // SgNode {
+        //     inner: res,
+        //     root: self.root.clone(),
+        // }
+        self.inner.matches(matcher)
     }
 
     // fn inside(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
@@ -85,16 +75,17 @@ impl SgNode {
     //     Ok(self.inner.follows(matcher))
     // }
 
-    // fn get_match(&self, meta_var: &str) -> Option<Self> {
-    //     self.inner
-    //         .get_env()
-    //         .get_match(meta_var)
-    //         .cloned()
-    //         .map(|n| Self {
-    //             inner: NodeMatch::from(n),
-    //             root: self.root.clone(),
-    //         })
-    // }
+    fn get_match(&self, meta_var: &str) -> Self {
+        self.inner
+            .get_env()
+            .get_match(meta_var)
+            .cloned()
+            .map(|n| Self {
+                inner: NodeMatch::from(n),
+                root: self.root.clone(),
+            })
+            .unwrap()
+    }
 
     // fn get_multiple_matches(&self, meta_var: &str) -> Vec<SgNode> {
     //     self.inner
@@ -149,17 +140,14 @@ impl SgNode {
     //     Ok(matcher)
     // }
 
-    // fn find(&self, config: Option<&PyDict>, rule: Option<&PyDict>) -> RResult<Option<Self>> {
-    //     let matcher = self.get_matcher(config, rule)?;
-    //     if let Some(inner) = self.inner.find(matcher) {
-    //         Ok(Some(Self {
-    //             inner,
-    //             root: self.root.clone(),
-    //         }))
-    //     } else {
-    //         Ok(None)
-    //     }
-    // }
+    fn find(&self, rule: List) -> SgNode {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let inner = self.inner.find(matcher).unwrap();
+        Self {
+            inner,
+            root: self.root.clone(),
+        }
+    }
 
     // fn find_all(&self, config: Option<&PyDict>, rule: Option<&PyDict>) -> RResult<Vec<Self>> {
     //     let matcher = self.get_matcher(config, rule)?;
@@ -341,12 +329,19 @@ impl SgNode {
 //     })
 // }
 
-// fn get_matcher_from_rule(lang: &SupportLang, rule: List) -> RResult<RuleCore<SupportLang>> {
-//     let env = DeserializeEnv::new(*lang);
-//     let config = config_from_rule(rule, lang)?;
-//     let matcher = config.get_matcher(env).context("cannot get matcher")?;
-//     Ok(matcher)
-// }
+fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportLang> {
+    let rule = crate::ser::new_rule(patterns.into());
+    let rule_core = SerializableRuleCore {
+        rule,
+        constraints: None,
+        utils: None,
+        transform: None,
+        fix: None,
+    };
+
+    let env = DeserializeEnv::new(lang);
+    rule_core.get_matcher(env).unwrap()
+}
 
 // fn config_from_dict(dict: List) -> RResult<SerializableRuleCore> {
 //     Ok(dict)

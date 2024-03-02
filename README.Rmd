@@ -25,12 +25,10 @@ Rust crate.
 library(astgrepr)
 
 x = astgrepr:::SgRoot$new("print('hello')\nlogger('hello', 'world', '!')", "python")
-root = x$root()
+node = x$root()
 
-root$range()
-
-root$text()
-root$is_leaf()
-root$kind()
+node$matches(list(kind = "call"))
+  
+node$find(list(pattern = "print($A)"))$get_match("A")$text()
 ```
 

@@ -39,11 +39,15 @@ SgNode$kind <- function() .Call(wrap__SgNode__kind, self)
 
 SgNode$text <- function() .Call(wrap__SgNode__text, self)
 
-SgNode$matches <- function(patterns) .Call(wrap__SgNode__matches, self, patterns)
+SgNode$matches <- function(rule) .Call(wrap__SgNode__matches, self, rule)
+
+SgNode$get_match <- function(meta_var) .Call(wrap__SgNode__get_match, self, meta_var)
 
 SgNode$get_transformed <- function(meta_var) .Call(wrap__SgNode__get_transformed, self, meta_var)
 
 SgNode$get_root <- function() .Call(wrap__SgNode__get_root, self)
+
+SgNode$find <- function(rule) .Call(wrap__SgNode__find, self, rule)
 
 SgNode$field <- function(name) .Call(wrap__SgNode__field, self, name)
 
