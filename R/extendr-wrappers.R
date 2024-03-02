@@ -41,6 +41,14 @@ SgNode$text <- function() .Call(wrap__SgNode__text, self)
 
 SgNode$matches <- function(rule) .Call(wrap__SgNode__matches, self, rule)
 
+SgNode$inside <- function(rule) .Call(wrap__SgNode__inside, self, rule)
+
+SgNode$has <- function(rule) .Call(wrap__SgNode__has, self, rule)
+
+SgNode$precedes <- function(rule) .Call(wrap__SgNode__precedes, self, rule)
+
+SgNode$follows <- function(rule) .Call(wrap__SgNode__follows, self, rule)
+
 SgNode$get_match <- function(meta_var) .Call(wrap__SgNode__get_match, self, meta_var)
 
 SgNode$get_transformed <- function(meta_var) .Call(wrap__SgNode__get_transformed, self, meta_var)

@@ -47,33 +47,28 @@ impl SgNode {
     /*---------- Search Refinement  ----------*/
     fn matches(&self, rule: List) -> bool {
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
-        // let res = self.inner.matches(matcher);
-        // SgNode {
-        //     inner: res,
-        //     root: self.root.clone(),
-        // }
         self.inner.matches(matcher)
     }
 
-    // fn inside(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
-    //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;
-    //     Ok(self.inner.inside(matcher))
-    // }
+    fn inside(&self, rule: List) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        self.inner.inside(matcher)
+    }
 
-    // fn has(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
-    //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;
-    //     Ok(self.inner.has(matcher))
-    // }
+    fn has(&self, rule: List) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        self.inner.has(matcher)
+    }
 
-    // fn precedes(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
-    //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;
-    //     Ok(self.inner.precedes(matcher))
-    // }
+    fn precedes(&self, rule: List) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        self.inner.precedes(matcher)
+    }
 
-    // fn follows(&self, kwargs: Option<&PyDict>) -> RResult<bool> {
-    //     let matcher = get_matcher_from_rule(self.inner.lang(), kwargs)?;
-    //     Ok(self.inner.follows(matcher))
-    // }
+    fn follows(&self, rule: List) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        self.inner.follows(matcher)
+    }
 
     fn get_match(&self, meta_var: &str) -> Self {
         self.inner
@@ -260,74 +255,7 @@ impl SgNode {
     //         })
     //         .collect()
     // }
-
-    // /*---------- Magic Method  ----------*/
-    // fn __hash__(&self) -> u64 {
-    //     let mut s = DefaultHasher::new();
-    //     self.inner.node_id().hash(&mut s);
-    //     s.finish()
-    // }
-    // fn __eq__(&self, other: &Self) -> bool {
-    //     self.inner.node_id() == other.inner.node_id()
-    // }
-    // fn __str__(&self) -> String {
-    //     let range = self.range();
-    //     format!("{}@{}", self.inner.kind(), range)
-    // }
-    // fn __repr__(&self) -> String {
-    //     let range = self.range();
-    //     let chars: Vec<_> = self.text().chars().take(10).collect();
-    //     let src = if chars.len() > 9 {
-    //         let s: String = chars.into_iter().take(5).collect();
-    //         format!("{}...", s)
-    //     } else {
-    //         chars.into_iter().collect()
-    //     };
-    //     format!("SgNode(`{src}`, kind={}, range={range})", self.inner.kind())
-    // }
-    // fn __getitem__(&self, key: &str) -> RResult<Self> {
-    //     if let Some(node) = self.get_match(key) {
-    //         Ok(node)
-    //     } else {
-    //         Err(PyErr::new::<PyKeyError, _>(key.to_string()))
-    //     }
-    // }
 }
-
-// impl SgNode {
-// fn get_matcher(
-//     &self,
-//     config: Option<&PyDict>,
-//     kwargs: Option<&PyDict>,
-// ) -> RResult<RuleCore<SupportLang>> {
-//     let lang = self.inner.lang();
-//     let config = if let Some(config) = config {
-//         config_from_dict(config)?
-//     } else if let Some(rule) = kwargs {
-//         config_from_rule(rule)?
-//     } else {
-//         return Err(PyErr::new::<PyValueError, _>("rule must not be empty"));
-//     };
-//     let env = DeserializeEnv::new(*lang);
-//     let matcher = config.get_matcher(env).context("cannot get matcher")?;
-//     Ok(matcher)
-// }
-// }
-
-// fn config_from_dict(dict: &PyDict) -> RResult<SerializableRuleCore> {
-//     Ok(depythonize(dict)?)
-// }
-
-// fn config_from_rule(dict: &PyDict) -> RResult<SerializableRuleCore> {
-//     let rule = depythonize(dict)?;
-//     Ok(SerializableRuleCore {
-//         rule,
-//         constraints: None,
-//         utils: None,
-//         transform: None,
-//         fix: None,
-//     })
-// }
 
 fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportLang> {
     let rule = crate::ser::new_rule(patterns.into());
@@ -342,41 +270,6 @@ fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportL
     let env = DeserializeEnv::new(lang);
     rule_core.get_matcher(env).unwrap()
 }
-
-// fn config_from_dict(dict: List) -> RResult<SerializableRuleCore> {
-//     Ok(dict)
-// }
-
-// fn list_to_serializable_rule(robj: extendr_api::List, lang: SupportLang) -> SerializableRule {
-//     let list = robj.as_list().expect("is a list");
-//     use ast_grep_config::*;
-
-//     let foo = Pattern::new("print($A)", lang);
-//     SerializableRule {
-//         pattern: foo,
-//         kind: ast_grep_config::maybe::Maybe(list.elt(1)),
-//         regex: (),
-//         inside: (),
-//         has: (),
-//         precedes: (),
-//         follows: (),
-//         all: (),
-//         any: (),
-//         not: (),
-//         matches: (),
-//     }
-// }
-
-// fn config_from_rule(dict: List, lang: SupportLang) -> RResult<SerializableRuleCore> {
-//     let rule = list_to_serializable_rule(dict, lang);
-//     Ok(SerializableRuleCore {
-//         rule,
-//         constraints: None,
-//         utils: None,
-//         transform: None,
-//         fix: None,
-//     })
-// }
 
 // Macro to generate exports.
 // This ensures exported functions are registered with R.
