@@ -106,35 +106,6 @@ impl SgNode {
         self.root.clone()
     }
 
-    // fn get_matcher(
-    //     &self,
-    //     config: Option<&PyDict>,
-    //     kwargs: Option<&PyDict>,
-    // ) -> RResult<RuleCore<SupportLang>> {
-    //     let lang = self.inner.lang();
-    //     // let config = if let Some(config) = config {
-    //     //     config_from_dict(config)?
-    //     // } else if let Some(rule) = kwargs {
-    //     //     config_from_rule(rule)?
-    //     // } else {
-    //     //     return Err(PyErr::new::<PyValueError, _>("rule must not be empty"));
-    //     // };
-    //     let config = SerializableRuleCore {
-    //         rule: SerializableRule {
-    //             pattern: ast_grep_config::maybe::Maybe(ast_grep_config::rule::PatternStyle::Str(
-    //                 "$A".to_string(),
-    //             )),
-    //         },
-    //         constraints: None,
-    //         utils: None,
-    //         transform: None,
-    //         fix: None,
-    //     };
-    //     let env = DeserializeEnv::new(*lang);
-    //     let matcher = config.get_matcher(env).context("cannot get matcher")?;
-    //     Ok(matcher)
-    // }
-
     fn find(&self, rule: List) -> SgNode {
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         let inner = self.inner.find(matcher).unwrap();
