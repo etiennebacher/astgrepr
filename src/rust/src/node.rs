@@ -3,12 +3,13 @@ use crate::SgRoot;
 use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
+use ast_grep_core::language::TSLanguage;
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
 
 #[extendr]
 pub struct SgNode {
-    pub inner: NodeMatch<'static, StrDoc<SupportLang>>,
+    pub inner: NodeMatch<'static, StrDoc<TSLanguage>>,
     // refcount SgRoot
     pub(crate) root: SgRoot,
 }
@@ -56,7 +57,7 @@ impl SgNode {
     }
 
     fn has(&self, rule: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.has(matcher)
     }
 
@@ -227,7 +228,7 @@ impl SgNode {
     }
 }
 
-fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportLang> {
+fn get_matcher_from_rule(lang: TSLanguage, patterns: List) -> RuleCore<TSLanguage> {
     let rule = crate::ser::new_rule(patterns.into());
     let rule_core = SerializableRuleCore {
         rule,

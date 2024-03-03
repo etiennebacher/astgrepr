@@ -32,8 +32,10 @@ impl SgRoot {
     }
 
     fn root(&self) -> SgNode {
-        let tree = unsafe { &*(&self.inner as *const AstGrep<_>) } as &'static AstGrep<_>;
-        let inner = NodeMatch::from(tree.root());
+        let foo2 = &self.inner;
+        // let foo = unsafe { &*(&self.inner as *const AstGrep<_>) };
+        // let tree = foo as &'static AstGrep<_>;
+        let inner = NodeMatch::from(foo2.root());
         SgNode {
             inner,
             root: self.clone(),
