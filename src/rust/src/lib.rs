@@ -17,10 +17,7 @@ pub struct SgRoot {
 
 #[extendr]
 impl SgRoot {
-    fn new(src: &str, lang: &str) -> Self {
-        // let lang = SupportLang::from(lang.parse().unwrap());
-
-        // let mut parser = tree_sitter::Parser::new();
+    fn new(src: &str) -> Self {
         let rlang = tree_sitter_r::language();
         let lang = TSLanguage::from(rlang);
 
@@ -32,13 +29,22 @@ impl SgRoot {
     }
 
     fn root(&self) -> SgNode {
-        let foo2 = &self.inner;
-        // let foo = unsafe { &*(&self.inner as *const AstGrep<_>) };
-        // let tree = foo as &'static AstGrep<_>;
-        let inner = NodeMatch::from(foo2.root());
+        // let foo2 = &self.inner;
+        // // let foo = unsafe { &*(&self.inner as *const AstGrep<_>) };
+        // // let tree = foo as &'static AstGrep<_>;
+        // let inner = NodeMatch::from(foo2.root());
+        // SgNode {
+        //     inner,
+        //     root: self.clone(),
+        // }
+        let r = self.clone();
+        let r2 = r.clone();
+        let inner_clone = Box::new(r.inner.clone());
+        let static_inner_clone = Box::leak(inner_clone);
+        let node_root = static_inner_clone.root().clone();
         SgNode {
-            inner,
-            root: self.clone(),
+            inner: node_root.into(),
+            root: r2,
         }
     }
 

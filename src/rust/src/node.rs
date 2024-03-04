@@ -47,12 +47,12 @@ impl SgNode {
 
     /*---------- Search Refinement  ----------*/
     fn matches(&self, rule: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.matches(matcher)
     }
 
     fn inside(&self, rule: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.inside(matcher)
     }
 
@@ -62,12 +62,12 @@ impl SgNode {
     }
 
     fn precedes(&self, rule: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.precedes(matcher)
     }
 
     fn follows(&self, rule: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.follows(matcher)
     }
 
@@ -108,8 +108,11 @@ impl SgNode {
     }
 
     fn find(&self, rule: List) -> SgNode {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        rprintln!("hi there");
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
+        rprintln!("second hi");
         let inner = self.inner.find(matcher).unwrap();
+        rprintln!("third hi");
         Self {
             inner,
             root: self.root.clone(),
@@ -117,7 +120,7 @@ impl SgNode {
     }
 
     fn find_all(&self, rule: List) -> List {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner
             .find_all(matcher)
             .map(|n| Self {
