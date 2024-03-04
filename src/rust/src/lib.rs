@@ -37,14 +37,12 @@ impl SgRoot {
         //     inner,
         //     root: self.clone(),
         // }
-        let r = self.clone();
-        let r2 = r.clone();
-        let inner_clone = Box::new(r.inner.clone());
+        let inner_clone = Box::new(self.inner.clone());
         let static_inner_clone = Box::leak(inner_clone);
         let node_root = static_inner_clone.root().clone();
         SgNode {
             inner: node_root.into(),
-            root: r2,
+            root: self.clone(),
         }
     }
 
