@@ -11,6 +11,10 @@
 #' @useDynLib astgrepr, .registration = TRUE
 NULL
 
+test <- function() invisible(.Call(wrap__test))
+
+test2 <- function(pattern) .Call(wrap__test2, pattern)
+
 SgRoot <- new.env(parent = emptyenv())
 
 SgRoot$new <- function(src) .Call(wrap__SgRoot__new, src)
