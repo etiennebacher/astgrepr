@@ -10,6 +10,7 @@
 [ast-grep](https://ast-grep.github.io/) Rust crate.
 
 ``` r
+
 library(astgrepr)
 
 src <- "library(tidyverse)
@@ -18,12 +19,17 @@ src <- "library(tidyverse)
     plot(x)
     any(duplicated(x))"
 
-node <- astgrepr:::SgRoot$new(src)$root()
+node <- src |> 
+  tree_new() |> 
+  tree_root()
 
 # get everything inside rnorm()
-lapply(node$find(list(
-  pattern = "rnorm($$$A)"
-))$get_multiple_matches("A"), \(x) x$text())
+node |> 
+  node_find(list(
+    pattern = "rnorm($$$A)"
+  )) |> 
+  node_get_multiple_matches("A") |> 
+  node_text_all()
 #> [[1]]
 #> [1] "100"
 #> 
@@ -37,10 +43,9 @@ lapply(node$find(list(
 ``` r
 
 # find occurrences of any(duplicated())
-lapply(
-  node$find_all(list(pattern = "any(duplicated($A))")),
-  \(x) x$text()
-)
+node |> 
+  node_find_all(list(pattern = "any(duplicated($A))")) |> 
+  node_text_all()
 #> [[1]]
 #> [1] "any(duplicated(y))"
 #> 
