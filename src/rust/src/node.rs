@@ -3,7 +3,6 @@ use crate::SgRoot;
 use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
-use ast_grep_core::language::TSLanguage;
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
 
