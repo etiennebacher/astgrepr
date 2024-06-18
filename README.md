@@ -12,28 +12,38 @@
 ``` r
 library(astgrepr)
 
-x = astgrepr:::SgRoot$new("print('hello')\nlogger('hello', 'world', '!')", "python")
-node = x$root()
+src <- "library(tidyverse)
+    x <- rnorm(100, mean = 2)
+    any(duplicated(y))
+    plot(x)
+    any(duplicated(x))"
 
-node$matches(list(kind = "call"))
-#> [1] FALSE
-  
-node$find(list(pattern = "print($A)"))$get_match("A")$text()
-#> [1] "'hello'"
+node <- astgrepr:::SgRoot$new(src)$root()
 
-lapply(node$find(list(pattern = "logger($$$ARGS)"))$get_multiple_matches("ARGS"), \(x) x$text())
+# get everything inside rnorm()
+lapply(node$find(list(
+  pattern = "rnorm($$$A)"
+))$get_multiple_matches("A"), \(x) x$text())
 #> [[1]]
-#> [1] "'hello'"
+#> [1] "100"
 #> 
 #> [[2]]
 #> [1] ","
 #> 
 #> [[3]]
-#> [1] "'world'"
+#> [1] "mean = 2"
+```
+
+``` r
+
+# find occurrences of any(duplicated())
+lapply(
+  node$find_all(list(pattern = "any(duplicated($A))")),
+  \(x) x$text()
+)
+#> [[1]]
+#> [1] "any(duplicated(y))"
 #> 
-#> [[4]]
-#> [1] ","
-#> 
-#> [[5]]
-#> [1] "'!'"
+#> [[2]]
+#> [1] "any(duplicated(x))"
 ```
