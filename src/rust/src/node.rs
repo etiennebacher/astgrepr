@@ -20,8 +20,10 @@ unsafe impl Send for SgNode {}
 #[extendr]
 impl SgNode {
     /*----------  Node Inspection ----------*/
-    fn range(&self) -> Range {
-        Range::from(&self.inner)
+    fn range(&self) -> Robj {
+        let (start_pos_row, start_pos_col) = self.inner.start_pos();
+        let (end_pos_row, end_pos_col) = self.inner.end_pos();
+        r!(vec![start_pos_row, start_pos_col, end_pos_row, end_pos_col])
     }
 
     fn is_leaf(&self) -> bool {
