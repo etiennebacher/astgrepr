@@ -29,6 +29,11 @@ node_text <- function(x) {
 }
 
 #' @export
+node_text_all <- function(x) {
+  lapply(x, function(nodes) nodes$text())
+}
+
+#' @export
 node_matches <- function(x, rule) {
   x$matches(rule)
 }

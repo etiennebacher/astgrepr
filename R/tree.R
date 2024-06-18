@@ -1,9 +1,9 @@
 #' @export
-tree_new <- function(x) {
-  SgRoot$new(x)
+tree_new <- function(src) {
+  SgRoot$new(src)
 }
 
 #' @export
 tree_root <- function(x) {
-  SgRoot$root(x)
+  x$root()
 }
