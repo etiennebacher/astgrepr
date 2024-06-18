@@ -1,6 +1,8 @@
 #' @export
 node_range <- function(x) {
-  x$range()
+  out <- x$range()
+  names(out) <- c("start", "end")
+  out
 }
 
 #' @export
@@ -79,13 +81,13 @@ node_get_root <- function(x) {
 }
 
 #' @export
-node_find <- function(x, rule) {
-  x$find(rule)
+node_find <- function(x, pattern) {
+  x$find(pattern)
 }
 
 #' @export
-node_find_all <- function(x, rule) {
-  x$find_all(rule)
+node_find_all <- function(x, pattern) {
+  x$find_all(pattern)
 }
 
 #' @export
