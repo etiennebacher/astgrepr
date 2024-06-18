@@ -18,7 +18,9 @@ pub struct SgRoot {
 #[extendr]
 impl SgRoot {
     fn new(src: &str) -> Self {
-        let lang = SupportLang::from("R".parse().unwrap());
+        // let foo = tree_sitter_r::language();
+        // let lang = ast_grep_core::language::TSLanguage::from(foo);
+        let lang = SupportLang::R;
 
         let inner = lang.ast_grep(src);
         Self {

@@ -8,11 +8,11 @@ crate-type = ['staticlib']
 name = 'astgrepr'
 
 [dependencies]
-ast-grep-core = "0.20.2"
-ast-grep-config = "0.20.2"
-ast-grep-language = "0.20.2"
+ast-grep-core = {git = "https://github.com/etiennebacher/ast-grep", rev = "bb28e9b879c2509e4bcd494ce3db33c98df33260"}
+ast-grep-config = {git = "https://github.com/etiennebacher/ast-grep", rev = "bb28e9b879c2509e4bcd494ce3db33c98df33260"}
+ast-grep-language = {git = "https://github.com/etiennebacher/ast-grep", rev = "bb28e9b879c2509e4bcd494ce3db33c98df33260"}
 extendr-api = { version = "*", features = ["serde"] }
 once_cell = "1.19.0"
 anyhow = "1.0.75"
-tree-sitter-r = "0.19.5"
+tree-sitter-r = { git = "https://github.com/r-lib/tree-sitter-r.git", branch = "main" }
 serde = "1.0.197"
