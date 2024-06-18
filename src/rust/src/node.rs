@@ -3,6 +3,7 @@ use crate::SgRoot;
 use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
+use ast_grep_core::language::TSLanguage;
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
 
@@ -106,11 +107,12 @@ impl SgNode {
         self.root.clone()
     }
 
-    fn find(&self, rule: List) -> SgNode {
+    pub fn find(&self, rule: List) -> SgNode {
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
-        let inner = self.inner.find(matcher).unwrap();
+        let inner = self.inner.find(matcher);
+        let inner2 = inner.unwrap();
         Self {
-            inner,
+            inner: inner2,
             root: self.root.clone(),
         }
     }

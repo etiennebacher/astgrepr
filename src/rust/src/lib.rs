@@ -4,9 +4,10 @@ mod range;
 pub mod ser;
 use node::SgNode;
 // use range::{Pos, Range};
-
+use ast_grep_core::language::TSLanguage;
 use ast_grep_core::{AstGrep, Language, NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
+use std::collections::HashMap;
 
 #[derive(Clone)]
 pub struct SgRoot {
@@ -16,8 +17,11 @@ pub struct SgRoot {
 
 #[extendr]
 impl SgRoot {
-    fn new(src: &str, lang: &str) -> Self {
-        let lang = SupportLang::from(lang.parse().unwrap());
+    fn new(src: &str) -> Self {
+        // let foo = tree_sitter_r::language();
+        // let lang = ast_grep_core::language::TSLanguage::from(foo);
+        let lang = SupportLang::R;
+
         let inner = lang.ast_grep(src);
         Self {
             inner,
@@ -41,9 +45,17 @@ impl SgRoot {
 
 #[extendr]
 fn test() {
-    let r_lang = tree_sitter_r::language();
+    let r_lang: TSLanguage = tree_sitter_r::language().into();
     let ast_r_lang = ast_grep_core::language::TSLanguage::from(r_lang);
     rprintln!("{:?}", ast_r_lang);
+}
+
+#[extendr]
+fn test2(pattern: Robj) -> SgNode {
+    let mut map: HashMap<&str, Robj> = HashMap::new();
+    map.insert("pattern", pattern);
+    let input = List::from_hashmap(map).unwrap();
+    SgRoot::new("plot(iris)").root().find(input)
 }
 // Macro to generate exports.
 // This ensures exported functions are registered with R.
@@ -54,5 +66,6 @@ extendr_module! {
     impl SgRoot;
     use node;
     use ser;
-    // fn test;
+    fn test;
+    fn test2;
 }
