@@ -25,6 +25,7 @@
 #'   )) |>
 #'   node_range()
 node_range <- function(x) {
+  check_is_node(x)
   out <- x$range()
   names(out) <- c("start", "end")
   out
@@ -57,18 +58,21 @@ node_range <- function(x) {
 #'   )) |>
 #'   node_is_leaf()
 node_is_leaf <- function(x) {
+  check_is_node(x)
   x$is_leaf()
 }
 
 #' @name node-is
 #' @export
 node_is_named <- function(x) {
+  check_is_node(x)
   x$is_named()
 }
 
 #' @name node-is
 #' @export
 node_is_named_leaf <- function(x) {
+  check_is_node(x)
   x$is_named_leaf()
 }
 
@@ -78,6 +82,7 @@ node_is_named_leaf <- function(x) {
 #'
 #' @export
 node_kind <- function(x) {
+  check_is_node(x)
   x$kind()
 }
 
@@ -120,15 +125,15 @@ node_kind <- function(x) {
 #'   )) |>
 #'   node_text_all()
 node_text <- function(x) {
+  check_is_node(x)
   x$text()
 }
 
 #' @name node-text
 #' @export
 node_text_all <- function(x) {
-  out <- lapply(x, function(nodes) nodes$text())
-  class(out) <- c("SgNodeList", class(out))
-  out
+  check_all_nodes(x)
+  lapply(x, function(nodes) nodes$text())
 }
 
 #' @inheritParams node_range
@@ -212,8 +217,7 @@ node_get_match <- function(x, meta_var) {
 #' @export
 node_get_multiple_matches <- function(x, meta_var) {
   out <- x$get_multiple_matches(meta_var)
-  class(out) <- c("SgNodeList", class(out))
-  out
+  add_sgnodelist_class(out)
 }
 
 #' @export
@@ -223,6 +227,7 @@ node_get_transformed <- function(x, meta_var) {
 
 #' @export
 node_get_root <- function(x) {
+  check_is_node(x)
   x$get_root()
 }
 
@@ -288,6 +293,7 @@ node_find_all <- function(x, pattern) {
 #' @name node-traversal
 #' @export
 node_parent <- function(x) {
+  check_is_node(x)
   x$parent()
 }
 
@@ -306,35 +312,43 @@ node_field <- function(name) {
 #' @name node-traversal
 #' @export
 node_ancestors <- function(x) {
-  x$ancestors()
+  check_is_node(x)
+  out <- x$ancestors()
+  add_sgnodelist_class(out)
 }
 
 #' @name node-traversal
 #' @export
 node_children <- function(x) {
-  x$children()
+  check_is_node(x)
+  out <- x$children()
+  add_sgnodelist_class(out)
 }
 
 #' @name node-traversal
 #' @export
 node_next <- function(x) {
+  check_is_node(x)
   x$next_()
 }
 
 #' @name node-traversal
 #' @export
 node_next_all <- function(x) {
+  check_is_node(x)
   x$next_all
 }
 
 #' @name node-traversal
 #' @export
 node_prev <- function(x) {
+  check_is_node(x)
   x$prev()
 }
 
 #' @name node-traversal
 #' @export
 node_prev_all <- function(x) {
+  check_is_node(x)
   x$prev_all()
 }
