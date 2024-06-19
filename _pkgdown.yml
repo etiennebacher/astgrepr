@@ -1,0 +1,36 @@
+url: ~
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0B7189"
+    line-height-base: 1.7
+
+authors:
+  Etienne Bacher:
+    href: https://www.etiennebacher.com
+
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github]
+
+reference:
+  - title: Build an Abstract Syntax Tree (AST)
+    contents:
+      - tree_new
+      - tree_root
+
+  - title: Navigate and manipulate the AST
+    contents:
+      - node_kind
+      - node-find
+      - node-get-match
+      - node-info
+      - node-is
+      - node-range
+      - node-text
+      - node-traversal
+
+  - title: Other
+    contents:
+      - astgrepr-package

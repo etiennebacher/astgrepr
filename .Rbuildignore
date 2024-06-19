@@ -3,3 +3,4 @@
 ^src/\.cargo$
 ^README\.Rmd$
 ^LICENSE\.md$
+^docs$
