@@ -6,9 +6,9 @@
 \alias{node_find_all}
 \title{Find node(s) matching a pattern}
 \usage{
-node_find(x, pattern)
+node_find(x, pattern, config = NULL)
 
-node_find_all(x, pattern)
+node_find_all(x, pattern, config = NULL)
 }
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}

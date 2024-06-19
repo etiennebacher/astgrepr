@@ -1,10 +1,26 @@
-use crate::range::Range;
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
+
+pub struct Pos {
+    /// line number starting from 0
+    pub line: u32,
+    /// column number starting from 0
+    pub column: u32,
+    /// byte offset of the position
+    pub index: u32,
+}
+
+fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
+    Pos {
+        line: pos.0 as u32,
+        column: pos.1 as u32 / 2,
+        index: offset as u32 / 2,
+    }
+}
 
 #[extendr]
 pub struct SgNode {
@@ -15,17 +31,24 @@ pub struct SgNode {
 
 // it is safe to send tree-sitter Node
 // because it is refcnt and concurrency safe
-unsafe impl Send for SgNode {}
+// unsafe impl Send for SgNode {}
 
 #[extendr]
 impl SgNode {
     /*----------  Node Inspection ----------*/
     fn range(&self) -> List {
-        let (start_pos_row, start_pos_col) = self.inner.start_pos();
-        let (end_pos_row, end_pos_col) = self.inner.end_pos();
+        let byte_range = self.inner.range();
+        let start_pos = self.inner.start_pos();
+        let end_pos = self.inner.end_pos();
+        let positioner = &self.root.position;
+        let start = positioner.byte_to_char(byte_range.start);
+        let end = positioner.byte_to_char(byte_range.end);
+
+        let start_pos = to_pos(start_pos, start);
+        let end_pos = to_pos(end_pos, end);
         list!(
-            vec![start_pos_row, start_pos_col],
-            vec![end_pos_row, end_pos_col]
+            vec![start_pos.line, start_pos.column],
+            vec![end_pos.line, end_pos.column]
         )
     }
 

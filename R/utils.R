@@ -14,3 +14,8 @@ add_sgnodelist_class <- function(x) {
   class(x) <- c("SgNodeList", class(x))
   x
 }
+
+build_matcher_from_dots <- function(...) {
+  dots <- eval(substitute(alist(...)))
+  dots
+}

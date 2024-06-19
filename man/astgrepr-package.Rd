@@ -4,9 +4,9 @@
 \name{astgrepr-package}
 \alias{astgrepr}
 \alias{astgrepr-package}
-\title{astgrepr: What the Package Does (Title Case)}
+\title{astgrepr: Parse and Manipulate R Code}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Parsing R code is key to build tools such as linters and stylers. This package provides a binding to the Rust crate 'ast-grep' so that one can parse and explore R code.
 }
 \seealso{
 Useful links:
@@ -14,5 +14,9 @@ Useful links:
   \item \url{https://github.com/etiennebacher/astgrepr}
   \item Report bugs at \url{https://github.com/etiennebacher/astgrepr/issues}
 }
+
+}
+\author{
+\strong{Maintainer}: Etienne Bacher \email{etienne.bacher@protonmail.com} [copyright holder]
 
 }

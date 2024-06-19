@@ -78,6 +78,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ast-grep-py"
+version = "0.23.0"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=bb28e9b879c2509e4bcd494ce3db33c98df33260#bb28e9b879c2509e4bcd494ce3db33c98df33260"
+dependencies = [
+ "anyhow",
+ "ast-grep-config",
+ "ast-grep-core",
+ "ast-grep-language",
+]
+
+[[package]]
 name = "astgrepr"
 version = "0.1.0"
 dependencies = [
@@ -85,6 +96,7 @@ dependencies = [
  "ast-grep-config",
  "ast-grep-core",
  "ast-grep-language",
+ "ast-grep-py",
  "extendr-api",
  "once_cell",
  "serde",

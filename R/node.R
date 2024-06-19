@@ -149,32 +149,60 @@ node_text_all <- function(x) {
   lapply(x, function(nodes) nodes$text())
 }
 
+#' Get more precise information on a node
+#'
 #' @inheritParams node-range
-#' @param rule The rule used to find matches
+#' @param m The rule to apply.
 #'
 #' @export
-node_matches <- function(x, rule) {
-  x$matches(rule)
+#' @name node-info
+#'
+#' @examples
+#' src <- "
+#' print('hi')
+#' fn <- function() {
+#'   print('hello')
+#' }
+#' "
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' some_node <- root |>
+#'   node_find(list(
+#'     pattern = "print($A)"
+#'   ))
+#'
+#' node_text(some_node)
+#'
+#' node_matches(some_node, kind = "function_declaration")
+node_matches <- function(x, ...) {
+  matcher <- build_matcher_from_dots(...)
+  x$matches(matcher)
 }
 
+#' @name node-info
 #' @export
-node_inside <- function(x, rule) {
-  x$inside(rule)
+node_inside <- function(x, m) {
+  x$inside(m)
 }
 
+#' @name node-info
 #' @export
-node_has <- function(x, rule) {
-  x$has(rule)
+node_has <- function(x, m) {
+  x$has(m)
 }
 
+#' @name node-info
 #' @export
-node_precedes <- function(x, rule) {
-  x$precedes(rule)
+node_precedes <- function(x, m) {
+  x$precedes(m)
 }
 
+#' @name node-info
 #' @export
-node_follows <- function(x, rule) {
-  x$follows(rule)
+node_follows <- function(x, m) {
+  x$follows(m)
 }
 
 #' Get the match(es) from a meta-variable
@@ -283,13 +311,31 @@ node_get_root <- function(x) {
 #'   node_find_all(list(
 #'     pattern = "any(duplicated($A))"
 #'   ))
-node_find <- function(x, pattern) {
+node_find <- function(x, pattern, config = NULL) {
+  if (!is.null(config)) {
+    if (!missing(pattern)) {
+      stop("Either provide `pattern` or `config`, not both.")
+    }
+    pattern <- yaml::read_yaml("any_duplicated.yml")$rule
+  } else {
+    pattern <- as.list(pattern)
+    names(pattern) <- "pattern"
+  }
   x$find(pattern)
 }
 
 #' @name node-find
 #' @export
-node_find_all <- function(x, pattern) {
+node_find_all <- function(x, pattern, config = NULL) {
+  if (!is.null(config)) {
+    if (!missing(pattern)) {
+      stop("Either provide `pattern` or `config`, not both.")
+    }
+    pattern <- yaml::read_yaml("any_duplicated.yml")$rule
+  } else {
+    pattern <- as.list(pattern)
+    names(pattern) <- "pattern"
+  }
   x$find_all(pattern)
 }
 
