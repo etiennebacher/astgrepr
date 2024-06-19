@@ -4,6 +4,8 @@
 #' function.
 #'
 #' @export
+#' @name node-range
+#'
 #' @return A list of two elements: `start` and `end`. Each of those is a vector
 #' with two values indicating the row and column. Those are 0-indexed.
 #'
@@ -31,9 +33,20 @@ node_range <- function(x) {
   out
 }
 
+#' @name node-range
+#' @export
+node_range_all <- function(x) {
+  check_all_nodes(x)
+  lapply(x, function(nodes) {
+    out <- nodes$range()
+    names(out) <- c("start", "end")
+    out
+  })
+}
+
 #' Get information on nodes
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #'
 #' @export
 #' @return A logical value.
@@ -78,7 +91,7 @@ node_is_named_leaf <- function(x) {
 
 #' Find the kind of a node
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #'
 #' @export
 node_kind <- function(x) {
@@ -95,7 +108,7 @@ node_kind <- function(x) {
 #' * `node_text_all()` applies on a list of nodes, for example the output of
 #'   [node_get_multiple_matches()]
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #'
 #' @export
 #' @name node-text
@@ -136,7 +149,7 @@ node_text_all <- function(x) {
   lapply(x, function(nodes) nodes$text())
 }
 
-#' @inheritParams node_range
+#' @inheritParams node-range
 #' @param rule The rule used to find matches
 #'
 #' @export
@@ -173,7 +186,7 @@ node_follows <- function(x, rule) {
 #' * `node_get_multiple_matches()` is used when the meta-variable captures all
 #'   elements in a pattern, e.g. `"plot($$$A)"`.
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #' @param meta_var The name given to one of the meta-variable(s) in
 #' `node_find()`.
 #'
@@ -238,7 +251,7 @@ node_get_root <- function(x) {
 #' * `node_find()` returns the first node that is found;
 #' * `node_find_all()` returns a list of all nodes found.
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #' @param pattern The pattern to search. This must be a list of named elements.
 #' Elements can be:
 #' * `pattern`:
@@ -286,7 +299,7 @@ node_find_all <- function(x, pattern) {
 #' them have a variant that applies on a single node (e.g. `node_next()`) and
 #' one that applies on a list of nodes (e.g. `node_next_all()`).
 #'
-#' @inheritParams node_range
+#' @inheritParams node-range
 #' @param nth Integer. The child node to find. This is 0-indexed, so setting
 #' `nth = 0` gets the first child.
 #'

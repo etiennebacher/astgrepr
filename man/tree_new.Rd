@@ -4,7 +4,7 @@
 \alias{tree_new}
 \title{Create a syntax tree}
 \usage{
-tree_new(src)
+tree_new(txt, file)
 }
 \arguments{
 \item{src}{String. R code to parse.}

@@ -13,8 +13,14 @@
 #'     any(duplicated(x))"
 #'
 #' tree_new(src)
-tree_new <- function(src) {
-  SgRoot$new(src)
+tree_new <- function(txt, file) {
+  if ((missing(txt) && missing(file)) || (!missing(txt) && !missing(file))) {
+    stop("Must pass either `txt` or `file`.")
+  }
+  if (!missing(file)) {
+    txt <- paste(readLines(file), collapse = "\n")
+  }
+  SgRoot$new(txt)
 }
 
 #' Get the root of the syntax tree
