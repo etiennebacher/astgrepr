@@ -11,27 +11,21 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "any(duplicated($A))"
-    )) |>
+    node_find(pattern = "any(duplicated($A))") |>
     node_text(),
   "any(duplicated(y))"
 )
 
 expect_error(
   root |>
-    node_find_all(list(
-      pattern = "any(duplicated($A))"
-    )) |>
+    node_find_all(pattern = "any(duplicated($A))") |>
     node_text(),
   "`x` must be an object of class 'SgNode'"
 )
 
 expect_equal(
   root |>
-    node_find_all(list(
-      pattern = "any(duplicated($A))"
-    )) |>
+    node_find_all(pattern = "any(duplicated($A))") |>
     node_text_all(),
   list("any(duplicated(y))", "any(duplicated(x))")
 )
@@ -39,9 +33,7 @@ expect_equal(
 # TODO: should return an empty list
 # expect_length(
 #   root |>
-#     node_find(list(
-#       pattern = "foobar"
-#     )) |>
+#     node_find(#       pattern = "foobar"     )) |>
 #     node_text(),
 #   0
 # )

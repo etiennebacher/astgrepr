@@ -22,9 +22,7 @@
 #' node_range(root)
 #'
 #' root |>
-#'   node_find(list(
-#'     pattern = "rnorm($$$A)"
-#'   )) |>
+#'   node_find(pattern = "rnorm($$$A)") |>
 #'   node_range()
 node_range <- function(x) {
   check_is_node(x)
@@ -66,9 +64,7 @@ node_range_all <- function(x) {
 #' node_is_leaf(root)
 #'
 #' root |>
-#'   node_find(list(
-#'     pattern = "rnorm($$$A)"
-#'   )) |>
+#'   node_find(pattern = "rnorm($$$A)") |>
 #'   node_is_leaf()
 node_is_leaf <- function(x) {
   check_is_node(x)
@@ -125,9 +121,7 @@ node_kind <- function(x) {
 #'
 #' # node_text() must be applied on single nodes
 #' root |>
-#'   node_find(list(
-#'     pattern = "plot($A)"
-#'   )) |>
+#'   node_find(pattern = "plot($A)")) |>
 #'   node_text()
 #'
 #' # node_find_all() returns a list on nodes on which
@@ -169,9 +163,7 @@ node_text_all <- function(x) {
 #'   tree_root()
 #'
 #' some_node <- root |>
-#'   node_find(list(
-#'     pattern = "print($A)"
-#'   ))
+#'   node_find(pattern = "print($A)")
 #'
 #' node_text(some_node)
 #'
@@ -231,24 +223,18 @@ node_follows <- function(x, m) {
 #'
 #' # we capture a single element with "$A" so node_get_match() can be used
 #' root |>
-#'   node_find(list(
-#'     pattern = "plot($A)"
-#'   )) |>
+#'   node_find(pattern = "plot($A)")) |>
 #'   node_get_match("A")
 #'
 #' # we can specify the variable to extract
 #' root |>
-#'   node_find(list(
-#'     pattern = "rnorm($A, $B)"
-#'   )) |>
+#'   node_find(pattern = "rnorm($A, $B)") |>
 #'   node_get_match("B")
 #'
 #' # we capture many elements with "$$$A" so node_get_multiple_matches() can
 #' # be used here
 #' root |>
-#'   node_find(list(
-#'     pattern = "rnorm($$$A)"
-#'   )) |>
+#'   node_find(pattern = "rnorm($$$A)") |>
 #'   node_get_multiple_matches("A")
 node_get_match <- function(x, meta_var) {
   x$get_match(meta_var)
@@ -303,15 +289,13 @@ node_get_root <- function(x) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(list(
-#'     pattern = "any(duplicated($A))"
-#'   ))
+#'   node_find(pattern = "any(duplicated($A))")
 #'
 #' root |>
 #'   node_find_all(list(
 #'     pattern = "any(duplicated($A))"
 #'   ))
-node_find <- function(x, pattern, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
+node_find <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
   # if (!is.null(config)) {
   #   if (!missing(pattern)) {
   #     stop("Either provide `pattern` or `config`, not both.")
@@ -324,24 +308,47 @@ node_find <- function(x, pattern, kind = NULL, regex = NULL, inside = NULL, has 
   #   config <- NULL
   # }
   rule_params <- list(
-    pattern = pattern, kind = kind, regex = regex, inside = inside, has = has, precedes = precedes, follows = follows, all = all, any = any, not = not, matches = matches
+    pattern = pattern,
+    kind = kind,
+    regex = regex,
+    inside = inside,
+    has = has,
+    precedes = precedes,
+    follows = follows,
+    all = all,
+    any = any,
+    not = not,
+    matches = matches
   )
   x$find(rule_params)
 }
 
 #' @name node-find
 #' @export
-node_find_all <- function(x, pattern, config = NULL) {
-  if (!is.null(config)) {
-    if (!missing(pattern)) {
-      stop("Either provide `pattern` or `config`, not both.")
-    }
-    pattern <- yaml::read_yaml("any_duplicated.yml")$rule
-  } else {
-    pattern <- as.list(pattern)
-    names(pattern) <- "pattern"
-  }
-  x$find_all(pattern)
+node_find_all <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
+  # if (!is.null(config)) {
+  #   if (!missing(pattern)) {
+  #     stop("Either provide `pattern` or `config`, not both.")
+  #   }
+  #   pattern <- yaml::read_yaml("any_duplicated.yml")$rule
+  # } else {
+  #   pattern <- as.list(pattern)
+  #   names(pattern) <- "pattern"
+  # }
+  rule_params <- list(
+    pattern = pattern,
+    kind = kind,
+    regex = regex,
+    inside = inside,
+    has = has,
+    precedes = precedes,
+    follows = follows,
+    all = all,
+    any = any,
+    not = not,
+    matches = matches
+  )
+  x$find_all(rule_params)
 }
 
 #' Navigate the tree

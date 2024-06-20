@@ -138,8 +138,6 @@ impl SgNode {
 
     pub fn find(&self, rule_params: List) -> SgNode {
         // let matcher2 = self.get_matcher(config, rule)?;
-        rprintln!("here");
-
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
         let inner = self.inner.find(matcher);
         let inner2 = inner.unwrap();

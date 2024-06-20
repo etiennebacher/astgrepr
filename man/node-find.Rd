@@ -8,7 +8,7 @@
 \usage{
 node_find(
   x,
-  pattern,
+  pattern = NULL,
   kind = NULL,
   regex = NULL,
   inside = NULL,
@@ -57,9 +57,7 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(list(
-    pattern = "any(duplicated($A))"
-  ))
+  node_find(pattern = "any(duplicated($A))")
 
 root |>
   node_find_all(list(

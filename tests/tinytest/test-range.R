@@ -14,9 +14,7 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "rnorm($$$A)"
-    )) |>
+    node_find(pattern = "rnorm($$$A)") |>
     node_range(),
   list(start = c(0, 5), end = c(0, 25))
 )
@@ -25,9 +23,7 @@ expect_equal(
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "{$$$A}"
-    )) |>
+    node_find(pattern = "{$$$A}") |>
     node_range(),
   list(start = c(1, 22), end = c(3, 1))
 )
@@ -36,9 +32,7 @@ expect_equal(
 
 expect_error(
   root |>
-    node_find_all(list(
-      pattern = "any(duplicated($A))"
-    )) |>
+    node_find_all(pattern = "any(duplicated($A))") |>
     node_range(),
   "`x` must be an object of class 'SgNode'"
 )
@@ -47,9 +41,7 @@ expect_error(
 
 expect_equal(
   root |>
-    node_find_all(list(
-      pattern = "rnorm($$$A)"
-    )) |>
+    node_find_all(pattern = "rnorm($$$A)") |>
     node_range_all(),
   list(
     list(start = c(0, 5), end = c(0, 25)),
@@ -61,9 +53,7 @@ expect_equal(
 
 expect_length(
   root |>
-    node_find_all(list(
-      pattern = "foobar"
-    )) |>
+    node_find_all(pattern = "foobar") |>
     node_range_all(),
   0
 )
