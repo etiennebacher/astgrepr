@@ -21,7 +21,20 @@ node_find(
   matches = NULL
 )
 
-node_find_all(x, pattern, config = NULL)
+node_find_all(
+  x,
+  pattern = NULL,
+  kind = NULL,
+  regex = NULL,
+  inside = NULL,
+  has = NULL,
+  precedes = NULL,
+  follows = NULL,
+  all = NULL,
+  any = NULL,
+  not = NULL,
+  matches = NULL
+)
 }
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
@@ -60,7 +73,5 @@ root |>
   node_find(pattern = "any(duplicated($A))")
 
 root |>
-  node_find_all(list(
-    pattern = "any(duplicated($A))"
-  ))
+  node_find_all(pattern = "any(duplicated($A))")
 }

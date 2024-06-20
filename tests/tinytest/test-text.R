@@ -30,10 +30,9 @@ expect_equal(
   list("any(duplicated(y))", "any(duplicated(x))")
 )
 
-# TODO: should return an empty list
-# expect_length(
-#   root |>
-#     node_find(#       pattern = "foobar"     )) |>
-#     node_text(),
-#   0
-# )
+expect_length(
+  root |>
+    node_find(pattern = "foobar") |>
+    node_text(),
+  0
+)

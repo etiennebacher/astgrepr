@@ -136,14 +136,17 @@ impl SgNode {
         self.root.clone()
     }
 
-    pub fn find(&self, rule_params: List) -> SgNode {
+    pub fn find(&self, rule_params: List) -> List {
         // let matcher2 = self.get_matcher(config, rule)?;
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
         let inner = self.inner.find(matcher);
-        let inner2 = inner.unwrap();
-        Self {
-            inner: inner2,
-            root: self.root.clone(),
+        if inner.is_some() {
+            list!(Self {
+                inner: inner.unwrap(),
+                root: self.root.clone(),
+            })
+        } else {
+            List::new(0)
         }
     }
 

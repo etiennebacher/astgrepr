@@ -121,17 +121,16 @@ node_kind <- function(x) {
 #'
 #' # node_text() must be applied on single nodes
 #' root |>
-#'   node_find(pattern = "plot($A)")) |>
+#'   node_find(pattern = "plot($A)") |>
 #'   node_text()
 #'
 #' # node_find_all() returns a list on nodes on which
 #' # we can use node_text_all()
 #' root |>
-#'   node_find_all(list(
-#'     pattern = "any(duplicated($A))"
-#'   )) |>
+#'   node_find_all(pattern = "any(duplicated($A))") |>
 #'   node_text_all()
 node_text <- function(x) {
+  if (length(x) == 0) return(list())
   check_is_node(x)
   x$text()
 }
@@ -292,9 +291,7 @@ node_get_root <- function(x) {
 #'   node_find(pattern = "any(duplicated($A))")
 #'
 #' root |>
-#'   node_find_all(list(
-#'     pattern = "any(duplicated($A))"
-#'   ))
+#'   node_find_all(pattern = "any(duplicated($A))")
 node_find <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
   # if (!is.null(config)) {
   #   if (!missing(pattern)) {
@@ -320,7 +317,8 @@ node_find <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NUL
     not = not,
     matches = matches
   )
-  x$find(rule_params)
+  x$find(rule_params) |>
+    unwrap_list_output()
 }
 
 #' @name node-find

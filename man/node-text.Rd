@@ -35,14 +35,12 @@ root <- src |>
 
 # node_text() must be applied on single nodes
 root |>
-  node_find(pattern = "plot($A)")) |>
+  node_find(pattern = "plot($A)") |>
   node_text()
 
 # node_find_all() returns a list on nodes on which
 # we can use node_text_all()
 root |>
-  node_find_all(list(
-    pattern = "any(duplicated($A))"
-  )) |>
+  node_find_all(pattern = "any(duplicated($A))") |>
   node_text_all()
 }

@@ -42,9 +42,8 @@ expect_equal(
 #   1
 # )
 
-# TODO: should return an empty list
-# expect_length(
-#   root |>
-#     node_find(#       pattern = "foobar"     )),
-#   0
-# )
+expect_length(
+  root |>
+    node_find(pattern = "foobar"),
+  0
+)
