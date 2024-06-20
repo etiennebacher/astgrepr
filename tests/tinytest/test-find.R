@@ -3,6 +3,7 @@ source("helpers.R")
 src <- "x <- rnorm(100, mean = 2)
     any(duplicated(y))
     plot(mtcars)
+    'plot(iris)'
     any(duplicated('x'))"
 
 root <- src |>
@@ -25,6 +26,13 @@ expect_length(
   root |>
     node_find_all(pattern = "any(duplicated($A))"),
   2
+)
+
+expect_equal(
+  root |>
+    node_find_all(pattern = "plot($A)", kind = "call") |>
+    node_text_all(),
+  list("plot(mtcars)")
 )
 
 # TODO: should work I guess?
