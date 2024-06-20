@@ -17,7 +17,9 @@ pub struct Pos {
 fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
     Pos {
         line: pos.0 as u32,
-        column: pos.1 as u32 / 2,
+        // In the pyo3 implementation they have u32 / 2 but for me that
+        // doesn't work well
+        column: pos.1 as u32,
         index: offset as u32 / 2,
     }
 }
