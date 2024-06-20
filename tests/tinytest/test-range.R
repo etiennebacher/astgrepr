@@ -10,6 +10,8 @@ root <- src |>
   tree_new() |>
   tree_root()
 
+# simple example
+
 expect_equal(
   root |>
     node_find(list(
@@ -18,6 +20,8 @@ expect_equal(
     node_range(),
   list(start = c(0, 5), end = c(0, 25))
 )
+
+# multiple lines
 
 expect_equal(
   root |>
@@ -28,6 +32,8 @@ expect_equal(
   list(start = c(1, 22), end = c(3, 1))
 )
 
+# require node_range_all()
+
 expect_error(
   root |>
     node_find_all(list(
@@ -36,6 +42,8 @@ expect_error(
     node_range(),
   "`x` must be an object of class 'SgNode'"
 )
+
+# multiple matches
 
 expect_equal(
   root |>
@@ -48,6 +56,8 @@ expect_equal(
     list(start = c(4, 5), end = c(4, 25))
   )
 )
+
+# 0 matches
 
 expect_length(
   root |>
