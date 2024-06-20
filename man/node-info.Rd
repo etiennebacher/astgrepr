@@ -40,9 +40,7 @@ root <- src |>
   tree_root()
 
 some_node <- root |>
-  node_find(list(
-    pattern = "print($A)"
-  ))
+  node_find(pattern = "print($A)")
 
 node_text(some_node)
 

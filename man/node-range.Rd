@@ -34,8 +34,6 @@ root <- src |>
 node_range(root)
 
 root |>
-  node_find(list(
-    pattern = "rnorm($$$A)"
-  )) |>
+  node_find(pattern = "rnorm($$$A)") |>
   node_range()
 }

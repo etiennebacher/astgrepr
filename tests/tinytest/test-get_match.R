@@ -11,9 +11,7 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "any(duplicated($A))"
-    )) |>
+    node_find(pattern = "any(duplicated($A))") |>
     node_get_match("A") |>
     node_text(),
   "y"
@@ -21,9 +19,7 @@ expect_equal(
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "rnorm($A, $B)"
-    )) |>
+    node_find(pattern = "rnorm($A, $B)") |>
     node_get_match("B") |>
     node_text(),
   "mean = 2"
@@ -31,9 +27,7 @@ expect_equal(
 
 expect_equal(
   root |>
-    node_find(list(
-      pattern = "rnorm($$$A)"
-    )) |>
+    node_find(pattern = "rnorm($$$A)") |>
     node_get_multiple_matches("A") |>
     node_text_all(),
   list("100", ",", "mean = 2")
@@ -41,18 +35,14 @@ expect_equal(
 
 expect_length(
   root |>
-    node_find(list(
-      pattern = "rnorm($A, $B)"
-    )) |>
+    node_find(pattern = "rnorm($A, $B)") |>
     node_get_multiple_matches("foo") ,
   0
 )
 
 expect_length(
   root |>
-    node_find(list(
-      pattern = "rnorm($$$A)"
-    )) |>
+    node_find(pattern = "rnorm($$$A)") |>
     node_get_multiple_matches("foo") |>
     node_text_all(),
   0
@@ -61,9 +51,7 @@ expect_length(
 # TODO: should return an empty list
 # expect_length(
 #   root |>
-#     node_find(list(
-#       pattern = "foobar"
-#     )) |>
+#     node_find(#       pattern = "foobar"     )) |>
 #     node_text(),
 #   0
 # )

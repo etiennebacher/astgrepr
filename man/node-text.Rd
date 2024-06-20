@@ -35,9 +35,7 @@ root <- src |>
 
 # node_text() must be applied on single nodes
 root |>
-  node_find(list(
-    pattern = "plot($A)"
-  )) |>
+  node_find(pattern = "plot($A)")) |>
   node_text()
 
 # node_find_all() returns a list on nodes on which
