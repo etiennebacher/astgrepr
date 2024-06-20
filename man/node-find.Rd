@@ -6,7 +6,20 @@
 \alias{node_find_all}
 \title{Find node(s) matching a pattern}
 \usage{
-node_find(x, pattern, config = NULL)
+node_find(
+  x,
+  pattern,
+  kind = NULL,
+  regex = NULL,
+  inside = NULL,
+  has = NULL,
+  precedes = NULL,
+  follows = NULL,
+  all = NULL,
+  any = NULL,
+  not = NULL,
+  matches = NULL
+)
 
 node_find_all(x, pattern, config = NULL)
 }
