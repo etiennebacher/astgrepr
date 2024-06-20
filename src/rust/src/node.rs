@@ -136,7 +136,9 @@ impl SgNode {
         self.root.clone()
     }
 
-    pub fn find(&self, rule: List) -> SgNode {
+    pub fn find(&self, rule: List, config: List) -> SgNode {
+        let matcher2 = self.get_matcher(config, rule)?;
+
         let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         let inner = self.inner.find(matcher);
         let inner2 = inner.unwrap();
@@ -256,6 +258,41 @@ impl SgNode {
             })
             .collect()
     }
+
+    fn get_matcher(&self, config: Option<List>, kwargs: Option<List>) -> RuleCore<SupportLang> {
+        let lang = self.inner.lang();
+        let config = if let Some(config) = config {
+            config_from_dict(config)?
+        } else if let Some(rule) = kwargs {
+            config_from_rule(rule)?
+        } else {
+            return Err(extendr_api::Error::Other("rule must not be empty"));
+        };
+        let env = DeserializeEnv::new(*lang);
+        let matcher = config.get_matcher(env).context("cannot get matcher")?;
+        Ok(matcher)
+    }
+}
+
+fn config_from_dict(dict: List) -> Result<SerializableRuleCore> {
+    use extendr_api::deserializer::from_robj;
+    Ok(SerializableRuleCore {
+        rule: dict.rule,
+        constraints: dict.constraints,
+        utils: dict.utils,
+        transform: dict.transform,
+        fix: dict.constraints,
+    })
+}
+
+fn config_from_rule(dict: List) -> Result<SerializableRuleCore> {
+    Ok(SerializableRuleCore {
+        rule: dict.elt(0),
+        constraints: None,
+        utils: None,
+        transform: None,
+        fix: None,
+    })
 }
 
 fn get_matcher_from_rule(lang: SupportLang, patterns: List) -> RuleCore<SupportLang> {

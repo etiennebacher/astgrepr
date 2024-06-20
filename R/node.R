@@ -316,12 +316,14 @@ node_find <- function(x, pattern, config = NULL) {
     if (!missing(pattern)) {
       stop("Either provide `pattern` or `config`, not both.")
     }
-    pattern <- yaml::read_yaml("any_duplicated.yml")$rule
+    config <- yaml::read_yaml("any_duplicated.yml")$rule
+    pattern <- NULL
   } else {
     pattern <- as.list(pattern)
     names(pattern) <- "pattern"
+    config <- NULL
   }
-  x$find(pattern)
+  x$find(rule = pattern, config = config)
 }
 
 #' @name node-find
