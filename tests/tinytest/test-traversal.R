@@ -25,14 +25,14 @@ root |>
   node_prev() |>
   node_text()
 
-diffobj::diffPrint(
-  root |>
-    node_find(pattern = "a <- $A") |>
-    node_prev() |>
-    node_text(),
-  cat(readLines("/home/etienne/Desktop/Git/packages/astgrepr/tests/tinytest/_tinysnapshot/previous_node.txt")),
-  guides = FALSE
-)
+# diffobj::diffPrint(
+#   root |>
+#     node_find(pattern = "a <- $A") |>
+#     node_prev() |>
+#     node_text(),
+#   cat(readLines("/home/etienne/Desktop/Git/packages/astgrepr/tests/tinytest/_tinysnapshot/previous_node.txt")),
+#   guides = FALSE
+# )
 
 
 
