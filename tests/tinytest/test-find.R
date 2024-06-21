@@ -3,6 +3,8 @@ source("helpers.R")
 src <- "x <- rnorm(100, mean = 2)
     any(duplicated(y))
     plot(mtcars)
+    # a comment
+    #' a roxygen comment
     'plot(iris)'
     any(duplicated('x'))"
 
@@ -20,6 +22,18 @@ expect_length(
   root |>
     node_find(kind = "string"),
   1
+)
+
+expect_length(
+  root |>
+    node_find(kind = "comment"),
+  1
+)
+
+expect_length(
+  root |>
+    node_find_all(kind = "comment"),
+  2
 )
 
 expect_length(
