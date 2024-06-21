@@ -19,6 +19,14 @@ expect_equal(
 
 expect_equal(
   root |>
+    node_find(pattern = "any(duplicated($A))") |>
+    node_get_match("foobar") |>
+    node_text(),
+  list()
+)
+
+expect_equal(
+  root |>
     node_find(pattern = "rnorm($A, $B)") |>
     node_get_match("B") |>
     node_text(),

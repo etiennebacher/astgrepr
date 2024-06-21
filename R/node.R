@@ -272,7 +272,7 @@ node_follows <- function(x, m) {
 #'   node_find(pattern = "rnorm($$$A)") |>
 #'   node_get_multiple_matches("A")
 node_get_match <- function(x, meta_var) {
-  x$get_match(meta_var)
+  unwrap_list_output(x$get_match(meta_var))
 }
 
 #' @name node-get-match

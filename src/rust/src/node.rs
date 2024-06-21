@@ -100,16 +100,21 @@ impl SgNode {
         self.inner.follows(matcher)
     }
 
-    fn get_match(&self, meta_var: &str) -> Self {
-        self.inner
+    fn get_match(&self, meta_var: &str) -> List {
+        let inner = self
+            .inner
             .get_env()
             .get_match(meta_var)
             .cloned()
             .map(|n| Self {
                 inner: NodeMatch::from(n),
                 root: self.root.clone(),
-            })
-            .unwrap()
+            });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
+        }
     }
 
     fn get_multiple_matches(&self, meta_var: &str) -> List {
