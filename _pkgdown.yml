@@ -30,7 +30,3 @@ reference:
       - node-range
       - node-text
       - node-traversal
-
-  - title: Other
-    contents:
-      - astgrepr-package
