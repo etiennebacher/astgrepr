@@ -161,30 +161,31 @@ impl SgNode {
             .collect()
     }
 
-    fn field(&self, name: &str) -> SgNode {
-        self.inner
-            .field(name)
-            .map(|inner| Self {
-                inner: inner.into(),
-                root: self.root.clone(),
-            })
-            .unwrap()
-    }
-
-    fn parent(&self) -> SgNode {
-        self.inner
-            .parent()
-            .map(|inner| Self {
-                inner: inner.into(),
-                root: self.root.clone(),
-            })
-            .unwrap()
-    }
-
-    fn child(&self, nth: Robj) -> SgNode {
-        if nth.len() > 1 {
-            panic!("foobar")
+    fn field(&self, name: &str) -> List {
+        let inner = self.inner.field(name).map(|inner| Self {
+            inner: inner.into(),
+            root: self.root.clone(),
+        });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
         }
+    }
+
+    fn parent(&self) -> List {
+        let inner = self.inner.parent().map(|inner| Self {
+            inner: inner.into(),
+            root: self.root.clone(),
+        });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
+        }
+    }
+
+    fn child(&self, nth: Robj) -> List {
         let nth_usize = match nth.rtype() {
             Rtype::Doubles => nth.as_real().unwrap() as usize,
             Rtype::Integers => nth.as_integer().unwrap() as usize,
@@ -192,13 +193,15 @@ impl SgNode {
                 panic!("foobar")
             }
         };
-        self.inner
-            .child(nth_usize)
-            .map(|inner| Self {
-                inner: inner.into(),
-                root: self.root.clone(),
-            })
-            .unwrap()
+        let inner = self.inner.child(nth_usize).map(|inner| Self {
+            inner: inner.into(),
+            root: self.root.clone(),
+        });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
+        }
     }
 
     fn ancestors(&self) -> List {
@@ -221,14 +224,16 @@ impl SgNode {
             .collect()
     }
 
-    fn next_(&self) -> SgNode {
-        self.inner
-            .next()
-            .map(|inner| Self {
-                inner: inner.into(),
-                root: self.root.clone(),
-            })
-            .unwrap()
+    fn next_(&self) -> List {
+        let inner = self.inner.next().map(|inner| Self {
+            inner: inner.into(),
+            root: self.root.clone(),
+        });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
+        }
     }
 
     fn next_all(&self) -> List {
@@ -241,14 +246,16 @@ impl SgNode {
             .collect()
     }
 
-    fn prev(&self) -> SgNode {
-        self.inner
-            .prev()
-            .map(|inner| Self {
-                inner: inner.into(),
-                root: self.root.clone(),
-            })
-            .unwrap()
+    fn prev(&self) -> List {
+        let inner = self.inner.prev().map(|inner| Self {
+            inner: inner.into(),
+            root: self.root.clone(),
+        });
+        if inner.is_some() {
+            list!(inner.unwrap())
+        } else {
+            List::new(0)
+        }
     }
 
     fn prev_all(&self) -> List {

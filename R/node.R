@@ -369,8 +369,7 @@ node_find <- function(
     not = not,
     matches = matches
   )
-  x$find(rule_params) |>
-    unwrap_list_output()
+  unwrap_list_output(x$find(rule_params))
 }
 
 #' @name node-find
@@ -416,9 +415,17 @@ node_find_all <- function(
 
 #' Navigate the tree
 #'
+#' @description
 #' This is a collection of functions used to navigate the tree. Some of
 #' them have a variant that applies on a single node (e.g. `node_next()`) and
-#' one that applies on a list of nodes (e.g. `node_next_all()`).
+#' one that applies on a list of nodes (e.g. `node_next_all()`):
+#'
+#' * `node_prev()`, `node_prev_all()`, `node_next()`, and `node_next_all()`
+#'   get the previous and next node(s) that are at the same depth as the current
+#'   node;
+#' * `node_parent()`, `node_ancestors()`, `node_child()` and `node_children()`
+#'   get the node(s) that are above or below the current node in terms of depth.
+#'   All nodes except the root node have at least one node (the root).
 #'
 #' @inheritParams node-range
 #' @param nth Integer. The child node to find. This is 0-indexed, so setting
@@ -426,21 +433,89 @@ node_find_all <- function(
 #'
 #' @name node-traversal
 #' @export
+#' @examples
+#'
+#' ### get the previous/next node ---------------------------
+#'
+#' src <- "
+#' print('hi there')
+#' a <- 1
+#' fn <- function(x) {
+#'   x + 1
+#' }
+#' "
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(pattern = "a <- $A") |>
+#'   node_prev() |>
+#'   node_text()
+#'
+#' root |>
+#'   node_find(pattern = "a <- $A") |>
+#'   node_next() |>
+#'   node_text()
+#'
+#' # there are nodes inside the function, but there are no more nodes on the
+#' # same level as "fn"
+#' root |>
+#'   node_find(pattern = "a <- $A") |>
+#'   node_next_all() |>
+#'   node_text_all()
+#'
+#'
+#' ### get the parent/child node ---------------------------
+#'
+#' src <- "
+#' print('hi there')
+#' a <- 1
+#' fn <- function(x) {
+#'   x + 1
+#' }
+#' "
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(pattern = "$VAR + 1") |>
+#'   node_parent() |>
+#'   node_text()
+#'
+#' root |>
+#'   node_find(pattern = "$VAR + 1") |>
+#'   node_ancestors() |>
+#'   node_text_all()
+#'
+#' root |>
+#'   node_find(pattern = "$VAR + 1") |>
+#'   node_child(0) |>
+#'   node_text()
+#'
+#' root |>
+#'   node_find(pattern = "$VAR + 1") |>
+#'   node_children() |>
+#'   node_text_all()
 node_parent <- function(x) {
   check_is_node(x)
-  x$parent()
+  unwrap_list_output(x$parent())
 }
 
 #' @name node-traversal
 #' @export
 node_child <- function(x, nth) {
-  x$child(nth)
+  if (length(nth) != 1 || !is.numeric(nth) || (nth != 0 && nth %% 1 != 0)) {
+    stop("`nth` must be an integer of length 1.")
+  }
+  unwrap_list_output(x$child(nth))
 }
 
 #' @name node-traversal
 #' @export
-node_field <- function(name) {
-  x$field(name)
+node_field <- function(x, name) {
+  unwrap_list_output(x$field(name))
 }
 
 #' @name node-traversal
@@ -463,21 +538,21 @@ node_children <- function(x) {
 #' @export
 node_next <- function(x) {
   check_is_node(x)
-  x$next_()
+  unwrap_list_output(x$next_())
 }
 
 #' @name node-traversal
 #' @export
 node_next_all <- function(x) {
   check_is_node(x)
-  x$next_all
+  add_sgnodelist_class(x$next_all())
 }
 
 #' @name node-traversal
 #' @export
 node_prev <- function(x) {
   check_is_node(x)
-  x$prev()
+  unwrap_list_output(x$prev())
 }
 
 #' @name node-traversal

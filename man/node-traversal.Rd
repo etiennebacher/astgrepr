@@ -17,7 +17,7 @@ node_parent(x)
 
 node_child(x, nth)
 
-node_field(name)
+node_field(x, name)
 
 node_ancestors(x)
 
@@ -41,5 +41,79 @@ function.}
 \description{
 This is a collection of functions used to navigate the tree. Some of
 them have a variant that applies on a single node (e.g. \code{node_next()}) and
-one that applies on a list of nodes (e.g. \code{node_next_all()}).
+one that applies on a list of nodes (e.g. \code{node_next_all()}):
+\itemize{
+\item \code{node_prev()}, \code{node_prev_all()}, \code{node_next()}, and \code{node_next_all()}
+get the previous and next node(s) that are at the same depth as the current
+node;
+\item \code{node_parent()}, \code{node_ancestors()}, \code{node_child()} and \code{node_children()}
+get the node(s) that are above or below the current node in terms of depth.
+All nodes except the root node have at least one node (the root).
+}
+}
+\examples{
+
+### get the previous/next node ---------------------------
+
+src <- "
+print('hi there')
+a <- 1
+fn <- function(x) {
+  x + 1
+}
+"
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(pattern = "a <- $A") |>
+  node_prev() |>
+  node_text()
+
+root |>
+  node_find(pattern = "a <- $A") |>
+  node_next() |>
+  node_text()
+
+# there are nodes inside the function, but there are no more nodes on the
+# same level as "fn"
+root |>
+  node_find(pattern = "a <- $A") |>
+  node_next_all() |>
+  node_text_all()
+
+
+### get the parent/child node ---------------------------
+
+src <- "
+print('hi there')
+a <- 1
+fn <- function(x) {
+  x + 1
+}
+"
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(pattern = "$VAR + 1") |>
+  node_parent() |>
+  node_text()
+
+root |>
+  node_find(pattern = "$VAR + 1") |>
+  node_ancestors() |>
+  node_text_all()
+
+root |>
+  node_find(pattern = "$VAR + 1") |>
+  node_child(0) |>
+  node_text()
+
+root |>
+  node_find(pattern = "$VAR + 1") |>
+  node_children() |>
+  node_text_all()
 }
