@@ -6,7 +6,6 @@
 # This file was created with the following call:
 #   .Call("wrap__make_astgrepr_wrappers", use_symbols = TRUE, package_name = "astgrepr")
 
-#' @docType package
 #' @usage NULL
 #' @useDynLib astgrepr, .registration = TRUE
 NULL

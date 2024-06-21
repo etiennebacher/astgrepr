@@ -2,11 +2,9 @@ use extendr_api::prelude::*;
 pub mod node;
 mod range;
 pub mod ser;
-use node::SgNode;
-// use range::{Pos, Range};
-use ast_grep_core::language::TSLanguage;
 use ast_grep_core::{AstGrep, Language, NodeMatch, StrDoc};
 use ast_grep_language::SupportLang;
+use node::SgNode;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Offset {
