@@ -167,9 +167,45 @@ node_text_all <- function(x) {
 #' node_text(some_node)
 #'
 #' node_matches(some_node, kind = "function_declaration")
-node_matches <- function(x, ...) {
-  matcher <- build_matcher_from_dots(...)
-  x$matches(matcher)
+node_matches <- function(
+    x,
+    pattern = NULL,
+    kind = NULL,
+    regex = NULL,
+    inside = NULL,
+    has = NULL,
+    precedes = NULL,
+    follows = NULL,
+    all = NULL,
+    any = NULL,
+    not = NULL,
+    matches = NULL
+) {
+  # if (!is.null(config)) {
+  #   if (!missing(pattern)) {
+  #     stop("Either provide `pattern` or `config`, not both.")
+  #   }
+  #   config <- yaml::read_yaml("any_duplicated.yml")$rule
+  #   pattern <- NULL
+  # } else {
+  #   pattern <- as.list(pattern)
+  #   names(pattern) <- "pattern"
+  #   config <- NULL
+  # }
+  rule_params <- list(
+    pattern = pattern,
+    kind = kind,
+    regex = regex,
+    inside = inside,
+    has = has,
+    precedes = precedes,
+    follows = follows,
+    all = all,
+    any = any,
+    not = not,
+    matches = matches
+  )
+  x$matches(rule_params)
 }
 
 #' @name node-info

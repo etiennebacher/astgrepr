@@ -9,7 +9,20 @@
 \alias{node_follows}
 \title{Get more precise information on a node}
 \usage{
-node_matches(x, ...)
+node_matches(
+  x,
+  pattern = NULL,
+  kind = NULL,
+  regex = NULL,
+  inside = NULL,
+  has = NULL,
+  precedes = NULL,
+  follows = NULL,
+  all = NULL,
+  any = NULL,
+  not = NULL,
+  matches = NULL
+)
 
 node_inside(x, m)
 
