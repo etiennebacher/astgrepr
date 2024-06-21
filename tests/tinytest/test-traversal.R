@@ -4,7 +4,7 @@ source("helpers.R")
 
 src <- "
 print('hi there')
-a <- 1
+a = 1
 fn <- function(x) {
   x + 1
 }
@@ -16,7 +16,7 @@ root <- src |>
 expect_snapshot_print(
   label = "previous_node",
   root |>
-    node_find(pattern = "a <- $A") |>
+    node_find(pattern = "a = $A") |>
     node_prev() |>
     node_text()
 )
@@ -24,7 +24,7 @@ expect_snapshot_print(
 expect_snapshot_print(
   label = "next_node",
   root |>
-    node_find(pattern = "a <- $A") |>
+    node_find(pattern = "a = $A") |>
     node_next() |>
     node_text()
 )
@@ -32,7 +32,7 @@ expect_snapshot_print(
 expect_snapshot_print(
   label = "next_all_nodes",
   root |>
-    node_find(pattern = "a <- $A") |>
+    node_find(pattern = "a = $A") |>
     node_next_all() |>
     node_text_all()
 )
@@ -76,12 +76,12 @@ expect_snapshot_print(
     node_text()
 )
 
-expect_snapshot_print(
-  label = "child_node_2",
+expect_equal(
   root |>
     node_find(pattern = "$VAR + 1") |>
     node_child(10) |>
-    node_text()
+    node_text(),
+  list()
 )
 
 expect_error(
