@@ -282,7 +282,7 @@ node_follows <- function(x, m) {
 #'
 #' # we capture a single element with "$A" so node_get_match() can be used
 #' root |>
-#'   node_find(pattern = "plot($A)")) |>
+#'   node_find(pattern = "plot($A)") |>
 #'   node_get_match("A")
 #'
 #' # we can specify the variable to extract

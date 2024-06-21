@@ -4,7 +4,7 @@ source("helpers.R")
 
 src <- "
 print('hi there')
-a = 1
+a <- 1
 fn <- function(x) {
   x + 1
 }
@@ -14,21 +14,32 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(pattern = "a = $A")
+  node_find(pattern = "a <- $A")
 
 root |>
-  node_find(pattern = "a = $A") |>
+  node_find(pattern = "a <- $A") |>
   node_prev()
 
 root |>
-  node_find(pattern = "a = $A") |>
+  node_find(pattern = "a <- $A") |>
   node_prev() |>
   node_text()
+
+diffobj::diffPrint(
+  root |>
+    node_find(pattern = "a <- $A") |>
+    node_prev() |>
+    node_text(),
+  cat(readLines("/home/etienne/Desktop/Git/packages/astgrepr/tests/tinytest/_tinysnapshot/previous_node.txt")),
+  guides = FALSE
+)
+
+
 
 # expect_snapshot_print(
 #   label = "previous_node",
 #   root |>
-#     node_find(pattern = "a = $A") |>
+#     node_find(pattern = "a <- $A") |>
 #     node_prev() |>
 #     node_text()
 # )
@@ -36,7 +47,7 @@ root |>
 # expect_snapshot_print(
 #   label = "next_node",
 #   root |>
-#     node_find(pattern = "a = $A") |>
+#     node_find(pattern = "a <- $A") |>
 #     node_next() |>
 #     node_text()
 # )
@@ -44,7 +55,7 @@ root |>
 # expect_snapshot_print(
 #   label = "next_all_nodes",
 #   root |>
-#     node_find(pattern = "a = $A") |>
+#     node_find(pattern = "a <- $A") |>
 #     node_next_all() |>
 #     node_text_all()
 # )
