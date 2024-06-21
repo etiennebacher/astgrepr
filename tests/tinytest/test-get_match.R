@@ -33,25 +33,24 @@ expect_equal(
   list("100", ",", "mean = 2")
 )
 
-expect_length(
+expect_equal(
   root |>
     node_find(pattern = "rnorm($A, $B)") |>
     node_get_multiple_matches("foo") ,
-  0
+  list()
 )
 
-expect_length(
+expect_equal(
   root |>
     node_find(pattern = "rnorm($$$A)") |>
     node_get_multiple_matches("foo") |>
     node_text_all(),
-  0
+  list()
 )
 
-# TODO: should return an empty list
-expect_length(
+expect_equal(
   root |>
     node_find(pattern = "foobar") |>
     node_text(),
-  0
+  list()
 )

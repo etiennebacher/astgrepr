@@ -243,6 +243,9 @@ node_get_match <- function(x, meta_var) {
 #' @export
 node_get_multiple_matches <- function(x, meta_var) {
   out <- x$get_multiple_matches(meta_var)
+  if (length(out) == 0) {
+    return(list())
+  }
   add_sgnodelist_class(out)
 }
 
