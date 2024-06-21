@@ -81,8 +81,6 @@ pub struct SgRoot {
 #[extendr]
 impl SgRoot {
     fn new(src: &str) -> Self {
-        // let foo = tree_sitter_r::language();
-        // let lang = ast_grep_core::language::TSLanguage::from(foo);
         let position = UnicodePosition::new(src);
         let lang = SupportLang::R;
 
