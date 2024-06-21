@@ -7,7 +7,14 @@
 <!-- badges: end -->
 
 `astgrepr` provides R bindings to the
-[ast-grep](https://ast-grep.github.io/) Rust crate.
+[ast-grep](https://ast-grep.github.io/) Rust crate. `ast-grep` is a tool
+to parse the abstract syntax tree (AST) of some code and to perform
+search and rewrite of code. This is extremely useful to build linters,
+stylers, and perform a lot of code analysis.
+
+Since `astgrepr` can be used as a low-level foundation for other tools
+(such as linters), it doesn’t rely on any R dependencies (but has Rust
+dependencies brought in by `ast-grep`).
 
 ``` r
 
@@ -25,9 +32,7 @@ node <- src |>
 
 # get everything inside rnorm()
 node |> 
-  node_find(list(
-    pattern = "rnorm($$$A)"
-  )) |> 
+  node_find(pattern = "rnorm($$$A)") |> 
   node_get_multiple_matches("A") |> 
   node_text_all()
 #> [[1]]
@@ -44,7 +49,7 @@ node |>
 
 # find occurrences of any(duplicated())
 node |> 
-  node_find_all(list(pattern = "any(duplicated($A))")) |> 
+  node_find_all(pattern = "any(duplicated($A))") |> 
   node_text_all()
 #> [[1]]
 #> [1] "any(duplicated(y))"
