@@ -295,7 +295,20 @@ node_get_root <- function(x) {
 #'
 #' root |>
 #'   node_find_all(pattern = "any(duplicated($A))")
-node_find <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
+node_find <- function(
+    x,
+    pattern = NULL,
+    kind = NULL,
+    regex = NULL,
+    inside = NULL,
+    has = NULL,
+    precedes = NULL,
+    follows = NULL,
+    all = NULL,
+    any = NULL,
+    not = NULL,
+    matches = NULL
+) {
   # if (!is.null(config)) {
   #   if (!missing(pattern)) {
   #     stop("Either provide `pattern` or `config`, not both.")
@@ -326,7 +339,20 @@ node_find <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NUL
 
 #' @name node-find
 #' @export
-node_find_all <- function(x, pattern = NULL, kind = NULL, regex = NULL, inside = NULL, has = NULL, precedes = NULL, follows = NULL, all = NULL, any = NULL, not = NULL, matches = NULL) {
+node_find_all <- function(
+    x,
+    pattern = NULL,
+    kind = NULL,
+    regex = NULL,
+    inside = NULL,
+    has = NULL,
+    precedes = NULL,
+    follows = NULL,
+    all = NULL,
+    any = NULL,
+    not = NULL,
+    matches = NULL
+) {
   # if (!is.null(config)) {
   #   if (!missing(pattern)) {
   #     stop("Either provide `pattern` or `config`, not both.")
