@@ -13,3 +13,21 @@ function.}
 \description{
 Find the kind of a node
 }
+\examples{
+src <- "x <- rnorm(100, mean = 2)
+    any(duplicated(y))
+    x <- z + 1
+    any(duplicated(x))"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(pattern = "any(duplicated($VAR))") |>
+  node_kind()
+
+root |>
+  node_find(pattern = "$X + $VALUE") |>
+  node_kind()
+}

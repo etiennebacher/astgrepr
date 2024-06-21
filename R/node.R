@@ -44,6 +44,9 @@ node_range_all <- function(x) {
 
 #' Get information on nodes
 #'
+#' Get information on whether a node is a leaf (meaning that it doesn't have
+#' any children) and whether it is named.
+#'
 #' @inheritParams node-range
 #'
 #' @export
@@ -54,7 +57,7 @@ node_range_all <- function(x) {
 #' @examples
 #' src <- "x <- rnorm(100, mean = 2)
 #'     any(duplicated(y))
-#'     plot(x)
+#'     x <- z + 1
 #'     any(duplicated(x))"
 #'
 #' root <- src |>
@@ -64,8 +67,12 @@ node_range_all <- function(x) {
 #' node_is_leaf(root)
 #'
 #' root |>
-#'   node_find(pattern = "rnorm($$$A)") |>
+#'   node_find(pattern = "z") |>
 #'   node_is_leaf()
+#'
+#' root |>
+#'   node_find(pattern = "z") |>
+#'   node_is_named()
 node_is_leaf <- function(x) {
   check_is_node(x)
   x$is_leaf()
@@ -90,6 +97,23 @@ node_is_named_leaf <- function(x) {
 #' @inheritParams node-range
 #'
 #' @export
+#' @examples
+#' src <- "x <- rnorm(100, mean = 2)
+#'     any(duplicated(y))
+#'     x <- z + 1
+#'     any(duplicated(x))"
+#'
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(pattern = "any(duplicated($VAR))") |>
+#'   node_kind()
+#'
+#' root |>
+#'   node_find(pattern = "$X + $VALUE") |>
+#'   node_kind()
 node_kind <- function(x) {
   check_is_node(x)
   x$kind()

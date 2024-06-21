@@ -21,12 +21,13 @@ function.}
 A logical value.
 }
 \description{
-Get information on nodes
+Get information on whether a node is a leaf (meaning that it doesn't have
+any children) and whether it is named.
 }
 \examples{
 src <- "x <- rnorm(100, mean = 2)
     any(duplicated(y))
-    plot(x)
+    x <- z + 1
     any(duplicated(x))"
 
 root <- src |>
@@ -36,6 +37,10 @@ root <- src |>
 node_is_leaf(root)
 
 root |>
-  node_find(pattern = "rnorm($$$A)") |>
+  node_find(pattern = "z") |>
   node_is_leaf()
+
+root |>
+  node_find(pattern = "z") |>
+  node_is_named()
 }
