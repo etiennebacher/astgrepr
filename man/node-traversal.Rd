@@ -4,7 +4,6 @@
 \alias{node-traversal}
 \alias{node_parent}
 \alias{node_child}
-\alias{node_field}
 \alias{node_ancestors}
 \alias{node_children}
 \alias{node_next}
@@ -16,8 +15,6 @@
 node_parent(x)
 
 node_child(x, nth)
-
-node_field(x, name)
 
 node_ancestors(x)
 

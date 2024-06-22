@@ -3,7 +3,10 @@
 #' This function takes R code as string and creates the corresponding abstract
 #' syntax tree (AST) from which we can query nodes.
 #'
-#' @param src String. R code to parse.
+#' @param txt A character string of length 1 containing the code to parse.
+#' If provided, `file` must not be provided.
+#' @param file Path to file containing the code to parse. If provided, `txt`
+#' must not be provided.
 #'
 #' @export
 #' @examples

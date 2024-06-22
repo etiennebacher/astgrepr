@@ -169,7 +169,7 @@ node_text_all <- function(x) {
 #' Get more precise information on a node
 #'
 #' @inheritParams node-range
-#' @param m The rule to apply.
+#' @inheritParams node-find
 #'
 #' @export
 #' @name node-info
@@ -344,11 +344,27 @@ node_get_root <- function(x) {
 #' * `node_find()` returns the first node that is found;
 #' * `node_find_all()` returns a list of all nodes found.
 #'
+#' Some arguments (such as `kind`) require some knowledge of the tree-sitter
+#' grammar of R. This grammar can be found here: <https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json>.
+#'
 #' @inheritParams node-range
-#' @param pattern The pattern to search. This must be a list of named elements.
-#' Elements can be:
-#' * `pattern`:
-#' * `kind`:
+#'
+#' @param pattern The pattern to search. This can contain meta-variables to
+#' capture certain elements. Those meta-variables can then be recovered with
+#' [node_get_match()] and [node_get_multiple_matches()]. The meta-variables must
+#' start with `$` and have only uppercase letters, e.g. `$VAR`.
+#'
+#' @param kind The kind of element to search, e.g `"while_statement"`.
+#' @param regex A regular expression to match the node's text. The regex must
+#' match the whole text of the node.
+#' @param inside TODO.
+#' @param has TODO.
+#' @param precedes TODO.
+#' @param follows TODO.
+#' @param all TODO.
+#' @param any TODO.
+#' @param not TODO.
+#' @param matches TODO.
 #'
 #' @name node-find
 #' @export
@@ -372,6 +388,20 @@ node_get_root <- function(x) {
 #'
 #' root |>
 #'   node_find_all(pattern = "any(duplicated($A))")
+#'
+#' # using the 'kind' of the nodes to find elements
+#' src <- "
+#'   a <- 1
+#'   while (TRUE) { print('a') }
+#' "
+#'
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(kind = "while_statement") |>
+#'   node_text()
 node_find <- function(
     x,
     pattern = NULL,
@@ -551,12 +581,6 @@ node_child <- function(x, nth) {
     stop("`nth` must be an integer of length 1.")
   }
   unwrap_list_output(x$child(nth))
-}
-
-#' @name node-traversal
-#' @export
-node_field <- function(x, name) {
-  unwrap_list_output(x$field(name))
 }
 
 #' @name node-traversal

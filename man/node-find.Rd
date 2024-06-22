@@ -40,12 +40,31 @@ node_find_all(
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 
-\item{pattern}{The pattern to search. This must be a list of named elements.
-Elements can be:
-\itemize{
-\item \code{pattern}:
-\item \code{kind}:
-}}
+\item{pattern}{The pattern to search. This can contain meta-variables to
+capture certain elements. Those meta-variables can then be recovered with
+\code{\link[=node_get_match]{node_get_match()}} and \code{\link[=node_get_multiple_matches]{node_get_multiple_matches()}}. The meta-variables must
+start with \code{$} and have only uppercase letters, e.g. \verb{$VAR}.}
+
+\item{kind}{The kind of element to search, e.g \code{"while_statement"}.}
+
+\item{regex}{A regular expression to match the node's text. The regex must
+match the whole text of the node.}
+
+\item{inside}{TODO.}
+
+\item{has}{TODO.}
+
+\item{precedes}{TODO.}
+
+\item{follows}{TODO.}
+
+\item{all}{TODO.}
+
+\item{any}{TODO.}
+
+\item{not}{TODO.}
+
+\item{matches}{TODO.}
 }
 \value{
 \code{node_find()} returns a single \code{SgNode}.
@@ -58,6 +77,9 @@ Those functions find one or several nodes based on some rule:
 \item \code{node_find()} returns the first node that is found;
 \item \code{node_find_all()} returns a list of all nodes found.
 }
+
+Some arguments (such as \code{kind}) require some knowledge of the tree-sitter
+grammar of R. This grammar can be found here: \url{https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json}.
 }
 \examples{
 src <- "x <- rnorm(100, mean = 2)
@@ -74,4 +96,18 @@ root |>
 
 root |>
   node_find_all(pattern = "any(duplicated($A))")
+
+# using the 'kind' of the nodes to find elements
+src <- "
+  a <- 1
+  while (TRUE) { print('a') }
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(kind = "while_statement") |>
+  node_text()
 }

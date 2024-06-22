@@ -7,7 +7,11 @@
 tree_new(txt, file)
 }
 \arguments{
-\item{src}{String. R code to parse.}
+\item{txt}{A character string of length 1 containing the code to parse.
+If provided, \code{file} must not be provided.}
+
+\item{file}{Path to file containing the code to parse. If provided, \code{txt}
+must not be provided.}
 }
 \description{
 This function takes R code as string and creates the corresponding abstract
