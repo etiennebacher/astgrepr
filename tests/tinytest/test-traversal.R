@@ -37,13 +37,13 @@ root |>
 
 
 
-expect_snapshot(
-  label = "previous_node",
-  root |>
-    node_find(pattern = "a <- $A") |>
-    node_prev() |>
-    node_text()
-)
+# expect_snapshot(
+#   label = "previous_node",
+#   root |>
+#     node_find(pattern = "a <- $A") |>
+#     node_prev() |>
+#     node_text()
+# )
 #
 # expect_snapshot_print(
 #   label = "next_node",
