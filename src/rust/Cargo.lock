@@ -79,7 +79,7 @@ dependencies = [
  "tree-sitter-lua",
  "tree-sitter-php",
  "tree-sitter-python",
- "tree-sitter-r 1.0.1 (git+https://github.com/r-lib/tree-sitter-r)",
+ "tree-sitter-r",
  "tree-sitter-ruby",
  "tree-sitter-rust",
  "tree-sitter-scala",
@@ -110,7 +110,7 @@ dependencies = [
  "extendr-api",
  "once_cell",
  "serde",
- "tree-sitter-r 1.0.1 (git+https://github.com/r-lib/tree-sitter-r.git?branch=main)",
+ "tree-sitter-r",
 ]
 
 [[package]]
@@ -850,16 +850,7 @@ dependencies = [
 [[package]]
 name = "tree-sitter-r"
 version = "1.0.1"
-source = "git+https://github.com/r-lib/tree-sitter-r.git?branch=main#1faad45322314f34dce88981e684f8f98d8e93b8"
-dependencies = [
- "cc",
- "tree-sitter",
-]
-
-[[package]]
-name = "tree-sitter-r"
-version = "1.0.1"
-source = "git+https://github.com/r-lib/tree-sitter-r#1faad45322314f34dce88981e684f8f98d8e93b8"
+source = "git+https://github.com/r-lib/tree-sitter-r.git#1faad45322314f34dce88981e684f8f98d8e93b8"
 dependencies = [
  "cc",
  "tree-sitter",
