@@ -6,3 +6,5 @@
 ^docs$
 ^\.github$
 ^src/rust/vendor$
+^pkgdown$
+_pkgdown.yml
