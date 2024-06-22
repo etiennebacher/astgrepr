@@ -5,3 +5,4 @@
 ^LICENSE\.md$
 ^docs$
 ^\.github$
+^src/rust/vendor$
