@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+
 # https://github.com/eitsupi/prqlr/blob/main/configure
 export PATH="$PATH:$HOME/.cargo/bin"
 
