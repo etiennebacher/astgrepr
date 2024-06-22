@@ -311,11 +311,6 @@ node_get_multiple_matches <- function(x, meta_var) {
   add_sgnodelist_class(out)
 }
 
-#' @export
-node_get_transformed <- function(x, meta_var) {
-  x$get_transformed(meta_var)
-}
-
 #' Recover the tree root from a node
 #'
 #' @inheritParams node-range
