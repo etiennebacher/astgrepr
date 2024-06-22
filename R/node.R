@@ -190,7 +190,9 @@ node_text_all <- function(x) {
 #'
 #' node_text(some_node)
 #'
-#' node_matches(some_node, kind = "function_declaration")
+#' some_node |>
+#'   node_get_match("A") |>
+#'   node_matches(kind = "argument")
 node_matches <- function(
     x,
     pattern = NULL,
@@ -314,7 +316,27 @@ node_get_transformed <- function(x, meta_var) {
   x$get_transformed(meta_var)
 }
 
+#' Recover the tree root from a node
+#'
+#' @inheritParams node-range
+#'
 #' @export
+#' @examples
+#' src <- "
+#' print('hi')
+#' fn <- function() {
+#'   print('hello')
+#' }
+#' "
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find("print($A)") |>
+#'   node_get_root() |>
+#'   tree_root() |>
+#'   node_text()
 node_get_root <- function(x) {
   check_is_node(x)
   x$get_root()

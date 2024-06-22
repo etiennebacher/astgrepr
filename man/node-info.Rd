@@ -57,5 +57,7 @@ some_node <- root |>
 
 node_text(some_node)
 
-node_matches(some_node, kind = "function_declaration")
+some_node |>
+  node_get_match("A") |>
+  node_matches(kind = "argument")
 }
