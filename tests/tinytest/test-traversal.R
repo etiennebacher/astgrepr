@@ -1,4 +1,5 @@
 source("helpers.R")
+using("astgrepr")
 
 ### get the previous/next node ---------------------------
 
@@ -25,24 +26,24 @@ root |>
   node_prev() |>
   node_text()
 
-diffobj::diffPrint(
-  root |>
-    node_find(pattern = "a <- $A") |>
-    node_prev() |>
-    node_text(),
-  cat(readLines("/home/etienne/Desktop/Git/packages/astgrepr/tests/tinytest/_tinysnapshot/previous_node.txt")),
-  guides = FALSE
-)
-
-
-
-# expect_snapshot_print(
-#   label = "previous_node",
+# diffobj::diffPrint(
 #   root |>
 #     node_find(pattern = "a <- $A") |>
 #     node_prev() |>
-#     node_text()
+#     node_text(),
+#   cat(readLines("/home/etienne/Desktop/Git/packages/astgrepr/tests/tinytest/_tinysnapshot/previous_node.txt")),
+#   guides = FALSE
 # )
+
+
+
+expect_snapshot(
+  label = "previous_node",
+  root |>
+    node_find(pattern = "a <- $A") |>
+    node_prev() |>
+    node_text()
+)
 #
 # expect_snapshot_print(
 #   label = "next_node",
