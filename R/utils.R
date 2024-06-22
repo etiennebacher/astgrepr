@@ -1,3 +1,9 @@
+check_is_tree <- function(x) {
+  if (!inherits(x, "SgRoot")) {
+    stop("`x` must be an object of class 'SgRoot'.")
+  }
+}
+
 check_is_node <- function(x) {
   if (!inherits(x, "SgNode")) {
     stop("`x` must be an object of class 'SgNode'.")

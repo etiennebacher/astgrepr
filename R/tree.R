@@ -17,6 +17,9 @@ tree_new <- function(txt, file) {
   if ((missing(txt) && missing(file)) || (!missing(txt) && !missing(file))) {
     stop("Must pass either `txt` or `file`.")
   }
+  if (!missing(txt) && (!all(is.character(txt)) || length(txt) != 1 )) {
+    stop("`txt` must a be a string of length 1.")
+  }
   if (!missing(file)) {
     txt <- paste(readLines(file), collapse = "\n")
   }
@@ -40,5 +43,6 @@ tree_new <- function(txt, file) {
 #' tree <- tree_new(src)
 #' tree_root(tree)
 tree_root <- function(x) {
+  check_is_tree(x)
   x$root()
 }
