@@ -4,6 +4,8 @@
 # astgrepr
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `astgrepr` provides R bindings to the
@@ -15,6 +17,8 @@ stylers, and perform a lot of code analysis.
 Since `astgrepr` can be used as a low-level foundation for other tools
 (such as linters), it doesn’t rely on any R dependencies (but has Rust
 dependencies brought in by `ast-grep`).
+
+## Demo
 
 ``` r
 
@@ -57,3 +61,18 @@ node |>
 #> [[2]]
 #> [1] "any(duplicated(x))"
 ```
+
+## Related tools
+
+There is some recent work linking `tree-sitter` and R. Those are not
+competing with `astgrepr` but are rather a complement to it:
+
+- [`r-lib/tree-sitter-r`](https://github.com/r-lib/tree-sitter-r):
+  provide the R grammer to be used with tools built on `tree-sitter`.
+  `astgrepr` relies on this grammar under the hood.
+- [`DavisVaughan/r-tree-sitter`](https://github.com/DavisVaughan/r-tree-sitter):
+  a companion of `r-lib/tree-sitter-r`. This gives a way to get the
+  tree-sitter representation of some code directly in R. This is useful
+  to learn how tree-sitter represents the R grammar, which is required
+  if you want advanced use of `astgrepr`. However, it doesn’t provide a
+  way to easily select specific nodes (e.g. based on patterns).
