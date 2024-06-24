@@ -29,8 +29,8 @@ checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
 
 [[package]]
 name = "ast-grep-config"
-version = "0.23.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=bb28e9b879c2509e4bcd494ce3db33c98df33260#bb28e9b879c2509e4bcd494ce3db33c98df33260"
+version = "0.24.0"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
 dependencies = [
  "anyhow",
  "ast-grep-core",
@@ -45,8 +45,8 @@ dependencies = [
 
 [[package]]
 name = "ast-grep-core"
-version = "0.23.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=bb28e9b879c2509e4bcd494ce3db33c98df33260#bb28e9b879c2509e4bcd494ce3db33c98df33260"
+version = "0.24.0"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
 dependencies = [
  "bit-set",
  "regex",
@@ -56,8 +56,8 @@ dependencies = [
 
 [[package]]
 name = "ast-grep-language"
-version = "0.23.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=bb28e9b879c2509e4bcd494ce3db33c98df33260#bb28e9b879c2509e4bcd494ce3db33c98df33260"
+version = "0.24.0"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
 dependencies = [
  "ast-grep-core",
  "ignore",
@@ -79,7 +79,7 @@ dependencies = [
  "tree-sitter-lua",
  "tree-sitter-php",
  "tree-sitter-python",
- "tree-sitter-r",
+ "tree-sitter-r 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "tree-sitter-ruby",
  "tree-sitter-rust",
  "tree-sitter-scala",
@@ -98,7 +98,7 @@ dependencies = [
  "extendr-api",
  "once_cell",
  "serde",
- "tree-sitter-r",
+ "tree-sitter-r 1.0.1 (git+https://github.com/r-lib/tree-sitter-r.git)",
 ]
 
 [[package]]
@@ -830,6 +830,16 @@ name = "tree-sitter-python"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4066c6cf678f962f8c2c4561f205945c84834cce73d981e71392624fdc390a9"
+dependencies = [
+ "cc",
+ "tree-sitter",
+]
+
+[[package]]
+name = "tree-sitter-r"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a53feaab89b6ffe66af9a533ed7728e0141ddad99dcb025fadfedd7bb55a9e43"
 dependencies = [
  "cc",
  "tree-sitter",
