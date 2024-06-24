@@ -24,6 +24,16 @@ fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
     }
 }
 
+#[derive(Clone, PartialEq, Eq, Hash)]
+pub struct Edit {
+    /// The start position of the edit in character
+    pub start_pos: usize,
+    /// The end position of the edit in character
+    pub end_pos: usize,
+    /// The text to be inserted
+    pub inserted_text: String,
+}
+
 #[extendr]
 pub struct SgNode {
     pub inner: NodeMatch<'static, StrDoc<SupportLang>>,
@@ -286,6 +296,71 @@ impl SgNode {
     //     let matcher = config.get_matcher(env).context("cannot get matcher")?;
     //     Ok(matcher)
     // }
+
+    /*---------- Edit  ----------*/
+    fn replace(&self, text: &str) -> List {
+        let byte_range = self.inner.range();
+        let root = &self.root;
+        let start_pos = root.position.byte_to_char(byte_range.start);
+        let end_pos = root.position.byte_to_char(byte_range.end);
+        let edit = Edit {
+            start_pos,
+            end_pos,
+            inserted_text: text.to_string(),
+        };
+        list!(edit.start_pos, edit.end_pos, edit.inserted_text)
+    }
+
+    fn commit_edits(&self, edits: List) -> String {
+        let mut edits2 = edits
+            .into_iter()
+            .map(|xi| Edit::from(xi.1.as_list().unwrap()))
+            .collect::<Vec<Edit>>();
+        edits2.sort_by_key(|edit| edit.start_pos);
+        let mut new_content = String::new();
+        let old_content = self.text();
+        let root = &self.root;
+        let conv = &root.position;
+        let converted: Vec<_> = edits2
+            .into_iter()
+            .map(|mut e| {
+                e.start_pos = conv.char_to_byte(e.start_pos);
+                e.end_pos = conv.char_to_byte(e.end_pos);
+                e
+            })
+            .collect();
+        let offset = self.inner.range().start;
+        let mut start = 0;
+        for diff in converted {
+            let pos = diff.start_pos - offset;
+            // skip overlapping edits
+            if start > pos {
+                continue;
+            }
+            new_content.push_str(&old_content[start..pos]);
+            new_content.push_str(&diff.inserted_text);
+            start = diff.end_pos - offset;
+        }
+        // add trailing statements
+        new_content.push_str(&old_content[start..]);
+        new_content
+    }
+}
+
+impl From<List> for Edit {
+    fn from(input: List) -> Edit {
+        let input = input.into_hashmap();
+        Edit {
+            start_pos: input.get(&"start_pos").unwrap().as_integer().unwrap() as usize,
+            end_pos: input.get(&"end_pos").unwrap().as_integer().unwrap() as usize,
+            inserted_text: input
+                .get(&"inserted_text")
+                .unwrap()
+                .as_str()
+                .unwrap()
+                .to_string(),
+        }
+    }
 }
 
 // fn config_from_dict(dict: Option<&str>) -> Result<SerializableRuleCore> {

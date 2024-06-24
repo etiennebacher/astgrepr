@@ -626,3 +626,29 @@ node_prev_all <- function(x) {
   check_is_node(x)
   x$prev_all()
 }
+
+#' Change the code in the tree
+#'
+#' `node_replace()` stores the replacement for a particular node, it doesn't
+#' change the actual code. `node_commit_edits()` takes a list of replacements
+#' (the output of `node_replace()`) and applies them one by one to the tree,
+#' returning the modified code.
+#'
+#' @inheritParams node-range
+#' @param new_text The replacement for a node. One can use meta-variables used
+#' in the previous step as a replacement.
+#' @param edits A list of replacements (the output of `node_replace()`).
+#'
+#' @name node-fix
+#' @export
+node_replace <- function(x, new_text) {
+  check_is_node(x)
+  x$replace(new_text)
+}
+
+#' @name node-fix
+#' @export
+node_commit_edits <- function(x, edits) {
+  check_is_node(x)
+  x$replace(edits)
+}

@@ -78,6 +78,10 @@ SgNode$prev <- function() .Call(wrap__SgNode__prev, self)
 
 SgNode$prev_all <- function() .Call(wrap__SgNode__prev_all, self)
 
+SgNode$replace <- function(text) .Call(wrap__SgNode__replace, self, text)
+
+SgNode$commit_edits <- function(edits) .Call(wrap__SgNode__commit_edits, self, edits)
+
 #' @export
 `$.SgNode` <- function (self, name) { func <- SgNode[[name]]; environment(func) <- environment(); func }
 
