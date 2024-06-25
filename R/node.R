@@ -656,7 +656,7 @@ node_prev_all <- function(x) {
 #'   tree_new() |>
 #'   tree_root()
 #'
-# one replacement ------------------------------------------
+#' # one replacement ------------------------------------------
 #'
 #' node_to_fix <- root |>
 #'   node_find(pattern = "any(duplicated($A))")
@@ -672,7 +672,6 @@ node_prev_all <- function(x) {
 #'
 #' node_commit_edits(root, fix) |>
 #'   cat()
-#'
 #'
 #' # several replacements ------------------------------------------
 #'

@@ -41,6 +41,7 @@ root <- src |>
   tree_new() |>
   tree_root()
 
+# one replacement ------------------------------------------
 
 node_to_fix <- root |>
   node_find(pattern = "any(duplicated($A))")
@@ -56,7 +57,6 @@ fix <- node_to_fix |>
 
 node_commit_edits(root, fix) |>
   cat()
-
 
 # several replacements ------------------------------------------
 
