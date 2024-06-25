@@ -3,10 +3,13 @@
 \name{node-fix}
 \alias{node-fix}
 \alias{node_replace}
+\alias{node_replace_all}
 \alias{node_commit_edits}
 \title{Change the code in the tree}
 \usage{
 node_replace(x, new_text)
+
+node_replace_all(x, new_text)
 
 node_commit_edits(x, edits)
 }
@@ -14,16 +17,19 @@ node_commit_edits(x, edits)
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 
-\item{new_text}{The replacement for a node. One can use meta-variables used
-in the previous step as a replacement.}
+\item{new_text}{The replacement for a node.}
 
-\item{edits}{A list of replacements (the output of \code{node_replace()}).}
+\item{edits}{A list of replacements (the output of \code{node_replace()} or
+\code{node_replace_all()}).}
 }
 \description{
 \code{node_replace()} stores the replacement for a particular node, it doesn't
-change the actual code. \code{node_commit_edits()} takes a list of replacements
-(the output of \code{node_replace()}) and applies them one by one to the tree,
-returning the modified code.
+change the actual code. \code{node_replace_all()} does the same but for several
+nodes (e.g. the output of \code{node_find_all()}).
+
+\code{node_commit_edits()} takes a list of replacements (the output of
+\code{node_replace()} or \code{node_replace_all()}) and applies them one by one to the
+input node, returning the modified code.
 }
 \examples{
 src <- "x <- rnorm(100, mean = 2)
@@ -35,14 +41,37 @@ root <- src |>
   tree_new() |>
   tree_root()
 
+
 node_to_fix <- root |>
   node_find(pattern = "any(duplicated($A))")
 
-node_commit_edits(
-  node_to_fix,
-  node_to_fix |>
-    node_replace(
-      paste0("anyDuplicated(", node_text(node_get_match(node_to_fix, "A")), ") > 0")
+fix <- node_to_fix |>
+  node_replace(
+    paste0(
+      "anyDuplicated(",
+      node_text(node_get_match(node_to_fix, "A")),
+      ") > 0"
     )
-)
+  )
+
+node_commit_edits(root, fix) |>
+  cat()
+
+
+# several replacements ------------------------------------------
+
+nodes_to_fix <- root |>
+  node_find_all(pattern = "any(duplicated($A))")
+
+fixes <- nodes_to_fix |>
+  node_replace_all(
+    paste0(
+      "anyDuplicated(",
+      node_text(node_get_match(node_to_fix, "A")),
+      ") > 0"
+    )
+  )
+
+node_commit_edits(root, fixes) |>
+  cat()
 }

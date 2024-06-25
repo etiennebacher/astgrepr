@@ -629,15 +629,19 @@ node_prev_all <- function(x) {
 
 #' Change the code in the tree
 #'
+#' @description
 #' `node_replace()` stores the replacement for a particular node, it doesn't
-#' change the actual code. `node_commit_edits()` takes a list of replacements
-#' (the output of `node_replace()`) and applies them one by one to the tree,
-#' returning the modified code.
+#' change the actual code. `node_replace_all()` does the same but for several
+#' nodes (e.g. the output of `node_find_all()`).
+#'
+#' `node_commit_edits()` takes a list of replacements (the output of
+#' `node_replace()` or `node_replace_all()`) and applies them one by one to the
+#' input node, returning the modified code.
 #'
 #' @inheritParams node-range
-#' @param new_text The replacement for a node. One can use meta-variables used
-#' in the previous step as a replacement.
-#' @param edits A list of replacements (the output of `node_replace()`).
+#' @param new_text The replacement for a node.
+#' @param edits A list of replacements (the output of `node_replace()` or
+#' `node_replace_all()`).
 #'
 #' @name node-fix
 #' @export
@@ -652,16 +656,40 @@ node_prev_all <- function(x) {
 #'   tree_new() |>
 #'   tree_root()
 #'
+# one replacement ------------------------------------------
+#'
 #' node_to_fix <- root |>
 #'   node_find(pattern = "any(duplicated($A))")
 #'
-#' node_commit_edits(
-#'   node_to_fix,
-#'   node_to_fix |>
-#'     node_replace(
-#'       paste0("anyDuplicated(", node_text(node_get_match(node_to_fix, "A")), ") > 0")
+#' fix <- node_to_fix |>
+#'   node_replace(
+#'     paste0(
+#'       "anyDuplicated(",
+#'       node_text(node_get_match(node_to_fix, "A")),
+#'       ") > 0"
 #'     )
-#' )
+#'   )
+#'
+#' node_commit_edits(root, fix) |>
+#'   cat()
+#'
+#'
+#' # several replacements ------------------------------------------
+#'
+#' nodes_to_fix <- root |>
+#'   node_find_all(pattern = "any(duplicated($A))")
+#'
+#' fixes <- nodes_to_fix |>
+#'   node_replace_all(
+#'     paste0(
+#'       "anyDuplicated(",
+#'       node_text(node_get_match(node_to_fix, "A")),
+#'       ") > 0"
+#'     )
+#'   )
+#'
+#' node_commit_edits(root, fixes) |>
+#'   cat()
 node_replace <- function(x, new_text) {
   check_is_node(x)
   x$replace(new_text)
@@ -669,7 +697,20 @@ node_replace <- function(x, new_text) {
 
 #' @name node-fix
 #' @export
+node_replace_all <- function(x, new_text) {
+  check_all_nodes(x)
+  lapply(x, function(y) y$replace(new_text))
+}
+
+#' @name node-fix
+#' @export
 node_commit_edits <- function(x, edits) {
   check_is_node(x)
-  x$commit_edits(list(edits))
+  if (!is.list(edits)) {
+    stop("`edits` must be a list.")
+  }
+  if (length(edits[[1]]) == 1) {
+    edits <- list(edits)
+  }
+  x$commit_edits(edits)
 }

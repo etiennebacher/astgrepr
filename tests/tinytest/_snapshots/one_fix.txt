@@ -1,0 +1,4 @@
+x <- rnorm(100, mean = 2)
+anyDuplicated(y) > 0
+plot(mtcars)
+any(duplicated(x))

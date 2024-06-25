@@ -24,6 +24,7 @@ reference:
     contents:
       - node_kind
       - node-find
+      - node-fix
       - node-get-match
       - node-info
       - node-is
