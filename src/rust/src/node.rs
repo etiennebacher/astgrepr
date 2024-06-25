@@ -24,7 +24,7 @@ fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Edit {
     /// The start position of the edit in character
     pub start_pos: usize,
@@ -313,10 +313,12 @@ impl SgNode {
 
     fn commit_edits(&self, edits: List) -> String {
         let mut edits2 = edits
+            .values()
             .into_iter()
-            .map(|xi| Edit::from(xi.1.as_list().unwrap()))
+            .map(|xi| Edit::from(xi.as_list().unwrap()))
             .collect::<Vec<Edit>>();
         edits2.sort_by_key(|edit| edit.start_pos);
+
         let mut new_content = String::new();
         let old_content = self.text();
         let root = &self.root;
@@ -329,6 +331,7 @@ impl SgNode {
                 e
             })
             .collect();
+
         let offset = self.inner.range().start;
         let mut start = 0;
         for diff in converted {
@@ -349,16 +352,10 @@ impl SgNode {
 
 impl From<List> for Edit {
     fn from(input: List) -> Edit {
-        let input = input.into_hashmap();
         Edit {
-            start_pos: input.get(&"start_pos").unwrap().as_integer().unwrap() as usize,
-            end_pos: input.get(&"end_pos").unwrap().as_integer().unwrap() as usize,
-            inserted_text: input
-                .get(&"inserted_text")
-                .unwrap()
-                .as_str()
-                .unwrap()
-                .to_string(),
+            start_pos: input.elt(0).unwrap().as_real().unwrap() as usize,
+            end_pos: input.elt(1).unwrap().as_real().unwrap() as usize,
+            inserted_text: input.elt(2).unwrap().as_str().unwrap().to_string(),
         }
     }
 }

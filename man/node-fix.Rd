@@ -25,3 +25,24 @@ change the actual code. \code{node_commit_edits()} takes a list of replacements
 (the output of \code{node_replace()}) and applies them one by one to the tree,
 returning the modified code.
 }
+\examples{
+src <- "x <- rnorm(100, mean = 2)
+any(duplicated(y))
+plot(mtcars)
+any(duplicated(x))"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+node_to_fix <- root |>
+  node_find(pattern = "any(duplicated($A))")
+
+node_commit_edits(
+  node_to_fix,
+  node_to_fix |>
+    node_replace(
+      paste0("anyDuplicated(", node_text(node_get_match(node_to_fix, "A")), ") > 0")
+    )
+)
+}

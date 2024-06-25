@@ -641,6 +641,27 @@ node_prev_all <- function(x) {
 #'
 #' @name node-fix
 #' @export
+#'
+#' @examples
+#' src <- "x <- rnorm(100, mean = 2)
+#' any(duplicated(y))
+#' plot(mtcars)
+#' any(duplicated(x))"
+#'
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' node_to_fix <- root |>
+#'   node_find(pattern = "any(duplicated($A))")
+#'
+#' node_commit_edits(
+#'   node_to_fix,
+#'   node_to_fix |>
+#'     node_replace(
+#'       paste0("anyDuplicated(", node_text(node_get_match(node_to_fix, "A")), ") > 0")
+#'     )
+#' )
 node_replace <- function(x, new_text) {
   check_is_node(x)
   x$replace(new_text)
@@ -650,5 +671,5 @@ node_replace <- function(x, new_text) {
 #' @export
 node_commit_edits <- function(x, edits) {
   check_is_node(x)
-  x$replace(edits)
+  x$commit_edits(list(edits))
 }
