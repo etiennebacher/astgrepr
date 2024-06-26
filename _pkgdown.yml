@@ -20,11 +20,10 @@ reference:
       - tree_new
       - tree_root
 
-  - title: Navigate and manipulate the AST
+  - title: Navigate the AST
     contents:
       - node_kind
       - node-find
-      - node-fix
       - node_get_root
       - node-get-match
       - node-info
@@ -32,3 +31,7 @@ reference:
       - node-range
       - node-text
       - node-traversal
+
+  - title: Modify the AST
+    contents:
+      - node-fix
