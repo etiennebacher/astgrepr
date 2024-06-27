@@ -1,0 +1,2 @@
+<ast-grep rule>
+pattern: print($A)

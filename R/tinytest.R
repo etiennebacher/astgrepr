@@ -17,8 +17,11 @@ test_this_file <- function() {
 #' @keywords internal
 expect_snapshot <- function(label, current) {
   snapshot_file <- file.path("_snapshots", paste0(label, ".txt"))
-  current2 <- paste(current, collapse = "\n")
-  # if (label == "next_all_nodes") browser()
+  if (is.list(current)) {
+    current2 <- paste(capture.output(print(current)), collapse = "\n")
+  } else {
+    current2 <- paste(current, collapse = "\n")
+  }
   if (!dir.exists(dirname(snapshot_file))) {
     dir.create(dirname(snapshot_file), showWarnings = FALSE, recursive = TRUE)
   }

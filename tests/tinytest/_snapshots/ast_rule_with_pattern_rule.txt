@@ -1,0 +1,5 @@
+<ast-grep rule>
+pattern:
+  selector: field_definition
+  context: class A { $FIELD = $INIT }
+  strictness: smart

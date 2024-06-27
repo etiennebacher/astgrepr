@@ -11,8 +11,21 @@ print.SgNodeList <- function(x, ...) {
 
 #' @export
 print.astgrep_rule <- function(x, ...) {
+  non_null <- rrapply::rrapply(x, condition = Negate(is.null), how = "prune")
   cat("<ast-grep rule>\n")
-  for (i in seq_along(x)) {
-    cat(paste0("  ", names(x)[i], ": ", x[i], "\n"))
-  }
+  cat(yaml::as.yaml(non_null))
+}
+
+#' @export
+print.astgrep_relational_rule <- function(x, ...) {
+  non_null <- rrapply::rrapply(x, condition = Negate(is.null), how = "prune")
+  cat("<ast-grep relational rule>\n")
+  cat(yaml::as.yaml(non_null))
+}
+
+#' @export
+print.astgrep_pattern_rule <- function(x, ...) {
+  non_null <- rrapply::rrapply(x, condition = Negate(is.null), how = "prune")
+  cat("<ast-grep pattern rule>\n")
+  cat(yaml::as.yaml(non_null))
 }

@@ -1,0 +1,5 @@
+<ast-grep rule>
+pattern: any(duplicated($VAR))
+inside:
+  stopBy: neighbor
+  field: if_statement

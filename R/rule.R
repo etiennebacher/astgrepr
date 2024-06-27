@@ -138,6 +138,8 @@ relational_rule <- function(stopBy = "neighbor", field = NULL, regex = NULL) {
 }
 
 
+# assertion functions -----------------------------------------------------
+
 check_all_null <- function(pattern, kind, regex, inside, has, precedes, follows, all, any, not, matches) {
   my_args <- list(pattern, kind, regex, inside, has, precedes, follows, all, any, not, matches)
   n_non_nulls <- sum(vapply(my_args, function(x) !is.null(x), FUN.VALUE = logical(1L)))
@@ -147,7 +149,7 @@ check_all_null <- function(pattern, kind, regex, inside, has, precedes, follows,
 }
 
 check_string_or_pattern_rule <- function(x) {
-  checkmate::check_string(x, null.ok = TRUE) || inherits(x, "astgrep_pattern_rule")
+  inherits(x, "astgrep_pattern_rule") || checkmate::check_string(x, null.ok = TRUE)
 }
 assert_string_or_pattern_rule <- checkmate::makeAssertionFunction(check_string_or_pattern_rule)
 
