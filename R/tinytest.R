@@ -13,22 +13,21 @@ test_this_file <- function() {
 
 #' @export
 expect_snapshot <- function(label, current) {
-  snapshot_fn <- file.path("_snapshots", paste0(label, ".txt"))
-  cal <- sys.call(sys.parent(5))
-  if (!dir.exists(dirname(snapshot_fn))) {
-    dir.create(dirname(snapshot_fn), showWarnings = FALSE, recursive = TRUE)
-    info <- paste("Creating snapshot:", snapshot_fn)
-    return(tinytest::tinytest(FALSE, call = cal, info = info))
+  snapshot_file <- file.path("_snapshots", paste0(label, ".txt"))
+  current2 <- paste(current, collapse = "\n")
+  # if (label == "next_all_nodes") browser()
+  if (!dir.exists(dirname(snapshot_file))) {
+    dir.create(dirname(snapshot_file), showWarnings = FALSE, recursive = TRUE)
   }
-  if (!file.exists(snapshot_fn)) {
-    cat(current, file = snapshot_fn)
-    return(tinytest::tinytest(FALSE, call = cal, info = if (exists(info)) info))
+  if (!file.exists(snapshot_file)) {
+    cat(current2, file = snapshot_file, sep = "\n")
+    message("Creating file", snapshot_file)
+    return(invisible())
   }
-  target <- readLines(snapshot_fn, warn = FALSE)
-  current <- strsplit(current, "\\n")[[1]]
+  target <- paste(readLines(snapshot_file, warn = FALSE), collapse = "\n")
   tinytest::tinytest(
-    result = identical(current, target),
+    result = identical(current2, target),
     call = sys.call(sys.parent(1)),
-    diff = paste0("Check content of ", snapshot_fn)
+    diff = paste0("Check content of ", snapshot_file)
   )
 }

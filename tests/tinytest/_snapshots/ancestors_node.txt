@@ -1,0 +1,15 @@
+{
+  x + 1
+}
+function(x) {
+  x + 1
+}
+fn <- function(x) {
+  x + 1
+}
+print('hi there')
+a <- 1
+fn <- function(x) {
+  x + 1
+}
+
