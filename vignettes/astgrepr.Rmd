@@ -1,0 +1,38 @@
+---
+title: "Getting started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(astgrepr)
+```
+
+The original [`ast-grep`](https://ast-grep.github.io/guide/pattern-syntax.html) library has a great documentation where you can learn more about pattern syntax and writing advanced rules. This vignette will focus mostly on the design implementation in R so that you understand how the package can be used.
+
+Functions in `astgrepr` can be classed in two categories: those that should be applied on a single node, and those that should be applied on multiple nodes. But before jumping to this distinction, let's create a simple code example and generate a tree, which is essential in order to use `astgrepr` functionalities:
+
+```{r}
+src <- "x <- rnorm(100, mean = 2)
+any(duplicated(y))
+plot(x)
+any(duplicated(x))"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+```
+
+## Single-node functions
+
+## Multi-node functions
