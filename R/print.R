@@ -12,7 +12,6 @@ print.SgNodeList <- function(x, ...) {
 #' @export
 print.astgrep_rule <- function(x, ...) {
   cat("<ast-grep rule>\n")
-  # browser()
   for (i in seq_along(x)) {
     cat(paste0("  ", names(x)[i], ": ", x[i], "\n"))
   }

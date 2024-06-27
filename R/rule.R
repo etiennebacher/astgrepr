@@ -48,17 +48,17 @@ ast_rule <- function(
   ) {
   check_all_null(pattern, kind, regex, inside, has, precedes, follows, all, any, not, matches)
   assert_string_or_pattern_rule(pattern)
-  assert_string(kind, null.ok = TRUE)
-  assert_string(regex, null.ok = TRUE)
+  checkmate::assert_string(kind, null.ok = TRUE)
+  checkmate::assert_string(regex, null.ok = TRUE)
   assert_relational_rule(inside)
   assert_relational_rule(has)
   assert_relational_rule(precedes)
   assert_relational_rule(follows)
-  check_ast_rule(all)
-  check_ast_rule(any)
-  check_ast_rule(not)
-  assert_string(matches, null.ok = TRUE)
-  assert_string(id, null.ok = TRUE)
+  assert_ast_rule(all)
+  assert_ast_rule(any)
+  assert_ast_rule(not)
+  checkmate::assert_string(matches, null.ok = TRUE)
+  checkmate::assert_string(id, null.ok = TRUE)
 
   out <- list(
     pattern = pattern,
@@ -109,7 +109,7 @@ ast_rule <- function(
 #'
 #' @export
 pattern_rule <- function(selector = NULL, context = NULL, strictness = "smart") {
-  assert_choice(
+  checkmate::assert_choice(
     strictness,
     choices = c("cst", "smart", "ast", "relaxed", "signature"),
     null.ok = TRUE
@@ -127,7 +127,7 @@ pattern_rule <- function(selector = NULL, context = NULL, strictness = "smart") 
 #'
 #' @export
 relational_rule <- function(stopBy = "neighbor", field = NULL, regex = NULL) {
-  assert_choice(
+  checkmate::assert_choice(
     stopBy,
     choices = c("end", "neighbor"),
     null.ok = TRUE
@@ -147,16 +147,16 @@ check_all_null <- function(pattern, kind, regex, inside, has, precedes, follows,
 }
 
 check_string_or_pattern_rule <- function(x) {
-  check_string(x, null.ok = TRUE) || inherits(x, "astgrep_pattern_rule")
+  checkmate::check_string(x, null.ok = TRUE) || inherits(x, "astgrep_pattern_rule")
 }
-assert_string_or_pattern_rule <- makeAssertionFunction(check_string_or_pattern_rule)
+assert_string_or_pattern_rule <- checkmate::makeAssertionFunction(check_string_or_pattern_rule)
 
 check_relational_rule <- function(x) {
   is.null(x) || inherits(x, "astgrep_relational_rule")
 }
-assert_relational_rule <- makeAssertionFunction(check_relational_rule)
+assert_relational_rule <- checkmate::makeAssertionFunction(check_relational_rule)
 
 check_ast_rule <- function(x) {
   is.null(x) || inherits(x, "astgrep_rule")
 }
-assert_ast_rule <- makeAssertionFunction(check_ast_rule)
+assert_ast_rule <- checkmate::makeAssertionFunction(check_ast_rule)

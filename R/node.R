@@ -682,7 +682,7 @@ node_prev_all <- function(x) {
 #'   node_replace_all(
 #'     paste0(
 #'       "anyDuplicated(",
-#'       node_text(node_get_match(node_to_fix, "A")),
+#'       node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
 #'       ") > 0"
 #'     )
 #'   )
@@ -698,7 +698,12 @@ node_replace <- function(x, new_text) {
 #' @export
 node_replace_all <- function(x, new_text) {
   check_all_nodes(x)
-  lapply(x, function(y) y$replace(new_text))
+  if (length(x) > 1 && length(new_text) == 1) {
+    new_text <- rep(new_text, length(x))
+  }
+  lapply(seq_along(x), function(y) {
+    x[[y]]$replace(new_text[y])
+  })
 }
 
 #' @name node-fix
