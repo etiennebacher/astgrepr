@@ -468,7 +468,9 @@ node_find_all <- function(x, ..., files = NULL) {
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
   out <- lapply(out, function(x) {
-    if (length(x) == 0) return(NULL)
+    if (length(x) == 0) {
+      return(NULL)
+    }
     names(x) <- paste0("node_", seq_along(x))
     unlist(x, recursive = FALSE)
   }) |>
@@ -609,7 +611,6 @@ node_ancestors <- function(x) {
   x <- node_to_list(x)
   lapply(x, function(y) y$ancestors()) |>
     add_rulelist_class()
-
 }
 
 #' @name node-traversal
@@ -700,13 +701,12 @@ node_prev_all <- function(x) {
 #'
 #' fixed <- node_commit_edits(root, fix)
 #' cat(fixed[[1]])
-
 # TODO: fix this
 # # several replacements ------------------------------------------
-#
+#' #
 # to_fix <- root |>
 #   node_find_all(ast_rule(pattern = "any(duplicated($A))"))
-#
+#' #
 # fixes <- to_fix |>
 #   node_replace_all(
 #     paste0(
@@ -719,7 +719,7 @@ node_prev_all <- function(x) {
 #       ") > 0"
 #     )
 #   )
-#
+#' #
 # fixed <- node_commit_edits(root, fixes)
 # cat(fixed[[1]])
 node_replace <- function(x, new_text) {

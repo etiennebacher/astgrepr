@@ -7,3 +7,4 @@
 docs
 src/rust/vendor
 src/vendor
+inst/doc
