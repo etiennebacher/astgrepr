@@ -43,7 +43,7 @@ pub struct SgNode {
 
 // it is safe to send tree-sitter Node
 // because it is refcnt and concurrency safe
-// unsafe impl Send for SgNode {}
+unsafe impl Send for SgNode {}
 
 #[extendr]
 impl SgNode {

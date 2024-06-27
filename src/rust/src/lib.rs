@@ -93,8 +93,14 @@ impl SgRoot {
     }
 
     fn root(&self) -> SgNode {
-        let tree = unsafe { &*(&self.inner as *const AstGrep<_>) } as &'static AstGrep<_>;
-        let inner = NodeMatch::from(tree.root());
+        // Clone the inner data to ensure it can outlive this method
+        let tree: Box<AstGrep<_>> = Box::new(self.inner.clone());
+
+        // SAFETY: `Box::leak` makes the data have a `'static` lifetime
+        let static_tree: &'static AstGrep<_> = Box::leak(tree);
+
+        let inner = NodeMatch::from(static_tree.root());
+
         SgNode {
             inner,
             root: self.clone(),
