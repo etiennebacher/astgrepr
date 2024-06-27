@@ -35,3 +35,9 @@ reference:
   - title: Modify the AST
     contents:
       - node-fix
+
+  - title: Building rules
+    contents:
+      - ast_rule
+      - pattern_rule
+      - relational_rule
