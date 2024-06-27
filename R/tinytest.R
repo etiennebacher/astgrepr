@@ -11,7 +11,10 @@ test_this_file <- function() {
   tinytest::run_test_file(file)
 }
 
+#' `tinytest` helper
+#'
 #' @export
+#' @keywords internal
 expect_snapshot <- function(label, current) {
   snapshot_file <- file.path("_snapshots", paste0(label, ".txt"))
   current2 <- paste(current, collapse = "\n")
