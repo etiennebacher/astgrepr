@@ -21,7 +21,11 @@ ast_rule(
 }
 \arguments{
 \item{pattern}{The pattern to look for. This can be a string or an object of
-class \code{"astgrep_pattern_rule"} created by \code{pattern_rule()}.}
+class \code{"astgrep_pattern_rule"} created by \code{pattern_rule()}. This can
+contain meta-variables to capture certain elements. Those meta-variables
+can then be recovered with \code{\link[=node_get_match]{node_get_match()}} and
+\code{\link[=node_get_multiple_matches]{node_get_multiple_matches()}}. The meta-variables must start with \code{$} and
+have only uppercase letters, e.g. \verb{$VAR}.}
 
 \item{kind}{The kind of nodes to look for.}
 
@@ -41,17 +45,17 @@ precede another type of node.}
 \item{follows}{Same input type as \code{inside}, but this looks for node that
 follow another type of node.}
 
-\item{all}{This takes one or a list of rules made with \code{ast_rule()}.
-It only matches nodes that respect all of the rules.}
+\item{all}{This takes one or a list of rules made with \code{ast_rule()}. It only
+matches nodes that respect all of the rules.}
 
-\item{any}{This takes one or a list of rules made with \code{ast_rule()}.
-It matches nodes that respect any of the rules.}
+\item{any}{This takes one or a list of rules made with \code{ast_rule()}. It
+matches nodes that respect any of the rules.}
 
-\item{not}{This takes one or a list of rules made with \code{ast_rule()}.
-It excludes those nodes from the selection.}
+\item{not}{This takes one or a list of rules made with \code{ast_rule()}. It
+excludes those nodes from the selection.}
 
-\item{matches}{This takes the \code{id} of another rule. It is useful to
-reuse rules.}
+\item{matches}{This takes the \code{id} of another rule. It is useful to reuse
+rules.}
 
 \item{id}{The name of this rule. This can be reused in another rule with
 \code{matches}.}
@@ -60,8 +64,8 @@ reuse rules.}
 A list (possibly nested) with the class \code{"astgrep_rule"}.
 }
 \description{
-Rules are the core of \code{astgrepr}. Those are used to search for nodes and
-are used in \verb{node_match*()} and \verb{node_find*()} functions. \code{ast_rule()} is
-a very flexible function that allows one to build simple rules but also much
-more complex and specific ones.
+Rules are the core of \code{astgrepr}. Those are used to search for nodes and are
+used in \verb{node_match*()} and \verb{node_find*()} functions. \code{ast_rule()} is a very
+flexible function that allows one to build simple rules but also much more
+complex and specific ones.
 }

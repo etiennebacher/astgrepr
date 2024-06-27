@@ -85,28 +85,28 @@ impl SgNode {
     }
 
     /*---------- Search Refinement  ----------*/
-    fn matches(&self, rule_params: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+    fn matches(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         self.inner.matches(matcher)
     }
 
-    fn inside(&self, rule_params: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+    fn inside(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         self.inner.inside(matcher)
     }
 
-    fn has(&self, rule_params: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+    fn has(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         self.inner.has(matcher)
     }
 
-    fn precedes(&self, rule_params: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+    fn precedes(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         self.inner.precedes(matcher)
     }
 
-    fn follows(&self, rule_params: List) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+    fn follows(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         self.inner.follows(matcher)
     }
 
@@ -151,9 +151,9 @@ impl SgNode {
         self.root.clone()
     }
 
-    pub fn find(&self, rule_params: List) -> List {
+    pub fn find(&self, rule: &str) -> List {
         // let matcher2 = self.get_matcher(config, rule)?;
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
+        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
         let inner = self.inner.find(matcher);
         if inner.is_some() {
             list!(Self {
@@ -165,13 +165,24 @@ impl SgNode {
         }
     }
 
-    fn find_all(&self, rule_params: List) -> List {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule_params);
-        self.inner
-            .find_all(matcher)
-            .map(|n| Self {
-                inner: n,
-                root: self.root.clone(),
+    fn find_all(&self, rule: Strings) -> List {
+        let list_matchers = rule
+            .iter()
+            .map(|xi| get_matcher_from_rule(*self.inner.lang(), xi))
+            .collect::<Vec<RuleCore<SupportLang>>>();
+
+        list_matchers
+            .iter()
+            .map(|xi| {
+                self.inner
+                    .find_all(xi)
+                    .map(|n| {
+                        list!(Self {
+                            inner: n,
+                            root: self.root.clone(),
+                        })
+                    })
+                    .collect::<List>()
             })
             .collect()
     }
@@ -381,8 +392,8 @@ impl From<List> for Edit {
 //     })
 // }
 
-fn get_matcher_from_rule(lang: SupportLang, rule_params: List) -> RuleCore<SupportLang> {
-    let rule = crate::ser::new_rule(rule_params);
+fn get_matcher_from_rule(lang: SupportLang, rule: &str) -> RuleCore<SupportLang> {
+    let rule = crate::ser::new_rule(rule);
 
     let rule_core = SerializableRuleCore {
         rule,

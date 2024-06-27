@@ -22,12 +22,26 @@
 #' node_range(root)
 #'
 #' root |>
-#'   node_find(pattern = "rnorm($$$A)") |>
+#'   node_find(ast_rule(pattern = "rnorm($$$A)")) |>
 #'   node_range()
+#'
+#' # There is also an "_all" variant when there are several nodes per rule
+#' root |>
+#'   node_find_all(
+#'     ast_rule(pattern = "any(duplicated($A))"),
+#'     ast_rule(pattern = "plot($A)")
+#'   ) |>
+#'   node_range_all()
 node_range <- function(x) {
-  check_is_node(x)
-  out <- x$range()
-  names(out) <- c("start", "end")
+  check_is_rulelist_or_node(x)
+  if (length(x) == 1 && inherits(x, "SgNode")) {
+    x <- list(x)
+  }
+  out <- lapply(x, function(y) {
+    res <- y$range()
+    names(res) <- c("start", "end")
+    res
+  })
   out
 }
 
@@ -35,10 +49,12 @@ node_range <- function(x) {
 #' @export
 node_range_all <- function(x) {
   check_all_nodes(x)
-  lapply(x, function(nodes) {
-    out <- nodes$range()
-    names(out) <- c("start", "end")
-    out
+  lapply(x, function(rule) {
+    lapply(rule, function(node) {
+      out <- node$range()
+      names(out) <- c("start", "end")
+      out
+    })
   })
 }
 
@@ -67,29 +83,39 @@ node_range_all <- function(x) {
 #' node_is_leaf(root)
 #'
 #' root |>
-#'   node_find(pattern = "z") |>
+#'   node_find(ast_rule(pattern = "z")) |>
 #'   node_is_leaf()
 #'
 #' root |>
-#'   node_find(pattern = "z") |>
+#'   node_find(ast_rule(pattern = "z")) |>
 #'   node_is_named()
 node_is_leaf <- function(x) {
-  check_is_node(x)
-  x$is_leaf()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_leaf())
 }
 
 #' @name node-is
 #' @export
 node_is_named <- function(x) {
-  check_is_node(x)
-  x$is_named()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_named())
 }
 
 #' @name node-is
 #' @export
 node_is_named_leaf <- function(x) {
-  check_is_node(x)
-  x$is_named_leaf()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_named_leaf())
+}
+
+node_to_list <- function(x) {
+  if (length(x) == 1 && inherits(x, "SgNode")) {
+    x <- list(x)
+  }
+  x
 }
 
 #' Find the kind of a node
@@ -108,15 +134,16 @@ node_is_named_leaf <- function(x) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(pattern = "any(duplicated($VAR))") |>
+#'   node_find(ast_rule(pattern = "any(duplicated($VAR))")) |>
 #'   node_kind()
 #'
 #' root |>
-#'   node_find(pattern = "$X + $VALUE") |>
+#'   node_find(ast_rule(pattern = "$X + $VALUE")) |>
 #'   node_kind()
 node_kind <- function(x) {
-  check_is_node(x)
-  x$kind()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$kind())
 }
 
 #' Extract the code corresponding to one or several nodes
@@ -145,25 +172,31 @@ node_kind <- function(x) {
 #'
 #' # node_text() must be applied on single nodes
 #' root |>
-#'   node_find(pattern = "plot($A)") |>
+#'   node_find(ast_rule(pattern = "plot($A)")) |>
 #'   node_text()
 #'
 #' # node_find_all() returns a list on nodes on which
 #' # we can use node_text_all()
 #' root |>
-#'   node_find_all(pattern = "any(duplicated($A))") |>
+#'   node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
 #'   node_text_all()
 node_text <- function(x) {
-  if (length(x) == 0) return(list())
-  check_is_node(x)
-  x$text()
+  if (length(x) == 0) NULL
+  check_is_rulelist_or_node(x)
+  lapply(x, function(node) {
+    node$text()
+  })
 }
 
 #' @name node-text
 #' @export
 node_text_all <- function(x) {
   check_all_nodes(x)
-  lapply(x, function(nodes) nodes$text())
+  lapply(x, function(rule) {
+    lapply(rule, function(node) {
+      node$text()
+    })
+  })
 }
 
 #' Get more precise information on a node
@@ -186,52 +219,22 @@ node_text_all <- function(x) {
 #'   tree_root()
 #'
 #' some_node <- root |>
-#'   node_find(pattern = "print($A)")
+#'   node_find(ast_rule(pattern = "print($A)"))
 #'
 #' node_text(some_node)
 #'
 #' some_node |>
 #'   node_get_match("A") |>
-#'   node_matches(kind = "argument")
-node_matches <- function(
-    x,
-    pattern = NULL,
-    kind = NULL,
-    regex = NULL,
-    inside = NULL,
-    has = NULL,
-    precedes = NULL,
-    follows = NULL,
-    all = NULL,
-    any = NULL,
-    not = NULL,
-    matches = NULL
-) {
-  # if (!is.null(config)) {
-  #   if (!missing(pattern)) {
-  #     stop("Either provide `pattern` or `config`, not both.")
-  #   }
-  #   config <- yaml::read_yaml("any_duplicated.yml")$rule
-  #   pattern <- NULL
-  # } else {
-  #   pattern <- as.list(pattern)
-  #   names(pattern) <- "pattern"
-  #   config <- NULL
-  # }
-  rule_params <- list(
-    pattern = pattern,
-    kind = kind,
-    regex = regex,
-    inside = inside,
-    has = has,
-    precedes = precedes,
-    follows = follows,
-    all = all,
-    any = any,
-    not = not,
-    matches = matches
-  )
-  x$matches(rule_params)
+#'   node_matches(ast_rule(kind = "argument"))
+node_matches <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+  browser()
+
+  lapply(rules, function(rule) {
+    x$matches(to_yaml(rule))[[1]]
+  }) |>
+    add_rulelist_class()
 }
 
 #' @name node-info
@@ -263,13 +266,13 @@ node_follows <- function(x, m) {
 #' Those functions extract the content of the meta-variable specified in
 #' [node_find()]:
 #' * `node_get_match()` is used when the meta-variable refers to a single
-#'   pattern, e.g. `"plot($A)`;
+#' pattern, e.g. `"plot($A)`;
 #' * `node_get_multiple_matches()` is used when the meta-variable captures all
-#'   elements in a pattern, e.g. `"plot($$$A)"`.
+#' elements in a pattern, e.g. `"plot($$$A)"`.
 #'
 #' @inheritParams node-range
 #' @param meta_var The name given to one of the meta-variable(s) in
-#' `node_find()`.
+#'   `node_find()`.
 #'
 #' @export
 #' @name node-get-match
@@ -333,43 +336,27 @@ node_get_multiple_matches <- function(x, meta_var) {
 #'   tree_root() |>
 #'   node_text()
 node_get_root <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   x$get_root()
 }
 
 #' Find node(s) matching a pattern
 #'
-#' @description
-#' Those functions find one or several nodes based on some rule:
+#' @description Those functions find one or several nodes based on some rule:
 #' * `node_find()` returns the first node that is found;
 #' * `node_find_all()` returns a list of all nodes found.
 #'
 #' Some arguments (such as `kind`) require some knowledge of the tree-sitter
-#' grammar of R. This grammar can be found here: <https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json>.
+#' grammar of R. This grammar can be found here:
+#' <https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json>.
 #'
 #' @inheritParams node-range
-#'
-#' @param pattern The pattern to search. This can contain meta-variables to
-#' capture certain elements. Those meta-variables can then be recovered with
-#' [node_get_match()] and [node_get_multiple_matches()]. The meta-variables must
-#' start with `$` and have only uppercase letters, e.g. `$VAR`.
-#'
-#' @param kind The kind of element to search, e.g `"while_statement"`.
-#' @param regex A regular expression to match the node's text. The regex must
-#' match the whole text of the node.
-#' @param inside TODO.
-#' @param has TODO.
-#' @param precedes TODO.
-#' @param follows TODO.
-#' @param all TODO.
-#' @param any TODO.
-#' @param not TODO.
-#' @param matches TODO.
-#'
+#' @param ... Any number of rules created with `ast_rule()`.
+#' @param files A vector of filenames containing rules. Those must be `.yaml`
+#' files.
 #' @name node-find
 #' @export
-#' @return
-#' `node_find()` returns a single `SgNode`.
+#' @return `node_find()` returns a single `SgNode`.
 #'
 #' `node_find_all()` returns a list of `SgNode`s.
 #'
@@ -384,10 +371,10 @@ node_get_root <- function(x) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(pattern = "any(duplicated($A))")
+#'   node_find(ast_rule(pattern = "any(duplicated($A))"))
 #'
 #' root |>
-#'   node_find_all(pattern = "any(duplicated($A))")
+#'   node_find_all(ast_rule(pattern = "any(duplicated($A))"))
 #'
 #' # using the 'kind' of the nodes to find elements
 #' src <- "
@@ -400,88 +387,85 @@ node_get_root <- function(x) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(kind = "while_statement") |>
-#'   node_text()
-node_find <- function(
-    x,
-    pattern = NULL,
-    kind = NULL,
-    regex = NULL,
-    inside = NULL,
-    has = NULL,
-    precedes = NULL,
-    follows = NULL,
-    all = NULL,
-    any = NULL,
-    not = NULL,
-    matches = NULL
-) {
-  # if (!is.null(config)) {
-  #   if (!missing(pattern)) {
-  #     stop("Either provide `pattern` or `config`, not both.")
-  #   }
-  #   config <- yaml::read_yaml("any_duplicated.yml")$rule
-  #   pattern <- NULL
-  # } else {
-  #   pattern <- as.list(pattern)
-  #   names(pattern) <- "pattern"
-  #   config <- NULL
-  # }
-  rule_params <- list(
-    pattern = pattern,
-    kind = kind,
-    regex = regex,
-    inside = inside,
-    has = has,
-    precedes = precedes,
-    follows = follows,
-    all = all,
-    any = any,
-    not = not,
-    matches = matches
-  )
-  unwrap_list_output(x$find(rule_params))
+#'   node_find(ast_rule(kind = "while_statement"))
+#'
+#' # one can pass several rules at once
+#' src <- "x <- rnorm(100, mean = 2)
+#'     any(duplicated(y))
+#'     plot(mtcars)
+#'     any(duplicated(x))
+#'     while (TRUE) { print('a') }"
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(
+#'     ast_rule(pattern = "any(duplicated($A))"),
+#'     ast_rule(kind = "while_statement")
+#'   )
+#'
+#' root |>
+#'   node_find_all(
+#'     ast_rule(pattern = "any(duplicated($A))"),
+#'     ast_rule(kind = "while_statement")
+#'   )
+node_find <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
+    id <- rules[[rule_idx]][["id"]]
+    if (is.null(id)) {
+      id <- paste0("rule_", rule_idx)
+    }
+    id
+  })
+  names(rules) <- rules_ids
+
+  lapply(rules, function(rule) {
+    x$find(to_yaml(rule))[[1]]
+  }) |>
+    add_rulelist_class()
 }
 
 #' @name node-find
 #' @export
-node_find_all <- function(
-    x,
-    pattern = NULL,
-    kind = NULL,
-    regex = NULL,
-    inside = NULL,
-    has = NULL,
-    precedes = NULL,
-    follows = NULL,
-    all = NULL,
-    any = NULL,
-    not = NULL,
-    matches = NULL
-) {
-  # if (!is.null(config)) {
-  #   if (!missing(pattern)) {
-  #     stop("Either provide `pattern` or `config`, not both.")
-  #   }
-  #   pattern <- yaml::read_yaml("any_duplicated.yml")$rule
-  # } else {
-  #   pattern <- as.list(pattern)
-  #   names(pattern) <- "pattern"
-  # }
-  rule_params <- list(
-    pattern = pattern,
-    kind = kind,
-    regex = regex,
-    inside = inside,
-    has = has,
-    precedes = precedes,
-    follows = follows,
-    all = all,
-    any = any,
-    not = not,
-    matches = matches
-  )
-  x$find_all(rule_params)
+node_find_all <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
+    id <- rules[[rule_idx]][["id"]]
+    if (is.null(id)) {
+      id <- paste0("rule_", rule_idx)
+    }
+    id
+  })
+
+  out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
+  out <- lapply(out, function(x) {
+    names(x) <- paste0("node_", seq_along(x))
+    unlist(x, recursive = FALSE)
+  }) |>
+    add_sgnodelist_class()
+
+  names(out) <- rules_ids
+  out
+}
+
+
+combine_rules_and_files <- function(rules, files) {
+  if (is.null(files) && length(rules) == 0) {
+    stop("Must be specify either argument `files` or some rules in `...`.")
+  }
+  if (!is.null(files)) {
+    files_char <- lapply(files, function(x) {
+      readLines(x, warn = FALSE)
+    })
+    rules <- append(rules, files_char)
+  }
+  rules
 }
 
 #' Navigate the tree
@@ -570,7 +554,7 @@ node_find_all <- function(
 #'   node_children() |>
 #'   node_text_all()
 node_parent <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   unwrap_list_output(x$parent())
 }
 
@@ -586,7 +570,7 @@ node_child <- function(x, nth) {
 #' @name node-traversal
 #' @export
 node_ancestors <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   out <- x$ancestors()
   add_sgnodelist_class(out)
 }
@@ -594,7 +578,7 @@ node_ancestors <- function(x) {
 #' @name node-traversal
 #' @export
 node_children <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   out <- x$children()
   add_sgnodelist_class(out)
 }
@@ -602,28 +586,28 @@ node_children <- function(x) {
 #' @name node-traversal
 #' @export
 node_next <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   unwrap_list_output(x$next_())
 }
 
 #' @name node-traversal
 #' @export
 node_next_all <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   add_sgnodelist_class(x$next_all())
 }
 
 #' @name node-traversal
 #' @export
 node_prev <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   unwrap_list_output(x$prev())
 }
 
 #' @name node-traversal
 #' @export
 node_prev_all <- function(x) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   x$prev_all()
 }
 
@@ -690,7 +674,7 @@ node_prev_all <- function(x) {
 #' node_commit_edits(root, fixes) |>
 #'   cat()
 node_replace <- function(x, new_text) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   x$replace(new_text)
 }
 
@@ -709,7 +693,7 @@ node_replace_all <- function(x, new_text) {
 #' @name node-fix
 #' @export
 node_commit_edits <- function(x, edits) {
-  check_is_node(x)
+  check_is_rulelist_or_node(x)
   if (!is.list(edits)) {
     stop("`edits` must be a list.")
   }

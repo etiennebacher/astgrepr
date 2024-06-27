@@ -35,32 +35,6 @@ node_follows(x, m)
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
-
-\item{pattern}{The pattern to search. This can contain meta-variables to
-capture certain elements. Those meta-variables can then be recovered with
-\code{\link[=node_get_match]{node_get_match()}} and \code{\link[=node_get_multiple_matches]{node_get_multiple_matches()}}. The meta-variables must
-start with \code{$} and have only uppercase letters, e.g. \verb{$VAR}.}
-
-\item{kind}{The kind of element to search, e.g \code{"while_statement"}.}
-
-\item{regex}{A regular expression to match the node's text. The regex must
-match the whole text of the node.}
-
-\item{inside}{TODO.}
-
-\item{has}{TODO.}
-
-\item{precedes}{TODO.}
-
-\item{follows}{TODO.}
-
-\item{all}{TODO.}
-
-\item{any}{TODO.}
-
-\item{not}{TODO.}
-
-\item{matches}{TODO.}
 }
 \description{
 Get more precise information on a node

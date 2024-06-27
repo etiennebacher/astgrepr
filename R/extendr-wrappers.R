@@ -38,15 +38,15 @@ SgNode$kind <- function() .Call(wrap__SgNode__kind, self)
 
 SgNode$text <- function() .Call(wrap__SgNode__text, self)
 
-SgNode$matches <- function(rule_params) .Call(wrap__SgNode__matches, self, rule_params)
+SgNode$matches <- function(rule) .Call(wrap__SgNode__matches, self, rule)
 
-SgNode$inside <- function(rule_params) .Call(wrap__SgNode__inside, self, rule_params)
+SgNode$inside <- function(rule) .Call(wrap__SgNode__inside, self, rule)
 
-SgNode$has <- function(rule_params) .Call(wrap__SgNode__has, self, rule_params)
+SgNode$has <- function(rule) .Call(wrap__SgNode__has, self, rule)
 
-SgNode$precedes <- function(rule_params) .Call(wrap__SgNode__precedes, self, rule_params)
+SgNode$precedes <- function(rule) .Call(wrap__SgNode__precedes, self, rule)
 
-SgNode$follows <- function(rule_params) .Call(wrap__SgNode__follows, self, rule_params)
+SgNode$follows <- function(rule) .Call(wrap__SgNode__follows, self, rule)
 
 SgNode$get_match <- function(meta_var) .Call(wrap__SgNode__get_match, self, meta_var)
 
@@ -56,9 +56,9 @@ SgNode$get_transformed <- function(meta_var) .Call(wrap__SgNode__get_transformed
 
 SgNode$get_root <- function() .Call(wrap__SgNode__get_root, self)
 
-SgNode$find <- function(rule_params) .Call(wrap__SgNode__find, self, rule_params)
+SgNode$find <- function(rule) .Call(wrap__SgNode__find, self, rule)
 
-SgNode$find_all <- function(rule_params) .Call(wrap__SgNode__find_all, self, rule_params)
+SgNode$find_all <- function(rule) .Call(wrap__SgNode__find_all, self, rule)
 
 SgNode$field <- function(name) .Call(wrap__SgNode__field, self, name)
 

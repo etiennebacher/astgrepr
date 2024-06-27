@@ -6,65 +6,18 @@
 \alias{node_find_all}
 \title{Find node(s) matching a pattern}
 \usage{
-node_find(
-  x,
-  pattern = NULL,
-  kind = NULL,
-  regex = NULL,
-  inside = NULL,
-  has = NULL,
-  precedes = NULL,
-  follows = NULL,
-  all = NULL,
-  any = NULL,
-  not = NULL,
-  matches = NULL
-)
+node_find(x, ..., files = NULL)
 
-node_find_all(
-  x,
-  pattern = NULL,
-  kind = NULL,
-  regex = NULL,
-  inside = NULL,
-  has = NULL,
-  precedes = NULL,
-  follows = NULL,
-  all = NULL,
-  any = NULL,
-  not = NULL,
-  matches = NULL
-)
+node_find_all(x, ..., files = NULL)
 }
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 
-\item{pattern}{The pattern to search. This can contain meta-variables to
-capture certain elements. Those meta-variables can then be recovered with
-\code{\link[=node_get_match]{node_get_match()}} and \code{\link[=node_get_multiple_matches]{node_get_multiple_matches()}}. The meta-variables must
-start with \code{$} and have only uppercase letters, e.g. \verb{$VAR}.}
+\item{...}{Any number of rules created with \code{ast_rule()}.}
 
-\item{kind}{The kind of element to search, e.g \code{"while_statement"}.}
-
-\item{regex}{A regular expression to match the node's text. The regex must
-match the whole text of the node.}
-
-\item{inside}{TODO.}
-
-\item{has}{TODO.}
-
-\item{precedes}{TODO.}
-
-\item{follows}{TODO.}
-
-\item{all}{TODO.}
-
-\item{any}{TODO.}
-
-\item{not}{TODO.}
-
-\item{matches}{TODO.}
+\item{files}{A vector of filenames containing rules. Those must be \code{.yaml}
+files.}
 }
 \value{
 \code{node_find()} returns a single \code{SgNode}.
@@ -79,7 +32,8 @@ Those functions find one or several nodes based on some rule:
 }
 
 Some arguments (such as \code{kind}) require some knowledge of the tree-sitter
-grammar of R. This grammar can be found here: \url{https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json}.
+grammar of R. This grammar can be found here:
+\url{https://github.com/r-lib/tree-sitter-r/blob/main/src/grammar.json}.
 }
 \examples{
 src <- "x <- rnorm(100, mean = 2)

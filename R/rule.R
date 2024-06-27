@@ -1,34 +1,38 @@
 #' Build a rule
 #'
-#' Rules are the core of `astgrepr`. Those are used to search for nodes and
-#' are used in `node_match*()` and `node_find*()` functions. `ast_rule()` is
-#' a very flexible function that allows one to build simple rules but also much
-#' more complex and specific ones.
+#' Rules are the core of `astgrepr`. Those are used to search for nodes and are
+#' used in `node_match*()` and `node_find*()` functions. `ast_rule()` is a very
+#' flexible function that allows one to build simple rules but also much more
+#' complex and specific ones.
 #'
 #' @param pattern The pattern to look for. This can be a string or an object of
-#' class `"astgrep_pattern_rule"` created by `pattern_rule()`.
+#'   class `"astgrep_pattern_rule"` created by `pattern_rule()`. This can
+#'   contain meta-variables to capture certain elements. Those meta-variables
+#'   can then be recovered with [node_get_match()] and
+#'   [node_get_multiple_matches()]. The meta-variables must start with `$` and
+#'   have only uppercase letters, e.g. `$VAR`.
 #' @param kind The kind of nodes to look for.
 #' @param regex A regex used to look for nodes. This must follow the syntax of
-#' the Rust [`regex` crate](https://docs.rs/regex/latest/regex/).
+#'   the Rust [`regex` crate](https://docs.rs/regex/latest/regex/).
 #' @param inside In which node should the node we look for be positioned? This
-#' can be another rule made with `ast_rule()` or an object of class
-#' `"astgrep_relational_rule"` created with `relational_rule()`.
+#'   can be another rule made with `ast_rule()` or an object of class
+#'   `"astgrep_relational_rule"` created with `relational_rule()`.
 #' @param has Same input type as `inside`, but this looks for nodes that contain
-#' another type of node.
+#'   another type of node.
 #' @param precedes Same input type as `inside`, but this looks for nodes that
-#' precede another type of node.
+#'   precede another type of node.
 #' @param follows Same input type as `inside`, but this looks for node that
-#' follow another type of node.
-#' @param all This takes one or a list of rules made with `ast_rule()`.
-#' It only matches nodes that respect all of the rules.
-#' @param any This takes one or a list of rules made with `ast_rule()`.
-#' It matches nodes that respect any of the rules.
-#' @param not This takes one or a list of rules made with `ast_rule()`.
-#' It excludes those nodes from the selection.
-#' @param matches This takes the `id` of another rule. It is useful to
-#' reuse rules.
+#'   follow another type of node.
+#' @param all This takes one or a list of rules made with `ast_rule()`. It only
+#'   matches nodes that respect all of the rules.
+#' @param any This takes one or a list of rules made with `ast_rule()`. It
+#'   matches nodes that respect any of the rules.
+#' @param not This takes one or a list of rules made with `ast_rule()`. It
+#'   excludes those nodes from the selection.
+#' @param matches This takes the `id` of another rule. It is useful to reuse
+#'   rules.
 #' @param id The name of this rule. This can be reused in another rule with
-#' `matches`.
+#'   `matches`.
 #'
 #' @return A list (possibly nested) with the class `"astgrep_rule"`.
 #' @export
@@ -71,7 +75,8 @@ ast_rule <- function(
     all = all,
     any = any,
     not = not,
-    matches = matches
+    matches = matches,
+    id = id
   )
 
   class(out) <- c("astgrep_rule", class(out))
