@@ -9,20 +9,7 @@
 \alias{node_follows}
 \title{Get more precise information on a node}
 \usage{
-node_matches(
-  x,
-  pattern = NULL,
-  kind = NULL,
-  regex = NULL,
-  inside = NULL,
-  has = NULL,
-  precedes = NULL,
-  follows = NULL,
-  all = NULL,
-  any = NULL,
-  not = NULL,
-  matches = NULL
-)
+node_matches(x, ..., files = NULL)
 
 node_inside(x, m)
 
@@ -35,6 +22,11 @@ node_follows(x, m)
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
+
+\item{...}{Any number of rules created with \code{ast_rule()}.}
+
+\item{files}{A vector of filenames containing rules. Those must be \code{.yaml}
+files.}
 }
 \description{
 Get more precise information on a node
@@ -51,11 +43,11 @@ root <- src |>
   tree_root()
 
 some_node <- root |>
-  node_find(pattern = "print($A)")
+  node_find(ast_rule(pattern = "print($A)"))
 
 node_text(some_node)
 
 some_node |>
   node_get_match("A") |>
-  node_matches(kind = "argument")
+  node_matches(ast_rule(kind = "argument"))
 }

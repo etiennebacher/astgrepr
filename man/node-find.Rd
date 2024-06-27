@@ -46,10 +46,10 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(pattern = "any(duplicated($A))")
+  node_find(ast_rule(pattern = "any(duplicated($A))"))
 
 root |>
-  node_find_all(pattern = "any(duplicated($A))")
+  node_find_all(ast_rule(pattern = "any(duplicated($A))"))
 
 # using the 'kind' of the nodes to find elements
 src <- "
@@ -62,6 +62,27 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(kind = "while_statement") |>
-  node_text()
+  node_find(ast_rule(kind = "while_statement"))
+
+# one can pass several rules at once
+src <- "x <- rnorm(100, mean = 2)
+    any(duplicated(y))
+    plot(mtcars)
+    any(duplicated(x))
+    while (TRUE) { print('a') }"
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(
+    ast_rule(pattern = "any(duplicated($A))"),
+    ast_rule(kind = "while_statement")
+  )
+
+root |>
+  node_find_all(
+    ast_rule(pattern = "any(duplicated($A))"),
+    ast_rule(kind = "while_statement")
+  )
 }

@@ -34,6 +34,14 @@ root <- src |>
 node_range(root)
 
 root |>
-  node_find(pattern = "rnorm($$$A)") |>
+  node_find(ast_rule(pattern = "rnorm($$$A)")) |>
   node_range()
+
+# There is also an "_all" variant when there are several nodes per rule
+root |>
+  node_find_all(
+    ast_rule(pattern = "any(duplicated($A))"),
+    ast_rule(pattern = "plot($A)")
+  ) |>
+  node_range_all()
 }

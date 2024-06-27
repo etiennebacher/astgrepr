@@ -11,28 +11,28 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(pattern = "any(duplicated($A))") |>
+    node_find(ast_rule(pattern = "any(duplicated($A))")) |>
     node_text(),
-  "any(duplicated(y))"
+  list(rule_1 = "any(duplicated(y))")
 )
 
 expect_error(
   root |>
-    node_find_all(pattern = "any(duplicated($A))") |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
     node_text(),
-  "`x` must be an object of class 'SgNode'"
+  "`x` must be an object of class 'RuleList' or 'SgNode'"
 )
 
 expect_equal(
   root |>
-    node_find_all(pattern = "any(duplicated($A))") |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
     node_text_all(),
-  list("any(duplicated(y))", "any(duplicated(x))")
+  list(rule_1 = list(node_1 = "any(duplicated(y))", node_2 = "any(duplicated(x))"))
 )
 
-expect_length(
+expect_equal(
   root |>
-    node_find(pattern = "foobar") |>
+    node_find(ast_rule(pattern = "foobar")) |>
     node_text(),
-  0
+  list(rule_1 = NULL)
 )

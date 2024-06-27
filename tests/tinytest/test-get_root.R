@@ -12,7 +12,7 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find("print($A)") |>
+    node_find(ast_rule("print($A)")) |>
     node_get_root() |>
     tree_root() |>
     node_text(),

@@ -1,1 +1,3 @@
-print('hi there')
+$rule_1
+[1] "print('hi there')"
+

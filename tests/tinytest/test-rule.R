@@ -12,6 +12,11 @@ expect_snapshot(
 )
 
 expect_snapshot(
+  "ast_rule_basic_pattern_with_id",
+  ast_rule(pattern = "print($A)", id = "print-pattern")
+)
+
+expect_snapshot(
   "ast_rule_basic_kind",
   ast_rule(kind = "field_definition")
 )

@@ -1,4 +1,4 @@
-<ast-grep rule>
+<ast-grep rule: <unnamed>>
 pattern: any(duplicated($VAR))
 inside:
   stopBy: neighbor

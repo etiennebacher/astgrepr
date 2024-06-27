@@ -37,10 +37,10 @@ root <- src |>
 node_is_leaf(root)
 
 root |>
-  node_find(pattern = "z") |>
+  node_find(ast_rule(pattern = "z")) |>
   node_is_leaf()
 
 root |>
-  node_find(pattern = "z") |>
+  node_find(ast_rule(pattern = "z")) |>
   node_is_named()
 }

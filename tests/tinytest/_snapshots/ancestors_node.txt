@@ -1,12 +1,14 @@
-[[1]]
+$rule_1
+$rule_1[[1]]
 [1] "{\n  x + 1\n}"
 
-[[2]]
+$rule_1[[2]]
 [1] "function(x) {\n  x + 1\n}"
 
-[[3]]
+$rule_1[[3]]
 [1] "fn <- function(x) {\n  x + 1\n}"
 
-[[4]]
+$rule_1[[4]]
 [1] "print('hi there')\na <- 1\nfn <- function(x) {\n  x + 1\n}\n"
+
 

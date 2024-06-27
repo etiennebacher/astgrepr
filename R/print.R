@@ -23,7 +23,12 @@ print.SgNodeList <- function(x, ...) {
 
 #' @export
 print.astgrep_rule <- function(x, ...) {
-  cat(paste0("<ast-grep rule: '", x[["id"]] %||% "", "'>\n"))
+  nm <- if (is.null(x[["id"]])) {
+    "<unnamed>"
+  } else {
+    paste0("'", x[["id"]], "'")
+  }
+  cat(paste0("<ast-grep rule: ", nm, ">\n"))
   cat(to_yaml(x))
 }
 

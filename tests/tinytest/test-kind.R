@@ -11,21 +11,21 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(pattern = "any(duplicated($VAR))") |>
+    node_find(ast_rule(pattern = "any(duplicated($VAR))")) |>
     node_kind(),
-  "call"
+  list(rule_1 = "call")
 )
 
 expect_equal(
   root |>
-    node_find(pattern = "$X + $VALUE") |>
+    node_find(ast_rule(pattern = "$X + $VALUE")) |>
     node_kind(),
-  "binary_operator"
+  list(rule_1 = "binary_operator")
 )
 
-expect_error(
+expect_equal(
   root |>
-    node_find(pattern = "foobar") |>
+    node_find(ast_rule(pattern = "foobar")) |>
     node_kind(),
-  "must be an object of class 'SgNode'"
+  list(rule_1 = NULL)
 )

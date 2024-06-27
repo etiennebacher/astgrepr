@@ -34,9 +34,7 @@
 #'   node_range_all()
 node_range <- function(x) {
   check_is_rulelist_or_node(x)
-  if (length(x) == 1 && inherits(x, "SgNode")) {
-    x <- list(x)
-  }
+  x <- node_to_list(x)
   out <- lapply(x, function(y) {
     res <- y$range()
     names(res) <- c("start", "end")
@@ -143,7 +141,13 @@ node_to_list <- function(x) {
 node_kind <- function(x) {
   check_is_rulelist_or_node(x)
   x <- node_to_list(x)
-  lapply(x, function(y) y$kind())
+  lapply(x, function(y) {
+    if (length(y) > 0) {
+      y$kind()
+    } else {
+      NULL
+    }
+  })
 }
 
 #' Extract the code corresponding to one or several nodes
@@ -181,10 +185,18 @@ node_kind <- function(x) {
 #'   node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
 #'   node_text_all()
 node_text <- function(x) {
-  if (length(x) == 0) NULL
   check_is_rulelist_or_node(x)
-  lapply(x, function(node) {
-    node$text()
+  x <- node_to_list(x)
+  lapply(x, function(y) {
+    if (length(y) > 0) {
+      if (is.list(y)) {
+        y[[1]]$text()
+      } else {
+        y$text()
+      }
+    } else {
+      NULL
+    }
   })
 }
 
@@ -229,12 +241,15 @@ node_text_all <- function(x) {
 node_matches <- function(x, ..., files = NULL) {
   rules <- list(...)
   rules <- combine_rules_and_files(rules, files)
-  browser()
 
   lapply(rules, function(rule) {
-    x$matches(to_yaml(rule))[[1]]
-  }) |>
-    add_rulelist_class()
+    res <- x[[1]]$matches(to_yaml(rule))
+    if (length(res) > 0) {
+      res[[1]]
+    } else {
+      return(NULL)
+    }
+  })
 }
 
 #' @name node-info
@@ -287,31 +302,34 @@ node_follows <- function(x, m) {
 #'
 #' # we capture a single element with "$A" so node_get_match() can be used
 #' root |>
-#'   node_find(pattern = "plot($A)") |>
+#'   node_find(ast_rule(pattern = "plot($A)")) |>
 #'   node_get_match("A")
 #'
 #' # we can specify the variable to extract
 #' root |>
-#'   node_find(pattern = "rnorm($A, $B)") |>
+#'   node_find(ast_rule(pattern = "rnorm($A, $B)")) |>
 #'   node_get_match("B")
 #'
 #' # we capture many elements with "$$$A" so node_get_multiple_matches() can
 #' # be used here
 #' root |>
-#'   node_find(pattern = "rnorm($$$A)") |>
+#'   node_find(ast_rule(pattern = "rnorm($$$A)")) |>
 #'   node_get_multiple_matches("A")
 node_get_match <- function(x, meta_var) {
-  unwrap_list_output(x$get_match(meta_var))
+  check_is_rulelist_or_node(x)
+  if (length(x) == 1 && inherits(x, "SgNode")) {
+    x <- list(x)
+  }
+  lapply(x, function(y) y$get_match(meta_var)) |>
+    add_rulelist_class()
 }
 
 #' @name node-get-match
 #' @export
 node_get_multiple_matches <- function(x, meta_var) {
-  out <- x$get_multiple_matches(meta_var)
-  if (length(out) == 0) {
-    return(list())
-  }
-  add_sgnodelist_class(out)
+  check_is_rulelist_or_node(x)
+  lapply(x, function(y) y$get_multiple_matches(meta_var)) |>
+    add_sgnodelist_class()
 }
 
 #' Recover the tree root from a node
@@ -331,13 +349,13 @@ node_get_multiple_matches <- function(x, meta_var) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find("print($A)") |>
+#'   node_find(ast_rule(pattern = "print($A)")) |>
 #'   node_get_root() |>
 #'   tree_root() |>
 #'   node_text()
 node_get_root <- function(x) {
   check_is_rulelist_or_node(x)
-  x$get_root()
+  x[[1]]$get_root()
 }
 
 #' Find node(s) matching a pattern
@@ -424,7 +442,12 @@ node_find <- function(x, ..., files = NULL) {
   names(rules) <- rules_ids
 
   lapply(rules, function(rule) {
-    x$find(to_yaml(rule))[[1]]
+    res <- x$find(to_yaml(rule))
+    if (length(res) > 0) {
+      res[[1]]
+    } else {
+      return(NULL)
+    }
   }) |>
     add_rulelist_class()
 }
@@ -445,6 +468,7 @@ node_find_all <- function(x, ..., files = NULL) {
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
   out <- lapply(out, function(x) {
+    if (length(x) == 0) return(NULL)
     names(x) <- paste0("node_", seq_along(x))
     unlist(x, recursive = FALSE)
   }) |>
@@ -504,19 +528,19 @@ combine_rules_and_files <- function(rules, files) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(pattern = "a <- $A") |>
+#'   node_find(ast_rule(pattern = "a <- $A")) |>
 #'   node_prev() |>
 #'   node_text()
 #'
 #' root |>
-#'   node_find(pattern = "a <- $A") |>
+#'   node_find(ast_rule(pattern = "a <- $A")) |>
 #'   node_next() |>
 #'   node_text()
 #'
 #' # there are nodes inside the function, but there are no more nodes on the
 #' # same level as "fn"
 #' root |>
-#'   node_find(pattern = "a <- $A") |>
+#'   node_find(ast_rule(pattern = "a <- $A")) |>
 #'   node_next_all() |>
 #'   node_text_all()
 #'
@@ -535,27 +559,29 @@ combine_rules_and_files <- function(rules, files) {
 #'   tree_root()
 #'
 #' root |>
-#'   node_find(pattern = "$VAR + 1") |>
+#'   node_find(ast_rule(pattern = "$VAR + 1")) |>
 #'   node_parent() |>
 #'   node_text()
 #'
 #' root |>
-#'   node_find(pattern = "$VAR + 1") |>
+#'   node_find(ast_rule(pattern = "$VAR + 1")) |>
 #'   node_ancestors() |>
 #'   node_text_all()
 #'
 #' root |>
-#'   node_find(pattern = "$VAR + 1") |>
+#'   node_find(ast_rule(pattern = "$VAR + 1")) |>
 #'   node_child(0) |>
 #'   node_text()
 #'
 #' root |>
-#'   node_find(pattern = "$VAR + 1") |>
+#'   node_find(ast_rule(pattern = "$VAR + 1")) |>
 #'   node_children() |>
 #'   node_text_all()
 node_parent <- function(x) {
   check_is_rulelist_or_node(x)
-  unwrap_list_output(x$parent())
+  x <- node_to_list(x)
+  lapply(x, function(y) y$parent()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
@@ -564,51 +590,69 @@ node_child <- function(x, nth) {
   if (length(nth) != 1 || !is.numeric(nth) || (nth != 0 && nth %% 1 != 0)) {
     stop("`nth` must be an integer of length 1.")
   }
-  unwrap_list_output(x$child(nth))
+  x <- node_to_list(x)
+  lapply(x, function(y) {
+    res <- y$child(nth)
+    if (length(res) > 0) {
+      res[[1]]
+    } else {
+      NULL
+    }
+  }) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_ancestors <- function(x) {
   check_is_rulelist_or_node(x)
-  out <- x$ancestors()
-  add_sgnodelist_class(out)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$ancestors()) |>
+    add_rulelist_class()
+
 }
 
 #' @name node-traversal
 #' @export
 node_children <- function(x) {
   check_is_rulelist_or_node(x)
-  out <- x$children()
-  add_sgnodelist_class(out)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$children()) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_next <- function(x) {
   check_is_rulelist_or_node(x)
-  unwrap_list_output(x$next_())
+  x <- node_to_list(x)
+  lapply(x, function(y) y$next_()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_next_all <- function(x) {
   check_is_rulelist_or_node(x)
-  add_sgnodelist_class(x$next_all())
+  lapply(x, function(y) y$next_all()) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_prev <- function(x) {
   check_is_rulelist_or_node(x)
-  unwrap_list_output(x$prev())
+  x <- node_to_list(x)
+  lapply(x, function(y) y$prev()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_prev_all <- function(x) {
   check_is_rulelist_or_node(x)
-  x$prev_all()
+  lapply(x, function(y) y$prev_all()) |>
+    add_rulelist_class()
 }
 
 #' Change the code in the tree
@@ -642,40 +686,46 @@ node_prev_all <- function(x) {
 #'
 #' # one replacement ------------------------------------------
 #'
-#' node_to_fix <- root |>
-#'   node_find(pattern = "any(duplicated($A))")
+#' to_fix <- root |>
+#'   node_find(ast_rule(pattern = "any(duplicated($A))"))
 #'
-#' fix <- node_to_fix |>
+#' fix <- to_fix |>
 #'   node_replace(
 #'     paste0(
 #'       "anyDuplicated(",
-#'       node_text(node_get_match(node_to_fix, "A")),
+#'       node_text(node_get_match(to_fix, "A")),
 #'       ") > 0"
 #'     )
 #'   )
 #'
-#' node_commit_edits(root, fix) |>
-#'   cat()
-#'
-#' # several replacements ------------------------------------------
-#'
-#' nodes_to_fix <- root |>
-#'   node_find_all(pattern = "any(duplicated($A))")
-#'
-#' fixes <- nodes_to_fix |>
-#'   node_replace_all(
-#'     paste0(
-#'       "anyDuplicated(",
-#'       node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
-#'       ") > 0"
-#'     )
-#'   )
-#'
-#' node_commit_edits(root, fixes) |>
-#'   cat()
+#' fixed <- node_commit_edits(root, fix)
+#' cat(fixed[[1]])
+
+# TODO: fix this
+# # several replacements ------------------------------------------
+#
+# to_fix <- root |>
+#   node_find_all(ast_rule(pattern = "any(duplicated($A))"))
+#
+# fixes <- to_fix |>
+#   node_replace_all(
+#     paste0(
+#       "anyDuplicated(",
+#       node_text_all(
+#         lapply(to_fix, function(rule) {
+#           lapply(rule, function(y) y$get_match("A")[[1]])
+#         })
+#       ),
+#       ") > 0"
+#     )
+#   )
+#
+# fixed <- node_commit_edits(root, fixes)
+# cat(fixed[[1]])
 node_replace <- function(x, new_text) {
   check_is_rulelist_or_node(x)
-  x$replace(new_text)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$replace(new_text))
 }
 
 #' @name node-fix
@@ -685,8 +735,10 @@ node_replace_all <- function(x, new_text) {
   if (length(x) > 1 && length(new_text) == 1) {
     new_text <- rep(new_text, length(x))
   }
-  lapply(seq_along(x), function(y) {
-    x[[y]]$replace(new_text[y])
+  lapply(x, function(rule) {
+    lapply(seq_along(rule), function(node_idx) {
+      rule[[node_idx]]$replace(new_text[node_idx])
+    })
   })
 }
 
@@ -694,11 +746,24 @@ node_replace_all <- function(x, new_text) {
 #' @export
 node_commit_edits <- function(x, edits) {
   check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
   if (!is.list(edits)) {
     stop("`edits` must be a list.")
   }
   if (length(edits[[1]]) == 1) {
     edits <- list(edits)
   }
-  x$commit_edits(edits)
+  lapply(edits, function(rule) {
+    if (!is.list(rule[[1]]) || length(rule[[1]]) != 3) {
+      rule <- list(rule)
+    }
+    res <- lapply(x, function(node) {
+      node$commit_edits(rule)
+    })
+    if (length(res) > 0) {
+      res[[1]]
+    } else {
+      NULL
+    }
+  })
 }

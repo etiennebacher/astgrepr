@@ -1,2 +1,2 @@
-<ast-grep rule>
+<ast-grep rule: <unnamed>>
 regex: \w+

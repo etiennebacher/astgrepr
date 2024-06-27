@@ -64,19 +64,19 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(pattern = "a <- $A") |>
+  node_find(ast_rule(pattern = "a <- $A")) |>
   node_prev() |>
   node_text()
 
 root |>
-  node_find(pattern = "a <- $A") |>
+  node_find(ast_rule(pattern = "a <- $A")) |>
   node_next() |>
   node_text()
 
 # there are nodes inside the function, but there are no more nodes on the
 # same level as "fn"
 root |>
-  node_find(pattern = "a <- $A") |>
+  node_find(ast_rule(pattern = "a <- $A")) |>
   node_next_all() |>
   node_text_all()
 
@@ -95,22 +95,22 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(pattern = "$VAR + 1") |>
+  node_find(ast_rule(pattern = "$VAR + 1")) |>
   node_parent() |>
   node_text()
 
 root |>
-  node_find(pattern = "$VAR + 1") |>
+  node_find(ast_rule(pattern = "$VAR + 1")) |>
   node_ancestors() |>
   node_text_all()
 
 root |>
-  node_find(pattern = "$VAR + 1") |>
+  node_find(ast_rule(pattern = "$VAR + 1")) |>
   node_child(0) |>
   node_text()
 
 root |>
-  node_find(pattern = "$VAR + 1") |>
+  node_find(ast_rule(pattern = "$VAR + 1")) |>
   node_children() |>
   node_text_all()
 }

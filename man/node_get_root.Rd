@@ -25,7 +25,7 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find("print($A)") |>
+  node_find(ast_rule(pattern = "print($A)")) |>
   node_get_root() |>
   tree_root() |>
   node_text()

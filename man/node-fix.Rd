@@ -43,35 +43,18 @@ root <- src |>
 
 # one replacement ------------------------------------------
 
-node_to_fix <- root |>
-  node_find(pattern = "any(duplicated($A))")
+to_fix <- root |>
+  node_find(ast_rule(pattern = "any(duplicated($A))"))
 
-fix <- node_to_fix |>
+fix <- to_fix |>
   node_replace(
     paste0(
       "anyDuplicated(",
-      node_text(node_get_match(node_to_fix, "A")),
+      node_text(node_get_match(to_fix, "A")),
       ") > 0"
     )
   )
 
-node_commit_edits(root, fix) |>
-  cat()
-
-# several replacements ------------------------------------------
-
-nodes_to_fix <- root |>
-  node_find_all(pattern = "any(duplicated($A))")
-
-fixes <- nodes_to_fix |>
-  node_replace_all(
-    paste0(
-      "anyDuplicated(",
-      node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
-      ") > 0"
-    )
-  )
-
-node_commit_edits(root, fixes) |>
-  cat()
+fixed <- node_commit_edits(root, fix)
+cat(fixed[[1]])
 }

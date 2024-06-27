@@ -26,11 +26,6 @@ add_rulelist_class <- function(x) {
   x
 }
 
-build_matcher_from_dots <- function(...) {
-  dots <- eval(substitute(alist(...)))
-  dots
-}
-
 # Only to be called in functions that return a single node
 unwrap_list_output <- function(x) {
   if (length(x) > 0) {

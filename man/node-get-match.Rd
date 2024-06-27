@@ -37,17 +37,17 @@ root <- src |>
 
 # we capture a single element with "$A" so node_get_match() can be used
 root |>
-  node_find(pattern = "plot($A)") |>
+  node_find(ast_rule(pattern = "plot($A)")) |>
   node_get_match("A")
 
 # we can specify the variable to extract
 root |>
-  node_find(pattern = "rnorm($A, $B)") |>
+  node_find(ast_rule(pattern = "rnorm($A, $B)")) |>
   node_get_match("B")
 
 # we capture many elements with "$$$A" so node_get_multiple_matches() can
 # be used here
 root |>
-  node_find(pattern = "rnorm($$$A)") |>
+  node_find(ast_rule(pattern = "rnorm($$$A)")) |>
   node_get_multiple_matches("A")
 }

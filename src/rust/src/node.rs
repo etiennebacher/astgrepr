@@ -328,6 +328,7 @@ impl SgNode {
             .into_iter()
             .map(|xi| Edit::from(xi.as_list().unwrap()))
             .collect::<Vec<Edit>>();
+
         edits2.sort_by_key(|edit| edit.start_pos);
 
         let mut new_content = String::new();

@@ -9,17 +9,19 @@ root <- src |>
   tree_new() |>
   tree_root()
 
-expect_false(node_is_leaf(root))
+expect_false(node_is_leaf(root)[[1]])
 
-expect_true(
+expect_equal(
   root |>
-    node_find(pattern = "z") |>
-    node_is_leaf()
+    node_find(ast_rule(pattern = "z")) |>
+    node_is_leaf(),
+  list(rule_1 = TRUE)
 )
 
 # TODO: am I sure about this?
-expect_true(
+expect_equal(
   root |>
-    node_find(pattern = "z") |>
-    node_is_named()
+    node_find(ast_rule(pattern = "z")) |>
+    node_is_named(),
+  list(rule_1 = TRUE)
 )

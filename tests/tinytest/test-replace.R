@@ -13,7 +13,7 @@ root <- src |>
 # one replacement ------------------------------------------
 
 node_to_fix <- root |>
-  node_find(pattern = "any(duplicated($A))")
+  node_find(ast_rule(pattern = "any(duplicated($A))"))
 
 fix <- node_to_fix |>
   node_replace(
@@ -29,13 +29,17 @@ expect_snapshot(
 # several replacements ------------------------------------------
 
 nodes_to_fix <- root |>
-  node_find_all(pattern = "any(duplicated($A))")
+  node_find_all(ast_rule(pattern = "any(duplicated($A))"))
 
 fixes <- nodes_to_fix |>
   node_replace_all(
     paste0(
       "anyDuplicated(",
-      node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
+      node_text_all(
+        lapply(nodes_to_fix, function(rule) {
+          lapply(rule, function(y) y$get_match("A")[[1]])
+        })
+      )[[1]],
       ") > 0"
     )
   )

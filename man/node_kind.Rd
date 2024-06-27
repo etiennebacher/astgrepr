@@ -24,10 +24,10 @@ root <- src |>
   tree_root()
 
 root |>
-  node_find(pattern = "any(duplicated($VAR))") |>
+  node_find(ast_rule(pattern = "any(duplicated($VAR))")) |>
   node_kind()
 
 root |>
-  node_find(pattern = "$X + $VALUE") |>
+  node_find(ast_rule(pattern = "$X + $VALUE")) |>
   node_kind()
 }
