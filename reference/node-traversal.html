@@ -122,25 +122,31 @@ function.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_prev</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "print('hi there')"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_next</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fn &lt;- function(x) {\n  x + 1\n}"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># there are nodes inside the function, but there are no more nodes on the</span></span></span>
 <span class="r-in"><span><span class="co"># same level as "fn"</span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"a &lt;- $A"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_next_all</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text_all</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fn &lt;- function(x) {\n  x + 1\n}"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -158,46 +164,54 @@ function.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_parent</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "{\n  x + 1\n}"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_ancestors</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text_all</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "{\n  x + 1\n}"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "function(x) {\n  x + 1\n}"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[3]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fn &lt;- function(x) {\n  x + 1\n}"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[4]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "print('hi there')\na &lt;- 1\nfn &lt;- function(x) {\n  x + 1\n}\n"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_child</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">root</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"$VAR + 1"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">node_children</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="node-text.html">node_text_all</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "+"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $rule_1[[3]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
