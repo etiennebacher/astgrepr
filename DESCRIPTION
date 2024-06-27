@@ -19,8 +19,7 @@ Imports:
     checkmate
 Suggests:
     rstudioapi,
-    tinytest,
-    tinysnapshot
+    tinytest
 URL: https://github.com/etiennebacher/astgrepr
 BugReports: https://github.com/etiennebacher/astgrepr/issues
 SystemRequirements: Cargo (Rust's package manager), rustc

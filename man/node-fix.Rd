@@ -67,7 +67,7 @@ fixes <- nodes_to_fix |>
   node_replace_all(
     paste0(
       "anyDuplicated(",
-      node_text(node_get_match(node_to_fix, "A")),
+      node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
       ") > 0"
     )
   )

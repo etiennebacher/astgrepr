@@ -1,4 +1,5 @@
 source("helpers.R")
+using("astgrepr")
 
 src <- "x <- rnorm(100, mean = 2)
 any(duplicated(y))
@@ -32,10 +33,12 @@ nodes_to_fix <- root |>
 
 fixes <- nodes_to_fix |>
   node_replace_all(
-    paste0("anyDuplicated(", node_text_all(node_get_multiple_matches(nodes_to_fix, "A")), ") > 0")
+    paste0(
+      "anyDuplicated(",
+      node_text_all(lapply(nodes_to_fix, function(x) node_get_match(x, "A"))),
+      ") > 0"
+    )
   )
-
-### TODO : wrong, should be "x" in the second replacement
 
 expect_snapshot(
   "several_fixes",
