@@ -29,8 +29,8 @@ checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
 
 [[package]]
 name = "ast-grep-config"
-version = "0.24.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
+version = "0.24.1"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=8af95c962d3300b6ddb3eec020d458e7da8207e1#8af95c962d3300b6ddb3eec020d458e7da8207e1"
 dependencies = [
  "anyhow",
  "ast-grep-core",
@@ -45,8 +45,8 @@ dependencies = [
 
 [[package]]
 name = "ast-grep-core"
-version = "0.24.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
+version = "0.24.1"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=8af95c962d3300b6ddb3eec020d458e7da8207e1#8af95c962d3300b6ddb3eec020d458e7da8207e1"
 dependencies = [
  "bit-set",
  "regex",
@@ -56,8 +56,8 @@ dependencies = [
 
 [[package]]
 name = "ast-grep-language"
-version = "0.24.0"
-source = "git+https://github.com/etiennebacher/ast-grep?rev=f4f9608704f317e4f2dd1592f77ac05baff1d9ad#f4f9608704f317e4f2dd1592f77ac05baff1d9ad"
+version = "0.24.1"
+source = "git+https://github.com/etiennebacher/ast-grep?rev=8af95c962d3300b6ddb3eec020d458e7da8207e1#8af95c962d3300b6ddb3eec020d458e7da8207e1"
 dependencies = [
  "ast-grep-core",
  "ignore",
