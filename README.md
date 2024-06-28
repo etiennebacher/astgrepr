@@ -14,6 +14,10 @@ to parse the abstract syntax tree (AST) of some code and to perform
 search and rewrite of code. This is extremely useful to build linters,
 stylers, and perform a lot of code analysis.
 
+See the example below and the [“Getting started”
+vignette](https://astgrepr.etiennebacher.com/articles/astgrepr) for a
+gentle introduction to `astgrepr`.
+
 Since `astgrepr` can be used as a low-level foundation for other tools
 (such as linters), the number of R dependencies is kept low:
 
