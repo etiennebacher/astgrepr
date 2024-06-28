@@ -25,41 +25,81 @@ dependencies brought in by `ast-grep`).
 library(astgrepr)
 
 src <- "library(tidyverse)
-    x <- rnorm(100, mean = 2)
-    any(duplicated(y))
-    plot(x)
-    any(duplicated(x))"
+x <- rnorm(100, mean = 2)
+any(duplicated(y))
+plot(x)
+any(duplicated(x))
+any(is.na(variable))"
 
-node <- src |> 
+root <- src |> 
   tree_new() |> 
   tree_root()
 
 # get everything inside rnorm()
-node |> 
-  node_find(pattern = "rnorm($$$A)") |> 
+root |> 
+  node_find(ast_rule(pattern = "rnorm($$$A)")) |> 
   node_get_multiple_matches("A") |> 
   node_text_all()
-#> [[1]]
+#> $rule_1
+#> $rule_1[[1]]
 #> [1] "100"
 #> 
-#> [[2]]
+#> $rule_1[[2]]
 #> [1] ","
 #> 
-#> [[3]]
+#> $rule_1[[3]]
 #> [1] "mean = 2"
 ```
 
 ``` r
 
 # find occurrences of any(duplicated())
-node |> 
-  node_find_all(pattern = "any(duplicated($A))") |> 
+root |> 
+  node_find_all(ast_rule(pattern = "any(duplicated($A))")) |> 
   node_text_all()
-#> [[1]]
+#> $rule_1
+#> $rule_1$node_1
 #> [1] "any(duplicated(y))"
 #> 
-#> [[2]]
+#> $rule_1$node_2
 #> [1] "any(duplicated(x))"
+```
+
+``` r
+
+# find some nodes and replace them with something else
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace_all(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
+
+# original code
+cat(src)
+#> library(tidyverse)
+#> x <- rnorm(100, mean = 2)
+#> any(duplicated(y))
+#> plot(x)
+#> any(duplicated(x))
+#> any(is.na(variable))
+```
+
+``` r
+
+# new code
+tree_rewrite(root, fixes)
+#> library(tidyverse)
+#> x <- rnorm(100, mean = 2)
+#> anyDuplicated(y) > 0
+#> plot(x)
+#> anyDuplicated(x) > 0
+#> anyNA(variable)
 ```
 
 ## Related tools

@@ -35,25 +35,45 @@ brought in by `ast-grep`).
 library(astgrepr)
 
 src <- "library(tidyverse)
-    x <- rnorm(100, mean = 2)
-    any(duplicated(y))
-    plot(x)
-    any(duplicated(x))"
+x <- rnorm(100, mean = 2)
+any(duplicated(y))
+plot(x)
+any(duplicated(x))
+any(is.na(variable))"
 
-node <- src |> 
+root <- src |> 
   tree_new() |> 
   tree_root()
 
 # get everything inside rnorm()
-node |> 
-  node_find(pattern = "rnorm($$$A)") |> 
+root |> 
+  node_find(ast_rule(pattern = "rnorm($$$A)")) |> 
   node_get_multiple_matches("A") |> 
   node_text_all()
 
 # find occurrences of any(duplicated())
-node |> 
-  node_find_all(pattern = "any(duplicated($A))") |> 
+root |> 
+  node_find_all(ast_rule(pattern = "any(duplicated($A))")) |> 
   node_text_all()
+
+# find some nodes and replace them with something else
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace_all(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
+
+# original code
+cat(src)
+
+# new code
+tree_rewrite(root, fixes)
 
 ```
 
