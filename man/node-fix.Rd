@@ -17,44 +17,56 @@ node_commit_edits(x, edits)
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 
-\item{edits}{A list of replacements (the output of \code{node_replace()} or
-\code{node_replace_all()}).}
-
-\item{new_text}{The replacement for a node.}
+\item{...}{Named elements where the name is a rule ID and the value is a
+character string indicating the replacement to apply to nodes that match this
+rule. Meta-variables are accepted but the syntax is different: they must be
+wrapped in \verb{~~}, e.g \code{"anyNA(~~VAR~~)"}.}
 }
 \description{
-\code{node_replace()} stores the replacement for a particular node, it doesn't
-change the actual code. \code{node_replace_all()} does the same but for several
-nodes (e.g. the output of \code{node_find_all()}).
-
-\code{node_commit_edits()} takes a list of replacements (the output of
-\code{node_replace()} or \code{node_replace_all()}) and applies them one by one to the
-input node, returning the modified code.
+\code{node_replace()} gives the replacement for a particular node.
+\code{node_replace_all()} does the same but for several nodes (e.g. the output of
+\code{node_find_all()}). The output of those functions can be passed to
+\code{tree_rewrite()} to rewrite the entire input code with those replacements.
 }
 \examples{
-src <- "x <- rnorm(100, mean = 2)
-any(duplicated(y))
-plot(mtcars)
-any(duplicated(x))"
+src <- "
+x <- c(1, 2, 3)
+any(duplicated(x), na.rm = TRUE)
+any(duplicated(x))
+if (any(is.na(x))) {
+  TRUE
+}
+any(is.na(y))"
 
-root <- src |>
-  tree_new() |>
+root <- tree_new(src) |>
   tree_root()
 
-# one replacement ------------------------------------------
 
-to_fix <- root |>
-  node_find(ast_rule(pattern = "any(duplicated($A))"))
+### Only replace the first nodes found by each rule
 
-fix <- to_fix |>
-  node_replace(
-    paste0(
-      "anyDuplicated(",
-      node_text(node_get_match(to_fix, "A")),
-      ") > 0"
-    )
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
   )
 
-fixed <- node_commit_edits(root, fix)
-cat(fixed[[1]])
+nodes_to_replace |>
+  node_replace(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
+
+### Replace all nodes found by each rule
+
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+nodes_to_replace |>
+  node_replace(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
 }

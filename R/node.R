@@ -700,66 +700,61 @@ node_prev_all <- function(x) {
 #' Change the code in the tree
 #'
 #' @description
-#' `node_replace()` stores the replacement for a particular node, it doesn't
-#' change the actual code. `node_replace_all()` does the same but for several
-#' nodes (e.g. the output of `node_find_all()`).
-#'
-#' `node_commit_edits()` takes a list of replacements (the output of
-#' `node_replace()` or `node_replace_all()`) and applies them one by one to the
-#' input node, returning the modified code.
+#' `node_replace()` gives the replacement for a particular node.
+#' `node_replace_all()` does the same but for several nodes (e.g. the output of
+#' `node_find_all()`). The output of those functions can be passed to
+#' `tree_rewrite()` to rewrite the entire input code with those replacements.
 #'
 #' @inheritParams node-range
-#' @param new_text The replacement for a node.
-#' @param edits A list of replacements (the output of `node_replace()` or
-#' `node_replace_all()`).
+#' @param ... Named elements where the name is a rule ID and the value is a
+#' character string indicating the replacement to apply to nodes that match this
+#' rule. Meta-variables are accepted but the syntax is different: they must be
+#' wrapped in `~~`, e.g `"anyNA(~~VAR~~)"`.
 #'
 #' @name node-fix
 #' @export
 #'
 #' @examples
-#' src <- "x <- rnorm(100, mean = 2)
-#' any(duplicated(y))
-#' plot(mtcars)
-#' any(duplicated(x))"
+#' src <- "
+#' x <- c(1, 2, 3)
+#' any(duplicated(x), na.rm = TRUE)
+#' any(duplicated(x))
+#' if (any(is.na(x))) {
+#'   TRUE
+#' }
+#' any(is.na(y))"
 #'
-#' root <- src |>
-#'   tree_new() |>
+#' root <- tree_new(src) |>
 #'   tree_root()
 #'
-#' # one replacement ------------------------------------------
 #'
-#' to_fix <- root |>
-#'   node_find(ast_rule(pattern = "any(duplicated($A))"))
+#' ### Only replace the first nodes found by each rule
 #'
-#' fix <- to_fix |>
-#'   node_replace(
-#'     paste0(
-#'       "anyDuplicated(",
-#'       node_text(node_get_match(to_fix, "A")),
-#'       ") > 0"
-#'     )
+#' nodes_to_replace <- root |>
+#'   node_find(
+#'     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+#'     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
 #'   )
 #'
-#' fixed <- node_commit_edits(root, fix)
-#' cat(fixed[[1]])
-# TODO: fix this
-# # several replacements ------------------------------------------
-# to_fix <- root |>
-#   node_find_all(ast_rule(pattern = "any(duplicated($A))"))
-# fixes <- to_fix |>
-#   node_replace_all(
-#     paste0(
-#       "anyDuplicated(",
-#       node_text_all(
-#         lapply(to_fix, function(rule) {
-#           lapply(rule, function(y) y$get_match("A")[[1]])
-#         })
-#       ),
-#       ") > 0"
-#     )
-#   )
-# fixed <- node_commit_edits(root, fixes)
-# cat(fixed[[1]])
+#' nodes_to_replace |>
+#'   node_replace(
+#'     any_na = "anyNA(~~VAR~~)",
+#'     any_dup = "anyDuplicated(~~VAR~~) > 0"
+#'   )
+#'
+#' ### Replace all nodes found by each rule
+#'
+#' nodes_to_replace <- root |>
+#'   node_find(
+#'     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+#'     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+#'   )
+#'
+#' nodes_to_replace |>
+#'   node_replace(
+#'     any_na = "anyNA(~~VAR~~)",
+#'     any_dup = "anyDuplicated(~~VAR~~) > 0"
+#'   )
 node_replace <- function(x, ...) {
   check_is_rulelist_or_node(x)
   replacements <- list(...)
