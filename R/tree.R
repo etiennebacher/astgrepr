@@ -62,8 +62,7 @@ tree_root <- function(x) {
 #'
 #' @examples
 #'
-#' src <- "
-#' x <- c(1, 2, 3)
+#' src <- "x <- c(1, 2, 3)
 #' any(duplicated(x), na.rm = TRUE)
 #' any(duplicated(x))
 #' if (any(is.na(x))) {
@@ -125,7 +124,7 @@ tree_rewrite <- function(root, replacements) {
   }
 
   for (i in seq_along(replacements)) {
-    elem_row <- attr(replacements[[i]], "coords_start")[1]
+    elem_row <- attr(replacements[[i]], "coords_start")[1] + 1
     start <- attr(replacements[[i]], "coords_start")[2] + 1
     end <- attr(replacements[[i]], "coords_end")[2]
     # TODO: find a base R alternative

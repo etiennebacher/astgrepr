@@ -1,9 +1,9 @@
 source("helpers.R")
 using("astgrepr")
 
-src <- "
-x <- c(1, 2, 3)
+src <- "x <- c(1, 2, 3)
 any(duplicated(x), na.rm = TRUE)
+
 any(duplicated(x))
 if (any(is.na(x))) {
   TRUE
