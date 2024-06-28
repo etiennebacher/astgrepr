@@ -804,29 +804,3 @@ node_replace_all <- function(x, ...) {
   class(out) <- c("astgrep_replacements", class(out))
   out
 }
-
-#' @name node-fix
-#' @export
-node_commit_edits <- function(x, edits) {
-  check_is_rulelist_or_node(x)
-  x <- node_to_list(x)
-  if (!is.list(edits)) {
-    stop("`edits` must be a list.")
-  }
-  if (length(edits[[1]]) == 1) {
-    edits <- list(edits)
-  }
-  lapply(edits, function(rule) {
-    if (!is.list(rule[[1]]) || length(rule[[1]]) != 3) {
-      rule <- list(rule)
-    }
-    res <- lapply(x, function(node) {
-      node$commit_edits(rule)
-    })
-    if (length(res) > 0) {
-      res[[1]]
-    } else {
-      NULL
-    }
-  })
-}

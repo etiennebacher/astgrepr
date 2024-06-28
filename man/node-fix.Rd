@@ -4,14 +4,11 @@
 \alias{node-fix}
 \alias{node_replace}
 \alias{node_replace_all}
-\alias{node_commit_edits}
 \title{Change the code in the tree}
 \usage{
 node_replace(x, ...)
 
 node_replace_all(x, ...)
-
-node_commit_edits(x, edits)
 }
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
