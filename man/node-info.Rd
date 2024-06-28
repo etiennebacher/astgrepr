@@ -11,13 +11,13 @@
 \usage{
 node_matches(x, ..., files = NULL)
 
-node_inside(x, m)
+node_inside(x, ..., files = NULL)
 
-node_has(x, m)
+node_has(x, ..., files = NULL)
 
-node_precedes(x, m)
+node_precedes(x, ..., files = NULL)
 
-node_follows(x, m)
+node_follows(x, ..., files = NULL)
 }
 \arguments{
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}

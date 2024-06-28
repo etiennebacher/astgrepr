@@ -242,38 +242,79 @@ node_matches <- function(x, ..., files = NULL) {
   rules <- list(...)
   rules <- combine_rules_and_files(rules, files)
 
-  lapply(rules, function(rule) {
-    res <- x[[1]]$matches(to_yaml(rule))
-    if (length(res) > 0) {
-      res[[1]]
-    } else {
-      return(NULL)
-    }
-  })
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$matches(to_yaml(rule))
+    res
+  }) |>
+    list()
+
+  names(out) <- names(x)
+  out
 }
 
 #' @name node-info
 #' @export
-node_inside <- function(x, m) {
-  x$inside(m)
+node_inside <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$inside(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
-node_has <- function(x, m) {
-  x$has(m)
+node_has <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$has(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
-node_precedes <- function(x, m) {
-  x$precedes(m)
+node_precedes <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$precedes(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
-node_follows <- function(x, m) {
-  x$follows(m)
+node_follows <- function(x, ..., files = NULL) {
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$follows(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' Get the match(es) from a meta-variable
