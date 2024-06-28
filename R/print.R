@@ -6,9 +6,9 @@ print.SgNode <- function(x, ...) {
 #' @export
 print.RuleList <- function(x, ...) {
   l <- length(x)
-  cat(paste0("<List of ", l, " rule>"))
+  cat(paste0("<List of ", l, ifelse(l > 1, " rules>", " rule>")))
   for (i in 1:l) {
-    cat("\n|--", names(x)[i], ":", length(x[[i]]), "node")
+    cat(paste0("\n|--", names(x)[i], ": ", length(x[[i]]), " node"))
   }
 }
 
@@ -17,7 +17,7 @@ print.SgNodeList <- function(x, ...) {
   l <- length(x)
   cat(paste0("<List of ", l, ifelse(l > 1, " rules>", " rule>")))
   for (i in 1:l) {
-    cat("\n|--", names(x)[i], ":", length(x[[i]]), "nodes")
+    cat(paste0("\n|--", names(x)[i], ": ", length(x[[i]]), " nodes"))
   }
 }
 

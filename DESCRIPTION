@@ -18,6 +18,7 @@ RoxygenNote: 7.3.1
 Imports:
     checkmate,
     rrapply,
+    stringx,
     utils,
     yaml
 Suggests:

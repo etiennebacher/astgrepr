@@ -7,7 +7,7 @@
 \alias{node_commit_edits}
 \title{Change the code in the tree}
 \usage{
-node_replace(x, new_text)
+node_replace(x, ...)
 
 node_replace_all(x, new_text)
 
@@ -57,7 +57,4 @@ fix <- to_fix |>
 
 fixed <- node_commit_edits(root, fix)
 cat(fixed[[1]])
-#
-#
-#
 }

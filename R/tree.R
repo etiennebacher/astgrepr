@@ -49,3 +49,58 @@ tree_root <- function(x) {
   check_is_tree(x)
   x$root()
 }
+
+#' Rewrite the tree with a list of replacements
+#'
+#' @param root The root tree, obtained via `tree_root()`
+#' @param replacements A list of replacements, obtained via `node_replace()` or
+#' `node_replace_all()`.
+#'
+#' @return A string character corresponding to the code used to build the tree
+#' root but with replacements applied.
+#' @export
+#'
+#' @examples
+#'
+#' src <- "
+#' x <- c(1, 2, 3)
+#' any(duplicated(x), na.rm = TRUE)
+#' any(duplicated(x))
+#' if (any(is.na(x))) {
+#'   TRUE
+#' }"
+#'
+#' root <- tree_new(src) |>
+#'   tree_root()
+#'
+#' nodes_to_replace <- root |>
+#'   node_find(
+#'     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+#'     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+#'   )
+#'
+#' fixes <- nodes_to_replace |>
+#'   node_replace(
+#'     any_na = "anyNA(~~VAR~~)",
+#'     any_dup = "anyDuplicated(~~VAR~~) > 0"
+#'   )
+#'
+#' # original code
+#' cat(src)
+#'
+#' # new code
+#' tree_rewrite(root, fixes) |>
+#'   cat(sep = "\n")
+
+tree_rewrite <- function(root, replacements) {
+  original_txt <- strsplit(root$text(), "\n")[[1]]
+  new_txt <- original_txt
+  for (i in seq_along(replacements)) {
+    elem_row <- attr(replacements[[i]], "coords_start")[1]
+    start <- attr(replacements[[i]], "coords_start")[2] + 1
+    end <- attr(replacements[[i]], "coords_end")[2]
+    # TODO: find a base R alternative
+    stringx::substr(new_txt[elem_row], start, end) <- replacements[[i]]
+  }
+  new_txt
+}

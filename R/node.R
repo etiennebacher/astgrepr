@@ -744,10 +744,8 @@ node_prev_all <- function(x) {
 #' cat(fixed[[1]])
 # TODO: fix this
 # # several replacements ------------------------------------------
-#' #
 # to_fix <- root |>
 #   node_find_all(ast_rule(pattern = "any(duplicated($A))"))
-#' #
 # fixes <- to_fix |>
 #   node_replace_all(
 #     paste0(
@@ -760,13 +758,27 @@ node_prev_all <- function(x) {
 #       ") > 0"
 #     )
 #   )
-#' #
 # fixed <- node_commit_edits(root, fixes)
 # cat(fixed[[1]])
-node_replace <- function(x, new_text) {
+node_replace <- function(x, ...) {
   check_is_rulelist_or_node(x)
-  x <- node_to_list(x)
-  lapply(x, function(y) y$replace(new_text))
+  replacements <- list(...)
+
+  # TODO: check there are no two elements with the same ID
+
+  lapply(seq_along(x), function(y) {
+    id <- names(x)[y]
+    repl <- replacements[[id]]
+    meta_var <- gsub(".*~~([A-Z]+)~~.*", "\\1", repl)
+    meta_var_txt <- node_text(node_get_match(x[[y]], meta_var))[[1]]
+    new_text <- gsub("~~([A-Z]+)~~", meta_var_txt, repl)
+    replacement_structure <- x[[y]]$replace(new_text)
+    coords <- x[[y]]$range()
+    out <- x[[y]]$commit_edits(list(replacement_structure))
+    attr(out, "coords_start") <- coords[[1]]
+    attr(out, "coords_end") <- coords[[2]]
+    out
+  })
 }
 
 #' @name node-fix
