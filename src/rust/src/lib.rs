@@ -1,9 +1,12 @@
 use extendr_api::prelude::*;
+mod language;
 pub mod node;
 mod range;
 pub mod ser;
-use ast_grep_core::{AstGrep, Language, NodeMatch, StrDoc};
-use ast_grep_language::SupportLang;
+use crate::language::Language;
+use ast_grep_core::{AstGrep, NodeMatch, StrDoc};
+
+use language::R;
 use node::SgNode;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -73,7 +76,7 @@ impl UnicodePosition {
 
 #[derive(Clone)]
 pub struct SgRoot {
-    inner: AstGrep<StrDoc<SupportLang>>,
+    inner: AstGrep<StrDoc<tree_sitter_facade_sg::Language>>,
     filename: String,
     position: UnicodePosition,
 }
@@ -82,9 +85,9 @@ pub struct SgRoot {
 impl SgRoot {
     fn new(src: &str) -> Self {
         let position = UnicodePosition::new(src);
-        let lang = SupportLang::R;
+        let lang = R.get_ts_language();
 
-        let inner = lang.ast_grep(src);
+        let inner = language::Language::ast_grep(&lang, src);
         Self {
             inner,
             filename: "anonymous".into(),

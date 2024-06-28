@@ -1,9 +1,9 @@
+use crate::Language;
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
-use ast_grep_language::SupportLang;
 
 pub struct Pos {
     /// line number starting from 0
@@ -36,7 +36,7 @@ pub struct Edit {
 
 #[extendr]
 pub struct SgNode {
-    pub inner: NodeMatch<'static, StrDoc<SupportLang>>,
+    pub inner: NodeMatch<'static, StrDoc<tree_sitter_facade_sg::Language>>,
     // refcount SgRoot
     pub(crate) root: SgRoot,
 }
@@ -169,7 +169,7 @@ impl SgNode {
         let list_matchers = rule
             .iter()
             .map(|xi| get_matcher_from_rule(*self.inner.lang(), xi))
-            .collect::<Vec<RuleCore<SupportLang>>>();
+            .collect::<Vec<RuleCore<tree_sitter_facade_sg::Language>>>();
 
         list_matchers
             .iter()
@@ -294,7 +294,7 @@ impl SgNode {
             .collect()
     }
 
-    // fn get_matcher(&self, config: Option<List>, kwargs: Option<List>) -> RuleCore<SupportLang> {
+    // fn get_matcher(&self, config: Option<List>, kwargs: Option<List>) -> RuleCore<tree_sitter_facade_sg::Language> {
     //     let lang = self.inner.lang();
     //     let config = if let Some(config) = config {
     //         config_from_dict(config)?
@@ -393,7 +393,7 @@ impl From<List> for Edit {
 //     })
 // }
 
-fn get_matcher_from_rule(lang: SupportLang, rule: &str) -> RuleCore<SupportLang> {
+fn get_matcher_from_rule(lang: Language, rule: &str) -> RuleCore<tree_sitter_facade_sg::Language> {
     let rule = crate::ser::new_rule(rule);
 
     let rule_core = SerializableRuleCore {
