@@ -18,21 +18,149 @@ knitr::opts_chunk$set(
 library(astgrepr)
 ```
 
-The original [`ast-grep`](https://ast-grep.github.io/guide/pattern-syntax.html) library has a great documentation where you can learn more about pattern syntax and writing advanced rules. This vignette will focus mostly on the design implementation in R so that you understand how the package can be used.
+This vignette will give you the basic knowledge so that you can start using
+`astgrepr`. If you want to know more about advanced rules and other topics, I
+invite you to read the docs of the Rust crate
+[`ast-grep`](https://ast-grep.github.io/guide/pattern-syntax.html), on which
+this package is built. 
 
-Functions in `astgrepr` can be classed in two categories: those that should be applied on a single node, and those that should be applied on multiple nodes. But before jumping to this distinction, let's create a simple code example and generate a tree, which is essential in order to use `astgrepr` functionalities:
+
+## First steps
+
+My main incentive for building this package was to provide a faster linter for
+R code. [`lintr`](https://lintr.r-lib.org/) is a great tool, but I'm jealous of 
+the Python ecosystem that has a lightning-fast linter 
+([`Ruff`](https://docs.astral.sh/ruff/)).
+
+Therefore, as a motivation for this vignette, let's say we have the following 
+code and that we want to find bad patterns:
 
 ```{r}
 src <- "x <- rnorm(100, mean = 2)
-any(duplicated(y))
+any(is.na(y))
 plot(x)
-any(duplicated(x))"
+any(is.na(x))
+any(duplicated(variable))"
+```
 
+I can already see two of them:
+
+* `any(is.na())` is slower than `anyNA()` ([`lintr`](https://lintr.r-lib.org/reference/any_is_na_linter.html))
+* `any(duplicated())` is slower than `anyDuplicated() > 0` ([`lintr`](https://lintr.r-lib.org/reference/any_duplicated_linter.html))
+
+Let's start by building the abstract syntax tree (AST) corresponding to this
+code. This has to be the first step, all other functions depend on this tree:
+
+```{r}
 root <- src |>
   tree_new() |>
   tree_root()
+
+root
 ```
 
-## Single-node functions
 
-## Multi-node functions
+## Rules and nodes
+
+"Rules" are one of the key elements of `astgrepr`. They basically define what
+we are looking for in the code. One can build a simple rule with `ast_rule()`:
+
+```{r}
+ast_rule(id = "any_na", pattern = "any(is.na($VAR))")
+```
+
+There are many arguments in `ast_rule()`, and one can also include `pattern_rule()`
+and `relational_rule()` but we keep it simple for now. Once a rule is created,
+it can be applied on a node:
+
+```{r}
+root |> 
+  node_find(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+```
+
+We can see that most `astgrepr` functions will return a nested list. Lists are 
+nested on two levels: rules and nodes. For each rule, there is a specific number
+of nodes that were matched. 
+
+Here, `node_find()` returned a list of two rules, and each of them contains a 
+single node. This is expected: `node_find()` stops after the first node that 
+matches the rule. If we want to look for all nodes that match this rule, we can 
+use `node_find_all()`:
+
+```{r}
+found_nodes <- root |> 
+  node_find_all(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+found_nodes
+```
+
+More generally, most functions come with a single-node and a multi-node variants.
+For instance, , we use `node_text_all()` to extract the text corresponding to 
+each node and `node_range_all()` to get their start and end coordinates in the
+original code^[Note that in each sublist, the first value refers to the row and 
+second one to the column. Also, those values are 0-indexed, so `1` corresponds
+to the second row/column.]: 
+
+```{r}
+found_nodes |> 
+  node_text_all()
+found_nodes |> 
+  node_range_all()
+```
+
+Let's sum up what we have. So far, we have the original code (`root$text()`),
+the location (`$range()`) and content (`$text()`) of the patterns we were looking
+for. This is already enough to build a linter^[Of course, more work is needed to
+make the IDE report those lints, but this is outside the scope of `astgrepr`.].
+
+`astgrepr` offers another feature: code rewriting.
+
+
+## Modifying nodes
+
+Wouldn't it be nice if our IDE (say, RStudio) could automatically fix those
+patterns?
+
+To do so, we need two new functions: `node_replace_all()` and `tree_rewrite()`.
+The first one takes a list of replacements for each rule, and the second one
+rewrites a node based on those replacements. First, let's see what `node_find_all()`
+looks like:
+
+```{r}
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+nodes_to_replace
+fixes <- nodes_to_replace |>
+  node_replace_all(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
+
+fixes
+```
+
+It returns a nested list (once again) with the replacement for each node and the
+coordinates indicating where this replacement should be inserted. To finalize our
+code rewrite, we now need to apply those changes to the original tree with 
+`tree_rewrite()`:
+
+```{r}
+# original code
+cat(src)
+# new code
+tree_rewrite(root, fixes)
+```
+
+And that's it. Building a linter or a code rewriter is a massive effort that 
+is not among `astgrepr` objectives, but I hope this tool can serve as a 
+foundation to build one.

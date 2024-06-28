@@ -18,6 +18,7 @@ reference:
   - title: Build an Abstract Syntax Tree (AST)
     contents:
       - tree_new
+      - tree_rewrite
       - tree_root
 
   - title: Navigate the AST
