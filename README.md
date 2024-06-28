@@ -40,7 +40,7 @@ Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 
 ``` r
 install.packages(
-  'loc', 
+  'astgrepr', 
   repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
 )
 ```
@@ -49,7 +49,7 @@ install.packages(
 
 ``` r
 install.packages(
-  'loc', 
+  'astgrepr', 
   repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
 )
 ```
