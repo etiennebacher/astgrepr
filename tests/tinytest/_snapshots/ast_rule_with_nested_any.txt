@@ -1,0 +1,7 @@
+<ast-grep rule: <unnamed>>
+pattern: print($A)
+inside:
+  any:
+    kind:
+      - for_statement
+      - while_statement

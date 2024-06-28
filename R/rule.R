@@ -36,6 +36,18 @@
 #'
 #' @return A list (possibly nested) with the class `"astgrep_rule"`.
 #' @export
+#'
+#' @examples
+#' ast_rule(pattern = "print($A)")
+#'
+#' ast_rule(
+#'   pattern = "print($A)",
+#'   inside = ast_rule(
+#'     any = ast_rule(
+#'       kind = c("for_statement", "while_statement")
+#'     )
+#'   )
+#' )
 ast_rule <- function(
     pattern = NULL,
     kind = NULL,
@@ -50,19 +62,20 @@ ast_rule <- function(
     matches = NULL,
     id = NULL
   ) {
+
   check_all_null(pattern, kind, regex, inside, has, precedes, follows, all, any, not, matches)
   assert_string_or_pattern_rule(pattern)
-  checkmate::assert_string(kind, null.ok = TRUE)
-  checkmate::assert_string(regex, null.ok = TRUE)
-  assert_relational_rule(inside)
-  assert_relational_rule(has)
-  assert_relational_rule(precedes)
-  assert_relational_rule(follows)
+  assert_string_or_null(kind)
+  assert_string_or_null(regex)
+  assert_relational_or_ast_rule(inside)
+  assert_relational_or_ast_rule(has)
+  assert_relational_or_ast_rule(precedes)
+  assert_relational_or_ast_rule(follows)
   assert_ast_rule(all)
   assert_ast_rule(any)
   assert_ast_rule(not)
-  checkmate::assert_string(matches, null.ok = TRUE)
-  checkmate::assert_string(id, null.ok = TRUE)
+  assert_string_or_null(matches)
+  assert_string_or_null(id)
 
   out <- list(
     pattern = pattern,
@@ -78,6 +91,21 @@ ast_rule <- function(
     matches = matches,
     id = id
   )
+
+  # I can't have several arguments with the same name e.g
+  #
+  # any:
+  #   - kind: for_statement
+  #   - kind: while_statement
+  #
+  # So I pass those as a vector and I convert them as a sublist here
+  out <- lapply(out, function(x) {
+    if (length(x) > 1) {
+      as.list(x)
+    } else {
+      x
+    }
+  })
 
   class(out) <- c("astgrep_rule", class(out))
   out
@@ -158,12 +186,16 @@ check_string_or_pattern_rule <- function(x) {
 }
 assert_string_or_pattern_rule <- checkmate::makeAssertionFunction(check_string_or_pattern_rule)
 
-check_relational_rule <- function(x) {
-  is.null(x) || inherits(x, "astgrep_relational_rule")
+check_relational_or_ast_rule <- function(x) {
+  is.null(x) || inherits(x, "astgrep_relational_rule") || inherits(x, "astgrep_rule")
 }
-assert_relational_rule <- checkmate::makeAssertionFunction(check_relational_rule)
+assert_relational_or_ast_rule <- checkmate::makeAssertionFunction(check_relational_or_ast_rule)
 
 check_ast_rule <- function(x) {
   is.null(x) || inherits(x, "astgrep_rule")
 }
 assert_ast_rule <- checkmate::makeAssertionFunction(check_ast_rule)
+
+assert_string_or_null <- function(x) {
+  is.null(x) || all(is.character(x))
+}

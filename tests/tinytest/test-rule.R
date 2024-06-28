@@ -46,4 +46,14 @@ expect_snapshot(
   )
 )
 
-
+expect_snapshot(
+  "ast_rule_with_nested_any",
+  ast_rule(
+    pattern = "print($A)",
+    inside = ast_rule(
+      any = ast_rule(
+        kind = c("for_statement", "while_statement")
+      )
+    )
+  )
+)

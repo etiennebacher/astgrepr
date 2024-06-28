@@ -69,3 +69,15 @@ used in \verb{node_match*()} and \verb{node_find*()} functions. \code{ast_rule()
 flexible function that allows one to build simple rules but also much more
 complex and specific ones.
 }
+\examples{
+ast_rule(pattern = "print($A)")
+
+ast_rule(
+  pattern = "print($A)",
+  inside = ast_rule(
+    any = ast_rule(
+      kind = c("for_statement", "while_statement")
+    )
+  )
+)
+}

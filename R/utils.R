@@ -40,9 +40,5 @@ to_yaml <- function(x) {
   if ("id" %in% names(non_null)) {
     non_null[["id"]] <- NULL
   }
-  yaml::as.yaml(non_null)
-}
-
-`%||%` <- function (x, y) {
-  if (is.null(x)) y else x
+  yaml::as.yaml(non_null, indent.mapping.sequence = TRUE)
 }
