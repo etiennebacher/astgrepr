@@ -18,7 +18,7 @@ test_this_file <- function() {
 expect_snapshot <- function(label, current) {
   snapshot_file <- file.path("_snapshots", paste0(label, ".txt"))
   if (is.list(current)) {
-    current2 <- paste(capture.output(print(current)), collapse = "\n")
+    current2 <- paste(utils::capture.output(print(current)), collapse = "\n")
   } else {
     current2 <- paste(current, collapse = "\n")
   }
