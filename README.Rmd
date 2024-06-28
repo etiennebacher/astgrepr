@@ -40,6 +40,26 @@ local::. 0.0.1 [new][bld]
 Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 ```
 
+## Installation
+
+### Windows or macOS
+
+``` r
+install.packages(
+  'loc', 
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
+)
+```
+
+### Linux
+
+``` r
+install.packages(
+  'loc', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
+)
+```
+
 
 ## Demo
 
