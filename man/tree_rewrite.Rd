@@ -27,10 +27,14 @@ any(duplicated(x), na.rm = TRUE)
 any(duplicated(x))
 if (any(is.na(x))) {
   TRUE
-}"
+}
+any(is.na(y))"
 
 root <- tree_new(src) |>
   tree_root()
+
+
+### Only replace the first nodes found by each rule
 
 nodes_to_replace <- root |>
   node_find(
@@ -48,6 +52,26 @@ fixes <- nodes_to_replace |>
 cat(src)
 
 # new code
-tree_rewrite(root, fixes) |>
-  cat(sep = "\n")
+tree_rewrite(root, fixes)
+
+
+### Replace all nodes found by each rule
+
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace(
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
+  )
+
+# original code
+cat(src)
+
+# new code
+tree_rewrite(root, fixes)
 }

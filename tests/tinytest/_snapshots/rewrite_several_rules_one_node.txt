@@ -1,0 +1,7 @@
+x <- c(1, 2, 3)
+any(duplicated(x), na.rm = TRUE)
+anyDuplicated(x) > 0
+if (anyNA(x)) {
+  TRUE
+}
+any(is.na(y))

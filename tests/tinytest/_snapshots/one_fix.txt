@@ -1,3 +1,0 @@
-$rule_1
-[1] "x <- rnorm(100, mean = 2)\nanyDuplicated(y) > 0\nplot(mtcars)\nany(duplicated(x))"
-

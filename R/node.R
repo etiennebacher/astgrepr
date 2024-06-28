@@ -766,7 +766,7 @@ node_replace <- function(x, ...) {
 
   # TODO: check there are no two elements with the same ID
 
-  lapply(seq_along(x), function(y) {
+  out <- lapply(seq_along(x), function(y) {
     id <- names(x)[y]
     repl <- replacements[[id]]
     meta_var <- gsub(".*~~([A-Z]+)~~.*", "\\1", repl)
@@ -779,20 +779,35 @@ node_replace <- function(x, ...) {
     attr(out, "coords_end") <- coords[[2]]
     out
   })
+  class(out) <- c("astgrep_replacement", class(out))
+  out
 }
 
 #' @name node-fix
 #' @export
-node_replace_all <- function(x, new_text) {
+node_replace_all <- function(x, ...) {
   check_all_nodes(x)
-  if (length(x) > 1 && length(new_text) == 1) {
-    new_text <- rep(new_text, length(x))
-  }
-  lapply(x, function(rule) {
-    lapply(seq_along(rule), function(node_idx) {
-      rule[[node_idx]]$replace(new_text[node_idx])
+  replacements <- list(...)
+
+  out <- lapply(seq_along(x), function(y) {
+    id <- names(x)[y]
+    repl <- replacements[[id]]
+    meta_var <- gsub(".*~~([A-Z]+)~~.*", "\\1", repl)
+    lapply(x[[y]], function(z) {
+      res <- node_text(node_get_match(z, meta_var))
+      new_text <- gsub("~~([A-Z]+)~~", res, repl)
+      replacement_structure <- z$replace(new_text)
+      coords <- z$range()
+      out <- z$commit_edits(list(replacement_structure))
+      attr(out, "coords_start") <- coords[[1]]
+      attr(out, "coords_end") <- coords[[2]]
+      out
     })
-  })
+  }) |>
+    setNames(names(x))
+
+  class(out) <- c("astgrep_replacements", class(out))
+  out
 }
 
 #' @name node-fix

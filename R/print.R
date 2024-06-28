@@ -43,3 +43,8 @@ print.astgrep_pattern_rule <- function(x, ...) {
   cat("<ast-grep pattern rule>\n")
   cat(to_yaml(x))
 }
+
+#' @export
+print.astgrep_rewritten_tree <- function(x, ...) {
+  cat(x, sep = "\n")
+}

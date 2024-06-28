@@ -68,10 +68,14 @@ tree_root <- function(x) {
 #' any(duplicated(x))
 #' if (any(is.na(x))) {
 #'   TRUE
-#' }"
+#' }
+#' any(is.na(y))"
 #'
 #' root <- tree_new(src) |>
 #'   tree_root()
+#'
+#'
+#' ### Only replace the first nodes found by each rule
 #'
 #' nodes_to_replace <- root |>
 #'   node_find(
@@ -89,12 +93,37 @@ tree_root <- function(x) {
 #' cat(src)
 #'
 #' # new code
-#' tree_rewrite(root, fixes) |>
-#'   cat(sep = "\n")
+#' tree_rewrite(root, fixes)
+#'
+#'
+#' ### Replace all nodes found by each rule
+#'
+#' nodes_to_replace <- root |>
+#'   node_find(
+#'     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+#'     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+#'   )
+#'
+#' fixes <- nodes_to_replace |>
+#'   node_replace(
+#'     any_na = "anyNA(~~VAR~~)",
+#'     any_dup = "anyDuplicated(~~VAR~~) > 0"
+#'   )
+#'
+#' # original code
+#' cat(src)
+#'
+#' # new code
+#' tree_rewrite(root, fixes)
 
 tree_rewrite <- function(root, replacements) {
   original_txt <- strsplit(root$text(), "\n")[[1]]
   new_txt <- original_txt
+
+  if (inherits(replacements, "astgrep_replacements")) {
+    replacements <- unlist(replacements, recursive = FALSE)
+  }
+
   for (i in seq_along(replacements)) {
     elem_row <- attr(replacements[[i]], "coords_start")[1]
     start <- attr(replacements[[i]], "coords_start")[2] + 1
@@ -102,5 +131,6 @@ tree_rewrite <- function(root, replacements) {
     # TODO: find a base R alternative
     stringx::substr(new_txt[elem_row], start, end) <- replacements[[i]]
   }
+  class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
   new_txt
 }

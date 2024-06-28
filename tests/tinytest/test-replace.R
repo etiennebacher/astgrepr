@@ -1,50 +1,54 @@
 source("helpers.R")
 using("astgrepr")
 
-src <- "x <- rnorm(100, mean = 2)
-any(duplicated(y))
-plot(mtcars)
-any(duplicated(x))"
+src <- "
+x <- c(1, 2, 3)
+any(duplicated(x), na.rm = TRUE)
+any(duplicated(x))
+if (any(is.na(x))) {
+  TRUE
+}
+any(is.na(y))
+"
 
-root <- src |>
-  tree_new() |>
+root <- tree_new(src) |>
   tree_root()
 
 # one replacement ------------------------------------------
 
-node_to_fix <- root |>
-  node_find(ast_rule(pattern = "any(duplicated($A))"))
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
 
-fix <- node_to_fix |>
+fixes <- nodes_to_replace |>
   node_replace(
-    paste0("anyDuplicated(", node_text(node_get_match(node_to_fix, "A")), ") > 0")
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
   )
 
 expect_snapshot(
-  "one_fix",
-  node_commit_edits(root, fix)
+  "rewrite_several_rules_one_node",
+  tree_rewrite(root, fixes)
 )
 
 
 # several replacements ------------------------------------------
 
-nodes_to_fix <- root |>
-  node_find_all(ast_rule(pattern = "any(duplicated($A))"))
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
+    ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
+  )
 
-fixes <- nodes_to_fix |>
+fixes <- nodes_to_replace |>
   node_replace_all(
-    paste0(
-      "anyDuplicated(",
-      node_text_all(
-        lapply(nodes_to_fix, function(rule) {
-          lapply(rule, function(y) y$get_match("A")[[1]])
-        })
-      )[[1]],
-      ") > 0"
-    )
+    any_na = "anyNA(~~VAR~~)",
+    any_dup = "anyDuplicated(~~VAR~~) > 0"
   )
 
 expect_snapshot(
-  "several_fixes",
-  node_commit_edits(root, fixes)
+  "rewrite_several_rules_several_nodes",
+  tree_rewrite(root, fixes)
 )

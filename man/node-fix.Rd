@@ -9,7 +9,7 @@
 \usage{
 node_replace(x, ...)
 
-node_replace_all(x, new_text)
+node_replace_all(x, ...)
 
 node_commit_edits(x, edits)
 }
@@ -17,10 +17,10 @@ node_commit_edits(x, edits)
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 
-\item{new_text}{The replacement for a node.}
-
 \item{edits}{A list of replacements (the output of \code{node_replace()} or
 \code{node_replace_all()}).}
+
+\item{new_text}{The replacement for a node.}
 }
 \description{
 \code{node_replace()} stores the replacement for a particular node, it doesn't
