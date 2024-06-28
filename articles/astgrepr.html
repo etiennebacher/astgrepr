@@ -41,6 +41,9 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -76,33 +79,224 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/astgrepr" class="external-link">astgrepr</a></span><span class="op">)</span></span></code></pre></div>
-<p>The original <a href="https://ast-grep.github.io/guide/pattern-syntax.html" class="external-link"><code>ast-grep</code></a>
-library has a great documentation where you can learn more about pattern
-syntax and writing advanced rules. This vignette will focus mostly on
-the design implementation in R so that you understand how the package
-can be used.</p>
-<p>Functions in <code>astgrepr</code> can be classed in two categories:
-those that should be applied on a single node, and those that should be
-applied on multiple nodes. But before jumping to this distinction, let’s
-create a simple code example and generate a tree, which is essential in
-order to use <code>astgrepr</code> functionalities:</p>
+<p>This vignette will give you the basic knowledge so that you can start
+using <code>astgrepr</code>. If you want to know more about advanced
+rules and other topics, I invite you to read the docs of the Rust crate
+<a href="https://ast-grep.github.io/guide/pattern-syntax.html" class="external-link"><code>ast-grep</code></a>,
+on which this package is built.</p>
+<div class="section level2">
+<h2 id="first-steps">First steps<a class="anchor" aria-label="anchor" href="#first-steps"></a>
+</h2>
+<p>My main incentive for building this package was to provide a faster
+linter for R code. <a href="https://lintr.r-lib.org/" class="external-link"><code>lintr</code></a> is a great tool,
+but I’m jealous of the Python ecosystem that has a lightning-fast linter
+(<a href="https://docs.astral.sh/ruff/" class="external-link"><code>Ruff</code></a>).</p>
+<p>Therefore, as a motivation for this vignette, let’s say we have the
+following code and that we want to find bad patterns:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">src</span> <span class="op">&lt;-</span> <span class="st">"x &lt;- rnorm(100, mean = 2)</span></span>
-<span><span class="st">any(duplicated(y))</span></span>
+<span><span class="st">any(is.na(y))</span></span>
 <span><span class="st">plot(x)</span></span>
-<span><span class="st">any(duplicated(x))"</span></span>
-<span></span>
-<span><span class="va">root</span> <span class="op">&lt;-</span> <span class="va">src</span> <span class="op">|&gt;</span></span>
+<span><span class="st">any(is.na(x))</span></span>
+<span><span class="st">any(duplicated(variable))"</span></span></code></pre></div>
+<p>I can already see two of them:</p>
+<ul>
+<li>
+<code>any(is.na())</code> is slower than <code><a href="https://rdrr.io/r/base/NA.html" class="external-link">anyNA()</a></code> (<a href="https://lintr.r-lib.org/reference/any_is_na_linter.html" class="external-link"><code>lintr</code></a>)</li>
+<li>
+<code>any(duplicated())</code> is slower than
+<code>anyDuplicated() &gt; 0</code> (<a href="https://lintr.r-lib.org/reference/any_duplicated_linter.html" class="external-link"><code>lintr</code></a>)</li>
+</ul>
+<p>Let’s start by building the abstract syntax tree (AST) corresponding
+to this code. This has to be the first step, all other functions depend
+on this tree:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">root</span> <span class="op">&lt;-</span> <span class="va">src</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tree_new.html">tree_new</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="single-node-functions">Single-node functions<a class="anchor" aria-label="anchor" href="#single-node-functions"></a>
-</h2>
+<span>  <span class="fu"><a href="../reference/tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">root</span></span>
+<span><span class="co">#&gt; &lt;AST node&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="multi-node-functions">Multi-node functions<a class="anchor" aria-label="anchor" href="#multi-node-functions"></a>
+<h2 id="rules-and-nodes">Rules and nodes<a class="anchor" aria-label="anchor" href="#rules-and-nodes"></a>
 </h2>
+<p>“Rules” are one of the key elements of <code>astgrepr</code>. They
+basically define what we are looking for in the code. One can build a
+simple rule with <code><a href="../reference/ast_rule.html">ast_rule()</a></code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;ast-grep rule: 'any_na'&gt;</span></span>
+<span><span class="co">#&gt; pattern: any(is.na($VAR))</span></span></code></pre></div>
+<p>There are many arguments in <code><a href="../reference/ast_rule.html">ast_rule()</a></code>, and one can also
+include <code><a href="../reference/pattern_rule.html">pattern_rule()</a></code> and <code><a href="../reference/relational_rule.html">relational_rule()</a></code>
+but we keep it simple for now. Once a rule is created, it can be applied
+on a node:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">root</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_dup"</span>, pattern <span class="op">=</span> <span class="st">"any(duplicated($VAR))"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;List of 2 rules&gt;</span></span>
+<span><span class="co">#&gt; |--any_na: 1 node</span></span>
+<span><span class="co">#&gt; |--any_dup: 1 node</span></span></code></pre></div>
+<p>We can see that most <code>astgrepr</code> functions will return a
+nested list. Lists are nested on two levels: rules and nodes. For each
+rule, there is a specific number of nodes that were matched.</p>
+<p>Here, <code><a href="../reference/node-find.html">node_find()</a></code> returned a list of two rules, and each
+of them contains a single node. This is expected:
+<code><a href="../reference/node-find.html">node_find()</a></code> stops after the first node that matches the
+rule. If we want to look for all nodes that match this rule, we can use
+<code><a href="../reference/node-find.html">node_find_all()</a></code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">&lt;-</span> <span class="va">root</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find_all</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_dup"</span>, pattern <span class="op">=</span> <span class="st">"any(duplicated($VAR))"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">found_nodes</span></span>
+<span><span class="co">#&gt; &lt;List of 2 rules&gt;</span></span>
+<span><span class="co">#&gt; |--any_na: 2 nodes</span></span>
+<span><span class="co">#&gt; |--any_dup: 1 nodes</span></span></code></pre></div>
+<p>More generally, most functions come with a single-node and a
+multi-node variants. For instance, , we use <code><a href="../reference/node-text.html">node_text_all()</a></code>
+to extract the text corresponding to each node and
+<code><a href="../reference/node-range.html">node_range_all()</a></code> to get their start and end coordinates in
+the original code<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Note that in each sublist, the first value refers to the
+row and second one to the column. Also, those values are 0-indexed, so
+&lt;code&gt;1&lt;/code&gt; corresponds to the second row/column.&lt;/p&gt;"><sup>1</sup></a>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/node-text.html">node_text_all</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $any_na</span></span>
+<span><span class="co">#&gt; $any_na$node_1</span></span>
+<span><span class="co">#&gt; [1] "any(is.na(y))"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_na$node_2</span></span>
+<span><span class="co">#&gt; [1] "any(is.na(x))"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_dup</span></span>
+<span><span class="co">#&gt; $any_dup$node_1</span></span>
+<span><span class="co">#&gt; [1] "any(duplicated(variable))"</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/node-range.html">node_range_all</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $any_na</span></span>
+<span><span class="co">#&gt; $any_na$node_1</span></span>
+<span><span class="co">#&gt; $any_na$node_1$start</span></span>
+<span><span class="co">#&gt; [1] 1 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_na$node_1$end</span></span>
+<span><span class="co">#&gt; [1]  1 13</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_na$node_2</span></span>
+<span><span class="co">#&gt; $any_na$node_2$start</span></span>
+<span><span class="co">#&gt; [1] 3 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_na$node_2$end</span></span>
+<span><span class="co">#&gt; [1]  3 13</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_dup</span></span>
+<span><span class="co">#&gt; $any_dup$node_1</span></span>
+<span><span class="co">#&gt; $any_dup$node_1$start</span></span>
+<span><span class="co">#&gt; [1] 4 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_dup$node_1$end</span></span>
+<span><span class="co">#&gt; [1]  4 25</span></span></code></pre></div>
+<p>Let’s sum up what we have. So far, we have the original code
+(<code>root$text()</code>), the location (<code>$range()</code>) and
+content (<code>$text()</code>) of the patterns we were looking for. This
+is already enough to build a linter<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Of course, more work is needed to make the IDE report
+those lints, but this is outside the scope of &lt;code&gt;astgrepr&lt;/code&gt;.&lt;/p&gt;"><sup>2</sup></a>.</p>
+<p><code>astgrepr</code> offers another feature: code rewriting.</p>
 </div>
+<div class="section level2">
+<h2 id="modifying-nodes">Modifying nodes<a class="anchor" aria-label="anchor" href="#modifying-nodes"></a>
+</h2>
+<p>Wouldn’t it be nice if our IDE (say, RStudio) could automatically fix
+those patterns?</p>
+<p>To do so, we need two new functions: <code><a href="../reference/node-fix.html">node_replace_all()</a></code>
+and <code><a href="../reference/tree_rewrite.html">tree_rewrite()</a></code>. The first one takes a list of
+replacements for each rule, and the second one rewrites a node based on
+those replacements. First, let’s see what <code><a href="../reference/node-find.html">node_find_all()</a></code>
+looks like:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nodes_to_replace</span> <span class="op">&lt;-</span> <span class="va">root</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find_all</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_dup"</span>, pattern <span class="op">=</span> <span class="st">"any(duplicated($VAR))"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">nodes_to_replace</span></span>
+<span><span class="co">#&gt; &lt;List of 2 rules&gt;</span></span>
+<span><span class="co">#&gt; |--any_na: 2 nodes</span></span>
+<span><span class="co">#&gt; |--any_dup: 1 nodes</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fixes</span> <span class="op">&lt;-</span> <span class="va">nodes_to_replace</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/node-fix.html">node_replace_all</a></span><span class="op">(</span></span>
+<span>    any_na <span class="op">=</span> <span class="st">"anyNA(~~VAR~~)"</span>,</span>
+<span>    any_dup <span class="op">=</span> <span class="st">"anyDuplicated(~~VAR~~) &gt; 0"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">fixes</span></span>
+<span><span class="co">#&gt; $any_na</span></span>
+<span><span class="co">#&gt; $any_na$node_1</span></span>
+<span><span class="co">#&gt; [1] "anyNA(y)"</span></span>
+<span><span class="co">#&gt; attr(,"coords_start")</span></span>
+<span><span class="co">#&gt; [1] 1 0</span></span>
+<span><span class="co">#&gt; attr(,"coords_end")</span></span>
+<span><span class="co">#&gt; [1]  1 13</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_na$node_2</span></span>
+<span><span class="co">#&gt; [1] "anyNA(x)"</span></span>
+<span><span class="co">#&gt; attr(,"coords_start")</span></span>
+<span><span class="co">#&gt; [1] 3 0</span></span>
+<span><span class="co">#&gt; attr(,"coords_end")</span></span>
+<span><span class="co">#&gt; [1]  3 13</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $any_dup</span></span>
+<span><span class="co">#&gt; $any_dup$node_1</span></span>
+<span><span class="co">#&gt; [1] "anyDuplicated(variable) &gt; 0"</span></span>
+<span><span class="co">#&gt; attr(,"coords_start")</span></span>
+<span><span class="co">#&gt; [1] 4 0</span></span>
+<span><span class="co">#&gt; attr(,"coords_end")</span></span>
+<span><span class="co">#&gt; [1]  4 25</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attr(,"class")</span></span>
+<span><span class="co">#&gt; [1] "astgrep_replacements" "list"</span></span></code></pre></div>
+<p>It returns a nested list (once again) with the replacement for each
+node and the coordinates indicating where this replacement should be
+inserted. To finalize our code rewrite, we now need to apply those
+changes to the original tree with <code><a href="../reference/tree_rewrite.html">tree_rewrite()</a></code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># original code</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">src</span><span class="op">)</span></span>
+<span><span class="co">#&gt; x &lt;- rnorm(100, mean = 2)</span></span>
+<span><span class="co">#&gt; any(is.na(y))</span></span>
+<span><span class="co">#&gt; plot(x)</span></span>
+<span><span class="co">#&gt; any(is.na(x))</span></span>
+<span><span class="co">#&gt; any(duplicated(variable))</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># new code</span></span>
+<span><span class="fu"><a href="../reference/tree_rewrite.html">tree_rewrite</a></span><span class="op">(</span><span class="va">root</span>, <span class="va">fixes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; x &lt;- rnorm(100, mean = 2)</span></span>
+<span><span class="co">#&gt; anyNA(y)</span></span>
+<span><span class="co">#&gt; plot(x)</span></span>
+<span><span class="co">#&gt; anyNA(x)</span></span>
+<span><span class="co">#&gt; anyDuplicated(variable) &gt; 0</span></span></code></pre></div>
+<p>And that’s it. Building a linter or a code rewriter is a massive
+effort that is not among <code>astgrepr</code> objectives, but I hope
+this tool can serve as a foundation to build one.</p>
+</div>
+
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>
