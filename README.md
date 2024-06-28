@@ -143,7 +143,7 @@ There is some recent work linking `tree-sitter` and R. Those are not
 competing with `astgrepr` but are rather a complement to it:
 
 - [`r-lib/tree-sitter-r`](https://github.com/r-lib/tree-sitter-r):
-  provide the R grammer to be used with tools built on `tree-sitter`.
+  provide the R grammar to be used with tools built on `tree-sitter`.
   `astgrepr` relies on this grammar under the hood.
 - [`DavisVaughan/r-tree-sitter`](https://github.com/DavisVaughan/r-tree-sitter):
   a companion of `r-lib/tree-sitter-r`. This gives a way to get the
