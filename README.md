@@ -15,8 +15,20 @@ search and rewrite of code. This is extremely useful to build linters,
 stylers, and perform a lot of code analysis.
 
 Since `astgrepr` can be used as a low-level foundation for other tools
-(such as linters), it doesn’t rely on any R dependencies (but has Rust
-dependencies brought in by `ast-grep`).
+(such as linters), the number of R dependencies is kept low:
+
+``` r
+> pak::local_deps_tree()
+✔ Loading metadata database ... done
+local::. 0.0.1 [new][bld]                                                  
+├─checkmate 2.3.1 [new][dl] (746.54 kB)
+│ └─backports 1.5.0 [new]
+├─rrapply 1.2.7 [new][bld][cmp]
+├─stringi 1.8.4 [new]
+└─yaml 2.3.8 [new][dl] (119.08 kB)
+
+Key:  [new] new | [dl] download | [bld] build | [cmp] compile
+```
 
 ## Demo
 
