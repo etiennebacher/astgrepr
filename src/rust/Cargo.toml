@@ -11,7 +11,7 @@ name = 'astgrepr'
 ast-grep-core = {git = "https://github.com/etiennebacher/ast-grep", rev = "8af95c962d3300b6ddb3eec020d458e7da8207e1"}
 ast-grep-config = {git = "https://github.com/etiennebacher/ast-grep", rev = "8af95c962d3300b6ddb3eec020d458e7da8207e1"}
 ast-grep-language = {git = "https://github.com/etiennebacher/ast-grep", rev = "8af95c962d3300b6ddb3eec020d458e7da8207e1"}
-extendr-api = {git = "https://github.com/extendr/extendr", rev = "d2c401487248c4fc18cbf9c5106a519ed3f556b8", features = ["serde"]}
+extendr-api = "0.7.0"
 once_cell = "1.19.0"
 anyhow = "1.0.75"
 tree-sitter-r = { git = "https://github.com/r-lib/tree-sitter-r.git" }
