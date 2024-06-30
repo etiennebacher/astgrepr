@@ -528,8 +528,17 @@ combine_rules_and_files <- function(rules, files) {
   }
   if (!is.null(files)) {
     files_char <- lapply(files, function(x) {
-      readLines(x, warn = FALSE)
+      rul <- paste(readLines(x, warn = FALSE), collapse = "\n")
+      rul <- strsplit(rul, "---")[[1]]
+      lapply(rul, function(y) {
+        out <- yaml::read_yaml(text = y)
+        res <- out$rule
+        res$id <- out$id
+        class(res) <- c("astgrep_rule", class(res))
+        res
+      })
     })
+    files_char <- unlist(files_char, recursive = FALSE)
     rules <- append(rules, files_char)
   }
   rules
