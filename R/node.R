@@ -528,7 +528,9 @@ combine_rules_and_files <- function(rules, files) {
   }
   if (!is.null(files)) {
     files_char <- lapply(files, function(x) {
-      rul <- paste(readLines(x, warn = FALSE), collapse = "\n")
+      rul <- readLines(x, warn = FALSE)
+      rul <- rul[grep("^#", rul, invert = TRUE)]
+      rul <- paste(rul, collapse = "\n")
       rul <- strsplit(rul, "---")[[1]]
       lapply(rul, function(y) {
         out <- yaml::read_yaml(text = y)
