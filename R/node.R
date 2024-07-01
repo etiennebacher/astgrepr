@@ -485,7 +485,9 @@ node_find <- function(x, ..., files = NULL) {
   lapply(rules, function(rule) {
     res <- x$find(to_yaml(rule))
     if (length(res) > 0) {
-      res[[1]]
+      res <- res[[1]]
+      attr(res, "other_info") <- attr(rule, "other_info")
+      res
     } else {
       return(NULL)
     }
@@ -537,6 +539,7 @@ combine_rules_and_files <- function(rules, files) {
         res <- out$rule
         res$id <- out$id
         class(res) <- c("astgrep_rule", class(res))
+        attr(res, "other_info") <- out[-which(names(out) %in% c("rule", "id"))]
         res
       })
     })
