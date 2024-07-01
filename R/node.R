@@ -510,12 +510,15 @@ node_find_all <- function(x, ..., files = NULL) {
   })
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
-  out <- lapply(out, function(x) {
-    if (length(x) == 0) {
+  out <- lapply(seq_along(out), function(x) {
+    res <- out[[x]]
+    if (length(res) == 0) {
       return(NULL)
     }
-    names(x) <- paste0("node_", seq_along(x))
-    unlist(x, recursive = FALSE)
+    names(res) <- paste0("node_", seq_along(res))
+    res <- unlist(res, recursive = FALSE)
+    attr(res, "other_info") <- attr(rules[[x]], "other_info")
+    res
   }) |>
     add_sgnodelist_class()
 
