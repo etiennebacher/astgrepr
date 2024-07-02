@@ -24,7 +24,7 @@ tree_new <- function(txt, file) {
     stop("`txt` must a be a string of length 1.")
   }
   if (!missing(file)) {
-    txt <- paste(readLines(file), collapse = "\n")
+    txt <- paste(readLines(file, warn = FALSE), collapse = "\n")
   }
   SgRoot$new(txt)
 }

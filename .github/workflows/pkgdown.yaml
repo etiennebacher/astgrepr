@@ -13,10 +13,6 @@ name: pkgdown
 
 permissions: read-all
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
-
 jobs:
   pkgdown:
     runs-on: ubuntu-latest

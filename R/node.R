@@ -485,7 +485,9 @@ node_find <- function(x, ..., files = NULL) {
   lapply(rules, function(rule) {
     res <- x$find(to_yaml(rule))
     if (length(res) > 0) {
-      res[[1]]
+      res <- res[[1]]
+      attr(res, "other_info") <- attr(rule, "other_info")
+      res
     } else {
       return(NULL)
     }
@@ -508,12 +510,15 @@ node_find_all <- function(x, ..., files = NULL) {
   })
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
-  out <- lapply(out, function(x) {
-    if (length(x) == 0) {
+  out <- lapply(seq_along(out), function(x) {
+    res <- out[[x]]
+    if (length(res) == 0) {
       return(NULL)
     }
-    names(x) <- paste0("node_", seq_along(x))
-    unlist(x, recursive = FALSE)
+    names(res) <- paste0("node_", seq_along(res))
+    res <- unlist(res, recursive = FALSE)
+    attr(res, "other_info") <- attr(rules[[x]], "other_info")
+    res
   }) |>
     add_sgnodelist_class()
 
@@ -528,8 +533,20 @@ combine_rules_and_files <- function(rules, files) {
   }
   if (!is.null(files)) {
     files_char <- lapply(files, function(x) {
-      readLines(x, warn = FALSE)
+      rul <- readLines(x, warn = FALSE)
+      rul <- rul[grep("^#", rul, invert = TRUE)]
+      rul <- paste(rul, collapse = "\n")
+      rul <- strsplit(rul, "---")[[1]]
+      lapply(rul, function(y) {
+        out <- yaml::read_yaml(text = y)
+        res <- out$rule
+        res$id <- out$id
+        class(res) <- c("astgrep_rule", class(res))
+        attr(res, "other_info") <- out[-which(names(out) %in% c("rule", "id"))]
+        res
+      })
     })
+    files_char <- unlist(files_char, recursive = FALSE)
     rules <- append(rules, files_char)
   }
   rules

@@ -24,6 +24,10 @@ Rust crate. `ast-grep` is a tool to parse the abstract syntax tree (AST) of some
 code and to perform search and rewrite of code. This is extremely useful to build
 linters, stylers, and perform a lot of code analysis.
 
+See the example below and the [“Getting started”
+vignette](https://astgrepr.etiennebacher.com/articles/astgrepr) for
+a gentle introduction to `astgrepr`.
+
 Since `astgrepr` can be used as a low-level foundation for other tools (such as
 linters), the number of R dependencies is kept low:
 
@@ -40,11 +44,30 @@ local::. 0.0.1 [new][bld]
 Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 ```
 
+## Installation
+
+### Windows or macOS
+
+``` r
+install.packages(
+  'astgrepr', 
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
+)
+```
+
+### Linux
+
+``` r
+install.packages(
+  'astgrepr', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
+)
+```
+
 
 ## Demo
 
 ```{r}
-
 library(astgrepr)
 
 src <- "library(tidyverse)
@@ -96,7 +119,7 @@ There is some recent work linking `tree-sitter` and R. Those are not competing
 with `astgrepr` but are rather a complement to it:
 
 * [`r-lib/tree-sitter-r`](https://github.com/r-lib/tree-sitter-r): provide the
-  R grammer to be used with tools built on `tree-sitter`. `astgrepr` relies on
+  R grammar to be used with tools built on `tree-sitter`. `astgrepr` relies on
   this grammar under the hood.
 * [`DavisVaughan/r-tree-sitter`](https://github.com/DavisVaughan/r-tree-sitter):
   a companion of `r-lib/tree-sitter-r`. This gives a way to get the tree-sitter

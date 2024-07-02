@@ -8,3 +8,4 @@
 ^src/rust/vendor$
 ^pkgdown$
 _pkgdown.yml
+^_pkgdown\.yml$
