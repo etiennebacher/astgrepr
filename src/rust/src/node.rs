@@ -324,7 +324,6 @@ impl SgNode {
     fn commit_edits(&self, edits: List) -> String {
         let mut edits2 = edits
             .values()
-            .into_iter()
             .map(|xi| Edit::from(xi.as_list().unwrap()))
             .collect::<Vec<Edit>>();
 
