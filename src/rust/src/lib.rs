@@ -76,7 +76,7 @@ impl UnicodePosition {
 
 #[derive(Clone)]
 pub struct SgRoot {
-    inner: AstGrep<StrDoc<tree_sitter_facade_sg::Language>>,
+    inner: AstGrep<StrDoc<crate::language::TSLanguage>>,
     filename: String,
     position: UnicodePosition,
 }
@@ -85,9 +85,7 @@ pub struct SgRoot {
 impl SgRoot {
     fn new(src: &str) -> Self {
         let position = UnicodePosition::new(src);
-        let lang = R.get_ts_language();
-
-        let inner = language::Language::ast_grep(&lang, src);
+        let inner = R.ast_grep(src);
         Self {
             inner,
             filename: "anonymous".into(),
