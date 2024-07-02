@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/404.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/404.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/LICENSE-text.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/LICENSE.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/articles/astgrepr.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/articles/astgrepr.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/articles/index.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/authors.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/authors.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/index.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/index.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/news/index.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/news/index.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/ast_rule.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/ast_rule.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/expect_snapshot.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/expect_snapshot.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/index.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-find.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-find.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-fix.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-fix.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-get-match.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-get-match.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-info.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-info.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-is.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-is.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-range.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-range.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-text.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-text.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node-traversal.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node-traversal.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node_get_root.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node_get_root.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/node_kind.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/node_kind.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/pattern_rule.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/pattern_rule.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/relational_rule.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/relational_rule.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/tree_new.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/tree_new.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/tree_rewrite.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/tree_rewrite.html</loc>
   </url>
   <url>
-    <loc>https://etiennebacher.github.io/astgrepr/reference/tree_root.html</loc>
+    <loc>https://astgrepr.etiennebacher.com/reference/tree_root.html</loc>
   </url>
 </urlset>
