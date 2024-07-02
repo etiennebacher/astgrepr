@@ -1,4 +1,3 @@
-use crate::Language;
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
