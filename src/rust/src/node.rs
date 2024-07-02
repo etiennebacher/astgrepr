@@ -35,7 +35,7 @@ pub struct Edit {
 
 #[extendr]
 pub struct SgNode {
-    pub inner: NodeMatch<'static, StrDoc<crate::language::TSLanguage>>,
+    pub inner: NodeMatch<'static, StrDoc<crate::language::R>>,
     // refcount SgRoot
     pub(crate) root: SgRoot,
 }
@@ -168,7 +168,7 @@ impl SgNode {
         let list_matchers = rule
             .iter()
             .map(|xi| get_matcher_from_rule(self.inner.lang().clone(), xi))
-            .collect::<Vec<RuleCore<tree_sitter_facade_sg::Language>>>();
+            .collect::<Vec<RuleCore<crate::language::R>>>();
 
         list_matchers
             .iter()
@@ -392,10 +392,7 @@ impl From<List> for Edit {
 //     })
 // }
 
-fn get_matcher_from_rule(
-    lang: crate::language::TSLanguage,
-    rule: &str,
-) -> RuleCore<crate::language::TSLanguage> {
+fn get_matcher_from_rule(lang: crate::language::R, rule: &str) -> RuleCore<crate::language::R> {
     let rule = crate::ser::new_rule(rule);
 
     let rule_core = SerializableRuleCore {

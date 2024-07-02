@@ -3,7 +3,7 @@ mod language;
 pub mod node;
 mod range;
 pub mod ser;
-use crate::language::Language;
+use ast_grep_core::Language;
 use ast_grep_core::{AstGrep, NodeMatch, StrDoc};
 
 use language::R;
@@ -76,7 +76,7 @@ impl UnicodePosition {
 
 #[derive(Clone)]
 pub struct SgRoot {
-    inner: AstGrep<StrDoc<crate::language::TSLanguage>>,
+    inner: AstGrep<StrDoc<crate::language::R>>,
     filename: String,
     position: UnicodePosition,
 }
