@@ -1,9 +1,4 @@
-use crate::AstGrep;
-use crate::StrDoc;
 use ast_grep_core::language::*;
-use ast_grep_core::meta_var::MetaVariable;
-use ast_grep_core::Language;
-use std::borrow::Cow;
 use std::iter::repeat;
 
 #[derive(Clone)]

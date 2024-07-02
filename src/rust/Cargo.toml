@@ -8,8 +8,8 @@ crate-type = ['staticlib']
 name = 'astgrepr'
 
 [dependencies]
-ast-grep-core = {git = "https://github.com/etiennebacher/ast-grep", rev = "aa15adacdfabb85e07fdb5409fe24b25bbb324d1"}
-ast-grep-config = {git = "https://github.com/etiennebacher/ast-grep", rev = "aa15adacdfabb85e07fdb5409fe24b25bbb324d1"}
+ast-grep-core = "0.24.1"
+ast-grep-config = "0.24.1"
 extendr-api = "0.7.0"
 once_cell = "1.19.0"
 anyhow = "1.0.75"
