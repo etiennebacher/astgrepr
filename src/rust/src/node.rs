@@ -3,7 +3,6 @@ use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
-use ast_grep_language::SupportLang;
 
 pub struct Pos {
     /// line number starting from 0
@@ -36,7 +35,7 @@ pub struct Edit {
 
 #[extendr]
 pub struct SgNode {
-    pub inner: NodeMatch<'static, StrDoc<SupportLang>>,
+    pub inner: NodeMatch<'static, StrDoc<crate::language::R>>,
     // refcount SgRoot
     pub(crate) root: SgRoot,
 }
@@ -86,27 +85,27 @@ impl SgNode {
 
     /*---------- Search Refinement  ----------*/
     fn matches(&self, rule: &str) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.matches(matcher)
     }
 
     fn inside(&self, rule: &str) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.inside(matcher)
     }
 
     fn has(&self, rule: &str) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.has(matcher)
     }
 
     fn precedes(&self, rule: &str) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.precedes(matcher)
     }
 
     fn follows(&self, rule: &str) -> bool {
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.follows(matcher)
     }
 
@@ -153,7 +152,7 @@ impl SgNode {
 
     pub fn find(&self, rule: &str) -> List {
         // let matcher2 = self.get_matcher(config, rule)?;
-        let matcher = get_matcher_from_rule(*self.inner.lang(), rule);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         let inner = self.inner.find(matcher);
         if inner.is_some() {
             list!(Self {
@@ -168,8 +167,8 @@ impl SgNode {
     fn find_all(&self, rule: Strings) -> List {
         let list_matchers = rule
             .iter()
-            .map(|xi| get_matcher_from_rule(*self.inner.lang(), xi))
-            .collect::<Vec<RuleCore<SupportLang>>>();
+            .map(|xi| get_matcher_from_rule(self.inner.lang().clone(), xi))
+            .collect::<Vec<RuleCore<crate::language::R>>>();
 
         list_matchers
             .iter()
@@ -294,7 +293,7 @@ impl SgNode {
             .collect()
     }
 
-    // fn get_matcher(&self, config: Option<List>, kwargs: Option<List>) -> RuleCore<SupportLang> {
+    // fn get_matcher(&self, config: Option<List>, kwargs: Option<List>) -> RuleCore<tree_sitter_facade_sg::Language> {
     //     let lang = self.inner.lang();
     //     let config = if let Some(config) = config {
     //         config_from_dict(config)?
@@ -393,7 +392,7 @@ impl From<List> for Edit {
 //     })
 // }
 
-fn get_matcher_from_rule(lang: SupportLang, rule: &str) -> RuleCore<SupportLang> {
+fn get_matcher_from_rule(lang: crate::language::R, rule: &str) -> RuleCore<crate::language::R> {
     let rule = crate::ser::new_rule(rule);
 
     let rule_core = SerializableRuleCore {
