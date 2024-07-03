@@ -8,3 +8,10 @@ docs
 src/rust/vendor
 src/vendor
 inst/doc
+
+any_duplicated.yml
+is_numeric.yml
+test.R
+test.py
+test_long.R
+test_long_fixed.R
