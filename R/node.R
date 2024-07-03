@@ -816,7 +816,7 @@ node_replace_all <- function(x, ...) {
       out
     })
   }) |>
-    setNames(names(x))
+    stats::setNames(names(x))
 
   class(out) <- c("astgrep_replacements", class(out))
   out

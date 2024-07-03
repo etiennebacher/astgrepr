@@ -27,11 +27,10 @@ Since `astgrepr` can be used as a low-level foundation for other tools
 local::. 0.0.1 [new][bld]                                                  
 ├─checkmate 2.3.1 [new][dl] (746.54 kB)
 │ └─backports 1.5.0 [new]
-├─rrapply 1.2.7 [new][bld][cmp]
-├─stringi 1.8.4 [new]
+├─rrapply 1.2.7 [new]
 └─yaml 2.3.8 [new][dl] (119.08 kB)
 
-Key:  [new] new | [dl] download | [bld] build | [cmp] compile
+Key:  [new] new | [dl] download | [bld] build
 ```
 
 ## Installation

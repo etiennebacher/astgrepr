@@ -127,9 +127,29 @@ tree_rewrite <- function(root, replacements) {
     elem_row <- attr(replacements[[i]], "coords_start")[1] + 1
     start <- attr(replacements[[i]], "coords_start")[2] + 1
     end <- attr(replacements[[i]], "coords_end")[2]
-    # TODO: find a base R alternative
-    stringi::stri_sub(new_txt[elem_row], start, end) <- replacements[[i]]
+    my_stri_sub(new_txt[elem_row], start, end) <- replacements[[i]]
   }
   class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
   new_txt
+}
+
+
+# Base R alternative to stringi::stri_sub()
+"my_stri_sub<-" <- function(x, start, end, value) {
+  # browser()
+  if (start == 1) {
+    part1 <- character()
+  } else {
+    part1 <- substr(x, 1, start - 1)
+  }
+
+  part2 <- value
+
+  if (end == nchar(x)) {
+    part3 <- character()
+  } else {
+    part3 <- substr(x, end + 1, stop = nchar(x))
+  }
+
+  paste0(part1, part2, part3)
 }
