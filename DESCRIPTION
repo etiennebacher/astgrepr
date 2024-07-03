@@ -22,6 +22,7 @@ Imports:
     yaml
 Suggests:
     knitr,
+    rextendr,
     rmarkdown,
     rstudioapi,
     tinytest
