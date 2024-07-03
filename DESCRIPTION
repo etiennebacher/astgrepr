@@ -25,7 +25,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
     tinytest
-URL: https://github.com/etiennebacher/astgrepr, https://etiennebacher.github.io/astgrepr/
+URL: https://github.com/etiennebacher/astgrepr, https://astgrepr.etiennebacher.com/
 BugReports: https://github.com/etiennebacher/astgrepr/issues
 SystemRequirements: Cargo (Rust's package manager), rustc
 Roxygen: list(markdown = TRUE)
