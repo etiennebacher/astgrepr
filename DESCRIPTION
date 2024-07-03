@@ -24,9 +24,11 @@ Suggests:
     knitr,
     rmarkdown,
     rstudioapi,
+    spelling,
     tinytest
 URL: https://github.com/etiennebacher/astgrepr, https://astgrepr.etiennebacher.com/
 BugReports: https://github.com/etiennebacher/astgrepr/issues
 SystemRequirements: Cargo (Rust's package manager), rustc
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
+Language: en-US
