@@ -7,6 +7,10 @@ edition = '2021'
 crate-type = ['staticlib']
 name = 'astgrepr'
 
+[profile.release]
+lto = true
+codegen-units= 1
+
 [dependencies]
 ast-grep-core = "0.24.1"
 ast-grep-config = "0.24.1"
