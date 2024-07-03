@@ -42,17 +42,3 @@ to_yaml <- function(x) {
   }
   yaml::as.yaml(non_null, indent.mapping.sequence = TRUE)
 }
-
-# For CRAN: https://github.com/r-lib/tree-sitter-r/issues/130
-vendor_pkgs <- function() {
-  rextendr::vendor_pkgs()
-  problematic_files <- c(
-    "src/vendor/tree-sitter-r/src/parser.c",
-    "src/vendor/tree-sitter-r/src/tree_sitter/array.h"
-  )
-  for (i in problematic_files) {
-    lines <- readLines(i)
-    lines <- grep("#pragma", lines, value = TRUE, invert = TRUE)
-    writeLines(lines, i)
-  }
-}

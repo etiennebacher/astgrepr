@@ -9,3 +9,4 @@
 ^pkgdown$
 _pkgdown.yml
 ^_pkgdown\.yml$
+^dev$
