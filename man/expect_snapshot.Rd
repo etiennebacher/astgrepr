@@ -6,6 +6,11 @@
 \usage{
 expect_snapshot(label, current)
 }
+\arguments{
+\item{label}{Snapshot name}
+
+\item{current}{Code that outputs some text}
+}
 \description{
 \code{tinytest} helper
 }

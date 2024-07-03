@@ -13,6 +13,9 @@ test_this_file <- function() {
 
 #' `tinytest` helper
 #'
+#' @param label Snapshot name
+#' @param current Code that outputs some text
+#'
 #' @export
 #' @keywords internal
 expect_snapshot <- function(label, current) {

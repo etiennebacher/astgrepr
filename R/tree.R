@@ -98,13 +98,13 @@ tree_root <- function(x) {
 #' ### Replace all nodes found by each rule
 #'
 #' nodes_to_replace <- root |>
-#'   node_find(
+#'   node_find_all(
 #'     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
 #'     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
 #'   )
 #'
 #' fixes <- nodes_to_replace |>
-#'   node_replace(
+#'   node_replace_all(
 #'     any_na = "anyNA(~~VAR~~)",
 #'     any_dup = "anyDuplicated(~~VAR~~) > 0"
 #'   )
@@ -116,19 +116,7 @@ tree_root <- function(x) {
 #' tree_rewrite(root, fixes)
 
 tree_rewrite <- function(root, replacements) {
-  original_txt <- strsplit(root$text(), "\n")[[1]]
-  new_txt <- original_txt
-
-  if (inherits(replacements, "astgrep_replacements")) {
-    replacements <- unlist(replacements, recursive = FALSE)
-  }
-
-  for (i in seq_along(replacements)) {
-    elem_row <- attr(replacements[[i]], "coords_start")[1] + 1
-    start <- attr(replacements[[i]], "coords_start")[2] + 1
-    end <- attr(replacements[[i]], "coords_end")[2]
-    my_stri_sub(new_txt[elem_row], start, end) <- replacements[[i]]
-  }
+  new_txt <- root$commit_edits(replacements)
   class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
   new_txt
 }

@@ -57,13 +57,13 @@ tree_rewrite(root, fixes)
 ### Replace all nodes found by each rule
 
 nodes_to_replace <- root |>
-  node_find(
+  node_find_all(
     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
   )
 
 fixes <- nodes_to_replace |>
-  node_replace(
+  node_replace_all(
     any_na = "anyNA(~~VAR~~)",
     any_dup = "anyDuplicated(~~VAR~~) > 0"
   )
