@@ -17,6 +17,6 @@ ast-grep-config = "0.24.1"
 extendr-api = "0.7.0"
 once_cell = "1.19.0"
 anyhow = "1.0.75"
-tree-sitter-r = { git = "https://github.com/r-lib/tree-sitter-r.git" }
+tree-sitter-r = "1.0.1"
 serde = "1.0.197"
 tree-sitter-facade-sg = "0.21.5"
