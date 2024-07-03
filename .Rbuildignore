@@ -10,3 +10,11 @@
 _pkgdown.yml
 ^_pkgdown\.yml$
 ^dev$
+^cran-comments\.md$
+
+any_duplicated.yml
+is_numeric.yml
+test.R
+test.py
+test_long.R
+test_long_fixed.R
