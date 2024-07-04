@@ -151,6 +151,41 @@ rules.</p></dd>
 
 <p>A list (possibly nested) with the class <code>"astgrep_rule"</code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="about-meta-variables">About meta-variables<a class="anchor" aria-label="anchor" href="#about-meta-variables"></a></h2>
+    
+
+<p>Meta-variables allow us to capture some of the content in a pattern. Usually,
+using <code>$</code> followed by an id in uppercase letters is enough:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">src</span> <span class="op">&lt;-</span> <span class="st">"any(duplicated(x))"</span></span>
+<span></span>
+<span><span class="va">root</span> <span class="op">&lt;-</span> <span class="va">src</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/tree_new.html">tree_new</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">root</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"any(duplicated($A))"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;List of 1 rule&gt;</span></span>
+<span><span class="co">#&gt; |--rule_1: 1 node</span></span></code></pre><p></p></div>
+<p>However, in some cases using <code>$</code> is a problem. For instance, if we want to
+capture a column name coming after <code>$</code>, then we can't use <code>$</code> both as code
+and as identifier.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">src</span> <span class="op">&lt;-</span> <span class="st">"df$a"</span></span>
+<span></span>
+<span><span class="va">root</span> <span class="op">&lt;-</span> <span class="va">src</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/tree_new.html">tree_new</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/tree_root.html">tree_root</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">root</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"df$$A"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;List of 1 rule&gt;</span></span>
+<span><span class="co">#&gt; |--rule_1: 0 node</span></span></code></pre><p></p></div>
+<p>In this situation, we can use <code>µ</code> instead:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">root</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/node-find.html">node_find</a></span><span class="op">(</span><span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"df$µA"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;List of 1 rule&gt;</span></span>
+<span><span class="co">#&gt; |--rule_1: 1 node</span></span></code></pre><p></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
