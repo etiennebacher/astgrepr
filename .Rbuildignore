@@ -11,6 +11,11 @@
 ^dev$
 ^cran-comments\.md$
 
+# as in https://github.com/PRQL/prqlc-r/blob/main/.Rbuildignore
+^src/rust/target$
+^src/rust/.cargo$
+
+# random stuff
 ^any_duplicated\.yml$
 ^is_numeric\.yml$
 ^test\.R$
