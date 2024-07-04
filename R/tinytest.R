@@ -30,7 +30,7 @@ expect_snapshot <- function(label, current) {
   }
   if (!file.exists(snapshot_file)) {
     cat(current2, file = snapshot_file, sep = "\n")
-    message("Creating file", snapshot_file)
+    message("Creating file ", snapshot_file)
     return(invisible())
   }
   target <- paste(readLines(snapshot_file, warn = FALSE), collapse = "\n")

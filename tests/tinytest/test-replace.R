@@ -52,3 +52,27 @@ expect_snapshot(
   "rewrite_several_rules_several_nodes",
   tree_rewrite(root, fixes)
 )
+
+
+# with expando
+
+src <- "df$a"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "foo", pattern = "df$µVAR")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace(
+    foo = "df[[\"~~VAR~~\"]]"
+  )
+
+expect_snapshot(
+  "rewrite_with_expando",
+  tree_rewrite(root, fixes)
+)
