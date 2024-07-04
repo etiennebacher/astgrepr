@@ -1,6 +1,5 @@
-# astgrepr (development version)
+# astgrepr 0.0.2
 
-* First CRAN release.
 * More robust handling of yaml files.
 * Update `extendr` to 0.7.0.
 * Many changes that hard to list: basically everything works better.
