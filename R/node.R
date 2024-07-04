@@ -782,10 +782,18 @@ node_replace <- function(x, ...) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
     repl <- replacements[[id]]
-    meta_var <- gsub(".*~~([A-Z]+)~~.*", "\\1", repl)
+    meta_var <- regmatches(repl, gregexpr("~~([A-Z]+)~~", repl))[[1]]
+    meta_var <- gsub("~~", "", meta_var)
 
-    res <- node_text(node_get_match(x[[y]], meta_var))
-    new_text <- gsub("~~([A-Z]+)~~", res, repl)
+    res <- vapply(meta_var, function(mv) {
+      node_text(node_get_match(x[[y]], mv))[[1]]
+    }, character(1))
+    new_text <- repl
+    if (length(res) > 0) {
+      for (i in names(res)) {
+        new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text)
+      }
+    }
     list(x[[y]]$replace(new_text))
   })
   out <- Filter(Negate(is.null), out)
@@ -805,11 +813,20 @@ node_replace_all <- function(x, ...) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
     repl <- replacements[[id]]
-    meta_var <- gsub(".*~~([A-Z]+)~~.*", "\\1", repl)
+    meta_var <- regmatches(repl, gregexpr("~~([A-Z]+)~~", repl))[[1]]
+    meta_var <- gsub("~~", "", meta_var)
 
     lapply(x[[y]], function(z) {
-      res <- node_text(node_get_match(z, meta_var))
-      new_text <- gsub("~~([A-Z]+)~~", res, repl)
+
+      res <- vapply(meta_var, function(mv) {
+        node_text(node_get_match(z, mv))[[1]]
+      }, character(1))
+      new_text <- repl
+      if (length(res) > 0) {
+        for (i in names(res)) {
+          new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text)
+        }
+      }
       z$replace(new_text)
     })
   })

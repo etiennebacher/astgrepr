@@ -56,23 +56,37 @@ expect_snapshot(
 
 # with expando
 
-src <- "df$a"
+src <- "
+iris$Species
+mtcars$drat
+"
 
 root <- src |>
   tree_new() |>
   tree_root()
 
-nodes_to_replace <- root |>
+fixes <- root |>
   node_find(
-    ast_rule(id = "foo", pattern = "df$µVAR")
-  )
-
-fixes <- nodes_to_replace |>
+    ast_rule(id = "foo", pattern = "$DATA$µVAR")
+  ) |>
   node_replace(
-    foo = "df[[\"~~VAR~~\"]]"
+    foo = "~~DATA~~[[\"~~VAR~~\"]]"
   )
 
 expect_snapshot(
   "rewrite_with_expando",
+  tree_rewrite(root, fixes)
+)
+
+fixes <- root |>
+  node_find_all(
+    ast_rule(id = "foo", pattern = "$DATA$µVAR")
+  ) |>
+  node_replace_all(
+    foo = "~~DATA~~[[\"~~VAR~~\"]]"
+  )
+
+expect_snapshot(
+  "rewrite_with_expando_several_replacements",
   tree_rewrite(root, fixes)
 )
