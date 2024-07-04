@@ -57,3 +57,17 @@ expect_equal(
   list(rule_1 = NULL),
   check.attributes = FALSE
 )
+
+src <- "
+mtcars$drat
+mtcars$cyl
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_length(
+  node_find_all(root, ast_rule(pattern = "mtcars$µVAR"))[[1]],
+  2
+)

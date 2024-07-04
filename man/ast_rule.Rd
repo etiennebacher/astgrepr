@@ -69,6 +69,48 @@ used in \verb{node_match*()} and \verb{node_find*()} functions. \code{ast_rule()
 flexible function that allows one to build simple rules but also much more
 complex and specific ones.
 }
+\section{About meta-variables}{
+
+Meta-variables allow us to capture some of the content in a pattern. Usually,
+using \code{$} followed by an id in uppercase letters is enough:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{src <- "any(duplicated(x))"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(ast_rule(pattern = "any(duplicated($A))"))
+#> <List of 1 rule>
+#> |--rule_1: 1 node
+}\if{html}{\out{</div>}}
+
+However, in some cases using \code{$} is a problem. For instance, if we want to
+capture a column name coming after \code{$}, then we can't use \code{$} both as code
+and as identifier.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{src <- "df$a"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+root |>
+  node_find(ast_rule(pattern = "df$$A"))
+#> <List of 1 rule>
+#> |--rule_1: 0 node
+}\if{html}{\out{</div>}}
+
+In this situation, we can use \code{µ} instead:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{root |>
+  node_find(ast_rule(pattern = "df$µA"))
+#> <List of 1 rule>
+#> |--rule_1: 1 node
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 ast_rule(pattern = "print($A)")
 

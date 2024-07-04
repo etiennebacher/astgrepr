@@ -8,7 +8,7 @@ impl Language for R {
         tree_sitter_r::language().into()
     }
     fn expando_char(&self) -> char {
-        'λ'
+        'µ'
     }
     fn meta_var_char(&self) -> char {
         '$'

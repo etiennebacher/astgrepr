@@ -34,6 +34,50 @@
 #' @param id The name of this rule. This can be reused in another rule with
 #'   `matches`.
 #'
+#' @section About meta-variables:
+#' Meta-variables allow us to capture some of the content in a pattern. Usually,
+#' using `$` followed by an id in uppercase letters is enough:
+#'
+#' ```r
+#' src <- "any(duplicated(x))"
+#'
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(ast_rule(pattern = "any(duplicated($A))"))
+#' #> <List of 1 rule>
+#' #> |--rule_1: 1 node
+#' ```
+#'
+#' However, in some cases using `$` is a problem. For instance, if we want to
+#' capture a column name coming after `$`, then we can't use `$` both as code
+#' and as identifier.
+#'
+#' ```r
+#' src <- "df$a"
+#'
+#' root <- src |>
+#'   tree_new() |>
+#'   tree_root()
+#'
+#' root |>
+#'   node_find(ast_rule(pattern = "df$$A"))
+#' #> <List of 1 rule>
+#' #> |--rule_1: 0 node
+#' ```
+#'
+#' In this situation, we can use `µ` instead:
+#'
+#' ```r
+#' root |>
+#'   node_find(ast_rule(pattern = "df$µA"))
+#' #> <List of 1 rule>
+#' #> |--rule_1: 1 node
+#' ```
+#'
+#'
 #' @return A list (possibly nested) with the class `"astgrep_rule"`.
 #' @export
 #'
