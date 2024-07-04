@@ -781,8 +781,6 @@ node_replace <- function(x, ...) {
   check_is_rulelist_or_node(x)
   replacements <- list(...)
 
-  # TODO: check there are no two elements with the same ID
-
   out <- lapply(seq_along(x), function(y) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
