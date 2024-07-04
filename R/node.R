@@ -472,14 +472,7 @@ node_get_root <- function(x) {
 node_find <- function(x, ..., files = NULL) {
   rules <- list(...)
   rules <- combine_rules_and_files(rules, files)
-
-  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
-    id <- rules[[rule_idx]][["id"]]
-    if (is.null(id)) {
-      id <- paste0("rule_", rule_idx)
-    }
-    id
-  })
+  rules_ids <- get_rules_ids(rules)
   names(rules) <- rules_ids
 
   lapply(rules, function(rule) {
@@ -500,14 +493,7 @@ node_find <- function(x, ..., files = NULL) {
 node_find_all <- function(x, ..., files = NULL) {
   rules <- list(...)
   rules <- combine_rules_and_files(rules, files)
-
-  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
-    id <- rules[[rule_idx]][["id"]]
-    if (is.null(id)) {
-      id <- paste0("rule_", rule_idx)
-    }
-    id
-  })
+  rules_ids <- get_rules_ids(rules)
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
   out <- lapply(seq_along(out), function(x) {
@@ -550,6 +536,25 @@ combine_rules_and_files <- function(rules, files) {
     rules <- append(rules, files_char)
   }
   rules
+}
+
+get_rules_ids <- function(rules) {
+  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
+    id <- rules[[rule_idx]][["id"]]
+    if (is.null(id)) {
+      id <- paste0("rule_", rule_idx)
+    }
+    id
+  })
+  if (anyDuplicated(rules_ids) > 0) {
+    name_count <- table(factor(unlist(rules_ids)))
+    name_count <- name_count[name_count > 1]
+    stop(
+      "Rule IDs must be unique. The following are duplicated: ",
+      paste0(names(name_count), " (", name_count, ")", collapse = ", "), "."
+    )
+  }
+  rules_ids
 }
 
 #' Navigate the tree

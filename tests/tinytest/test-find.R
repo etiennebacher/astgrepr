@@ -71,3 +71,25 @@ expect_length(
   node_find_all(root, ast_rule(pattern = "mtcars$µVAR"))[[1]],
   2
 )
+
+expect_error(
+  root |> node_find(
+    ast_rule(id = "foo", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo2", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo2", pattern = "any(duplicated($A))")
+  ),
+  "Rule IDs must be unique. The following are duplicated: foo (2), foo2 (2).",
+  fixed = TRUE
+)
+
+expect_error(
+  root |> node_find_all(
+    ast_rule(id = "foo", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo2", pattern = "any(duplicated($A))"),
+    ast_rule(id = "foo2", pattern = "any(duplicated($A))")
+  ),
+  "Rule IDs must be unique. The following are duplicated: foo (2), foo2 (2).",
+  fixed = TRUE
+)
