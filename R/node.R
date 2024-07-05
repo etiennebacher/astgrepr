@@ -476,14 +476,14 @@ node_find <- function(x, ..., files = NULL) {
   names(rules) <- rules_ids
 
   lapply(rules, function(rule) {
-    res <- x$find(to_yaml(rule))
+    res <- x$find_all(to_yaml(rule))
+    res <- unlist(res)
+    res <- remove_ignored_nodes(res)
     if (length(res) > 0) {
       res <- res[[1]]
-      attr(res, "other_info") <- attr(rule, "other_info")
-      res
-    } else {
-      return(NULL)
     }
+    attr(res, "other_info") <- attr(rule, "other_info")
+    res
   }) |>
     add_rulelist_class()
 }
@@ -501,8 +501,14 @@ node_find_all <- function(x, ..., files = NULL) {
     if (length(res) == 0) {
       return(NULL)
     }
-    names(res) <- paste0("node_", seq_along(res))
     res <- unlist(res, recursive = FALSE)
+    res <- remove_ignored_nodes(res)
+    if (is.null(res)) {
+      return(list())
+    } else if (!is.list(res)) {
+      res <- list(res)
+    }
+    names(res) <- paste0("node_", seq_along(res))
     attr(res, "other_info") <- attr(rules[[x]], "other_info")
     res
   }) |>
@@ -555,6 +561,36 @@ get_rules_ids <- function(rules) {
     )
   }
   rules_ids
+}
+
+remove_ignored_nodes <- function(nodes) {
+  nodes_suppressed <- lapply(nodes, function(found) {
+    prev <- found$prev() %||% NULL
+    if (is.null(prev)) {
+      return(found)
+    } else {
+      prev <- prev[[1]]
+    }
+    prev_start_row <- prev$range()[[1]][1]
+    found_start_row <- found$range()[[1]][1]
+
+    if (prev_start_row + 1 == found_start_row) {
+      if (prev$text() == "# ast-grep-ignore") {
+        return(NULL)
+      }
+    }
+    found
+  })
+  nodes_suppressed <- Filter(Negate(is.null), nodes_suppressed)
+  if (length(nodes_suppressed) == 0) {
+    NULL
+  } else {
+    nodes_suppressed
+  }
+}
+
+`%||%` <- function(x, y) {
+  if (!is.null(x) && length(x) > 0) x else y
 }
 
 #' Navigate the tree
@@ -838,4 +874,15 @@ node_replace_all <- function(x, ...) {
 
   class(out) <- c("astgrep_replacements", class(out))
   out
+}
+
+node_has_parent <- function(x, include_root = FALSE) {
+  check_is_rulelist_or_node(x)
+
+  res <- length(x$parent()) > 0
+
+  if (res && !include_root) {
+    res <- length(x$parent()$parent()) > 0
+  }
+  res
 }
