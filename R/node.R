@@ -565,14 +565,50 @@ get_rules_ids <- function(rules) {
 
 remove_ignored_nodes <- function(nodes) {
   nodes_suppressed <- lapply(nodes, function(found) {
-    prev <- found$prev() %||% NULL
-    if (is.null(prev)) {
-      return(found)
-    } else {
-      prev <- prev[[1]]
-    }
-    prev_start_row <- prev$range()[[1]][1]
+
+    # A node could be positioned anywhere. Start by looking at the previous node
+    # (on the same level).
+    # If it doesn't have the comment we look for, maybe it's because the node is
+    # nested and the comment is at the same level as one of the parent nodes.
+    # So let's go up the parents gradually, and at each step, check the previous
+    # node to see if it's the comment we look for.
+    #
+    # Note that the only valid parents are those on the same line as our node.
+    # For instance:
+    #
+    # "if (any(is.na(x)))" is our text, "any(is.na(x))" is our node, and "if" is
+    # the parent. We could have the comment above the "if" condition so that
+    # works.
+    #
+    # Other example:
+    # "function(x) {
+    #   any(is.na(x))
+    # }"
+    #
+    # Here, if the comment is above the parent "function" then we consider it
+    # as invalid as our node "any(is.na(x))" is not on the same line.
+    #
+    # This could be relaxed later.
+
+    prev <- found
     found_start_row <- found$range()[[1]][1]
+    prev_start_row <- found_start_row
+
+    while (prev_start_row == found_start_row) {
+      prev2 <- prev$prev()
+      if (length(prev2) == 0) {
+        prev2 <- prev$parent()
+        if (length(prev2) == 0) {
+          return(found)
+        } else {
+          prev2 <- prev2[[1]]
+        }
+      } else {
+        prev2 <- prev2[[1]]
+      }
+      prev_start_row <- prev2$range()[[1]][1]
+      prev <- prev2
+    }
 
     if (prev_start_row + 1 == found_start_row) {
       if (prev$text() == "# ast-grep-ignore") {

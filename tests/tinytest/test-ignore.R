@@ -58,9 +58,8 @@ expect_equal(
 
 src <- "
 # ast-grep-ignore
-if (TRUE) {
-  any(duplicated(x))
-  any(duplicated(foo))
+if (any(is.na(x))) {
+  any(duplicated(y))
 }
 print(1)
 "
@@ -69,17 +68,16 @@ root <- src |>
   tree_new() |>
   tree_root()
 
-# TODO: should work I guess
-# expect_equal(
-#   root |>
-#     node_find(ast_rule(pattern = "any(duplicated($A))")) |>
-#     node_text(),
-#   list(rule_1 = NULL)
-# )
-#
-# expect_equal(
-#   root |>
-#     node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
-#     node_text_all(),
-#   list(rule_1 = list())
-# )
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(is.na($A))")) |>
+    node_text(),
+  list(rule_1 = NULL)
+)
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))")) |>
+    node_text(),
+  list(rule_1 = "any(duplicated(y))")
+)
