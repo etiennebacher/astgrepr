@@ -524,7 +524,7 @@ combine_rules_and_files <- function(rules, files) {
       rul <- paste(rul, collapse = "\n")
       rul <- strsplit(rul, "---")[[1]]
       lapply(rul, function(y) {
-        out <- yaml::yaml.load(text = y)
+        out <- yaml::yaml.load(y)
         res <- out$rule
         res$id <- out$id
         class(res) <- c("astgrep_rule", class(res))
