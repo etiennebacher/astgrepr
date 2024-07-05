@@ -625,10 +625,6 @@ remove_ignored_nodes <- function(nodes) {
   }
 }
 
-`%||%` <- function(x, y) {
-  if (!is.null(x) && length(x) > 0) x else y
-}
-
 #' Navigate the tree
 #'
 #' @description
@@ -910,15 +906,4 @@ node_replace_all <- function(x, ...) {
 
   class(out) <- c("astgrep_replacements", class(out))
   out
-}
-
-node_has_parent <- function(x, include_root = FALSE) {
-  check_is_rulelist_or_node(x)
-
-  res <- length(x$parent()) > 0
-
-  if (res && !include_root) {
-    res <- length(x$parent()$parent()) > 0
-  }
-  res
 }
