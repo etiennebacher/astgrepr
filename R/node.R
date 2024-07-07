@@ -478,7 +478,7 @@ node_find <- function(x, ..., files = NULL) {
   lapply(rules, function(rule) {
     res <- x$find_all(to_yaml(rule))
     res <- unlist(res)
-    res <- remove_ignored_nodes(res)
+    # res <- remove_ignored_nodes(res)
     if (length(res) > 0) {
       res <- res[[1]]
     }
@@ -502,7 +502,7 @@ node_find_all <- function(x, ..., files = NULL) {
       return(NULL)
     }
     res <- unlist(res, recursive = FALSE)
-    res <- remove_ignored_nodes(res)
+    # res <- remove_ignored_nodes(res)
     if (is.null(res)) {
       return(list())
     } else if (!is.list(res)) {
