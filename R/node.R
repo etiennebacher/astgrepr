@@ -857,7 +857,18 @@ node_replace <- function(x, ...) {
     meta_var <- gsub("~~", "", meta_var)
 
     res <- vapply(meta_var, function(mv) {
-      node_text(node_get_match(x[[y]], mv))[[1]]
+      matches <- node_get_match(x[[y]], mv)
+      if (length(matches[[1]]) == 0) {
+        matches <- x[[y]]$get_multiple_matches(mv)
+        txts <- unlist(node_text_all(list(matches)))
+        if (txts[length(txts)] == ",") {
+          txts <- txts[-length(txts)]
+        }
+        txts <- gsub("^,$", ", ", txts)
+        paste(txts, collapse = "")
+      } else {
+        node_text(matches)[[1]]
+      }
     }, character(1))
     new_text <- repl
     if (length(res) > 0) {

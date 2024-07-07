@@ -54,7 +54,7 @@ expect_snapshot(
 )
 
 
-# with expando
+# with expando ------------------------------------------
 
 src <- "
 iris$Species
@@ -88,5 +88,27 @@ fixes <- root |>
 
 expect_snapshot(
   "rewrite_with_expando_several_replacements",
+  tree_rewrite(root, fixes)
+)
+
+
+# with replace multi meta-var ------------------------------------------
+
+src <- "paste0('a', 'b', sep = '')"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find(ast_rule(id = "foo", pattern = "paste0($$$A sep = '')"))
+
+fixes <- nodes_to_replace |>
+  node_replace(
+    foo = "paste0(~~A~~)"
+  )
+
+expect_snapshot(
+  "rewrite_multi_meta_var",
   tree_rewrite(root, fixes)
 )
