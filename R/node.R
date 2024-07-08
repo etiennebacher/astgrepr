@@ -811,7 +811,7 @@ node_replace <- function(x, ...) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
     repl <- replacements[[id]]
-    meta_var <- regmatches(repl, gregexpr("~~([A-Z]+)~~", repl))[[1]]
+    meta_var <- regmatches(repl, gregexpr("~~([A-Z0-9]+)~~", repl))[[1]]
     meta_var <- gsub("~~", "", meta_var)
 
     res <- vapply(meta_var, function(mv) {

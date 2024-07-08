@@ -112,3 +112,26 @@ expect_snapshot(
   "rewrite_multi_meta_var",
   tree_rewrite(root, fixes)
 )
+
+# ensure digits in metavar work ------------------------------------------
+
+src <- "length(x == 0)"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "foo", pattern = "length($VAR == $VAR2)")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace(
+    foo = "length(~~VAR~~) == ~~VAR2~~"
+  )
+
+expect_snapshot(
+  "rewrite_digit_in_metavar",
+  tree_rewrite(root, fixes)
+)
