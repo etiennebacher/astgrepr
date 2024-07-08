@@ -11,8 +11,13 @@ check_is_rulelist_or_node <- function(x) {
 }
 
 check_all_nodes <- function(x) {
-  if (!all(vapply(unlist(x, recursive = TRUE), \(y) inherits(y, "SgNode"), FUN.VALUE = logical(1)))) {
-    stop("All elements of `x` must be objects of class 'SgNode'.")
+  elems <- unlist(x, recursive = TRUE)
+  # faster than going through all elems via vapply() since here we can stop on
+  # first non-node instead of using inherits() on all of them
+  for (i in elems) {
+    if (!inherits(i, "SgNode")) {
+      stop("All elements of `x` must be objects of class 'SgNode'.")
+    }
   }
 }
 
