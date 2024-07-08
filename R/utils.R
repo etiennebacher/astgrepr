@@ -47,3 +47,5 @@ to_yaml <- function(x) {
   }
   yaml::as.yaml(non_null, indent.mapping.sequence = TRUE)
 }
+
+seq2 <- Vectorize(seq.default, vectorize.args = c("from", "to"))

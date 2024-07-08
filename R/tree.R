@@ -26,11 +26,6 @@ tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
   if (!missing(txt) && (!all(is.character(txt)) || length(txt) != 1 )) {
     stop("`txt` must a be a string of length 1.")
   }
-  if (length(ignore_tags) > 1) {
-    ignore_pattern <- paste0("# (", paste(ignore_tags, collapse = "|"), ")")
-  } else {
-    ignore_pattern <- paste0("# ", ignore_tags)
-  }
   if (!missing(file)) {
     raw_txt <- readLines(file, warn = FALSE)
     txt <- paste(raw_txt, collapse = "\n")
@@ -38,9 +33,46 @@ tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
     raw_txt <- strsplit(txt, "\\n")[[1]]
   }
   out <- SgRoot$new(txt)
-  # Make this 0-indexed for easier comparison with ast-grep output
-  attr(out, "lines_to_ignore") <- grep(ignore_pattern, raw_txt) - 1
+  attr(out, "lines_to_ignore") <- find_lines_to_ignore(raw_txt, ignore_tags)
   out
+}
+
+
+find_lines_to_ignore <- function(raw_txt, ignore_tags) {
+  if (length(ignore_tags) == 0) {
+    return(NULL)
+  } else if (length(ignore_tags) > 1) {
+    ignore_pattern <- paste0("# (", paste(ignore_tags, collapse = "|"), ")")
+  } else {
+    ignore_pattern <- paste0("# ", ignore_tags)
+  }
+
+  single_lines_to_ignore <- grep(ignore_pattern, raw_txt, perl = TRUE)
+  chunks_to_ignore <- NULL
+
+  for (i in ignore_tags) {
+    ignore_tags_start <- paste0("# ", i, "-start")
+    ignore_tags_end <- paste0("# ", i, "-end")
+
+    ignore_chunk_start <- grep(ignore_tags_start, raw_txt, perl = TRUE)
+    ignore_chunk_end <- grep(ignore_tags_end, raw_txt, perl = TRUE)
+
+    l_ignore_chunk_start <- length(ignore_chunk_start)
+    l_ignore_chunk_end <- length(ignore_chunk_end)
+
+    if (l_ignore_chunk_start != l_ignore_chunk_end) {
+      stop("Mismatch: the number of `start` patterns (", l_ignore_chunk_start,
+           ") and of `end` patterns (", l_ignore_chunk_end, ") must be equal.")
+    }
+
+    if (l_ignore_chunk_start == 0 && l_ignore_chunk_end == 0) {
+      next
+    }
+    chunks_to_ignore <- unlist(seq2(ignore_chunk_start, ignore_chunk_end))
+  }
+
+  # Make this 0-indexed for easier comparison with ast-grep output
+  unique(c(single_lines_to_ignore, chunks_to_ignore)) - 1
 }
 
 #' Get the root of the syntax tree
