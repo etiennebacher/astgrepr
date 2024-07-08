@@ -1,81 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/404.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/articles/astgrepr.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/index.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/ast_rule.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/expect_snapshot.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-find.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-fix.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-get-match.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-info.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-is.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-range.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-text.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node-traversal.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node_get_root.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/node_kind.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/pattern_rule.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/relational_rule.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/tree_new.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/tree_rewrite.html</loc>
-  </url>
-  <url>
-    <loc>https://astgrepr.etiennebacher.com/reference/tree_root.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://astgrepr.etiennebacher.com/404.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/LICENSE-text.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/LICENSE.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/articles/astgrepr.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/articles/index.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/authors.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/index.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/news/index.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/ast_rule.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/expect_snapshot.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/index.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-find.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-fix.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-get-match.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-info.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-is.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-range.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-text.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node-traversal.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node_get_root.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/node_kind.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/pattern_rule.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/relational_rule.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/tree_new.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/tree_rewrite.html</loc></url>
+<url><loc>https://astgrepr.etiennebacher.com/reference/tree_root.html</loc></url>
 </urlset>
+

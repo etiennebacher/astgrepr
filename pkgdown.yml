@@ -1,10 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   astgrepr: astgrepr.html
-last_built: 2024-07-05T21:57Z
+last_built: 2024-07-08T06:38Z
 urls:
   reference: https://astgrepr.etiennebacher.com/reference
   article: https://astgrepr.etiennebacher.com/articles
-
