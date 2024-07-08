@@ -16,17 +16,28 @@
 #'     any(duplicated(x))"
 #'
 #' tree_new(src)
-tree_new <- function(txt, file) {
+tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
   if ((missing(txt) && missing(file)) || (!missing(txt) && !missing(file))) {
     stop("Must pass either `txt` or `file`.")
   }
   if (!missing(txt) && (!all(is.character(txt)) || length(txt) != 1 )) {
     stop("`txt` must a be a string of length 1.")
   }
-  if (!missing(file)) {
-    txt <- paste(readLines(file, warn = FALSE), collapse = "\n")
+  if (length(ignore_tags) > 1) {
+    ignore_pattern <- paste0("# (", paste(ignore_tags, collapse = "|"), ")")
+  } else {
+    ignore_pattern <- paste0("# ", ignore_tags)
   }
-  SgRoot$new(txt)
+  if (!missing(file)) {
+    raw_txt <- readLines(file, warn = FALSE)
+    txt <- paste(raw_txt, collapse = "\n")
+  } else {
+    raw_txt <- strsplit(txt, "\\n")[[1]]
+  }
+  out <- SgRoot$new(txt)
+  # Make this 0-indexed for easier comparison with ast-grep output
+  attr(out, "lines_to_ignore") <- grep(ignore_pattern, raw_txt) - 1
+  out
 }
 
 #' Get the root of the syntax tree
@@ -47,7 +58,9 @@ tree_new <- function(txt, file) {
 #' tree_root(tree)
 tree_root <- function(x) {
   check_is_tree(x)
-  x$root()
+  out <- x$root()
+  attr(out, "lines_to_ignore") <- attr(x, "lines_to_ignore")
+  out
 }
 
 #' Rewrite the tree with a list of replacements

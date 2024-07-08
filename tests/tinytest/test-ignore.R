@@ -81,3 +81,50 @@ expect_equal(
     node_text(),
   list(rule_1 = "any(duplicated(y))")
 )
+
+# other tags to ignore -------------------------------
+
+src <- "
+# flint-ignore
+any(duplicated(x))
+# ast-grep-ignore
+any(duplicated(y))
+print(1)
+"
+
+root <- src |>
+  tree_new(ignore_tags = "flint-ignore") |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))")) |>
+    node_text(),
+  list(rule_1 = "any(duplicated(y))")
+)
+
+expect_equal(
+  root |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
+    node_text_all(),
+  list(rule_1 = list(node_1 = "any(duplicated(y))"))
+)
+
+
+root <- src |>
+  tree_new(ignore_tags = c("flint-ignore", "ast-grep-ignore")) |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))")) |>
+    node_text(),
+  list(rule_1 = NULL)
+)
+
+expect_equal(
+  root |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
+    node_text_all(),
+  list(rule_1 = list())
+)

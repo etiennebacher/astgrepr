@@ -478,7 +478,7 @@ node_find <- function(x, ..., files = NULL) {
   lapply(rules, function(rule) {
     res <- x$find_all(to_yaml(rule))
     res <- unlist(res)
-    # res <- remove_ignored_nodes(res)
+    res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
     if (length(res) > 0) {
       res <- res[[1]]
     }
@@ -496,20 +496,20 @@ node_find_all <- function(x, ..., files = NULL) {
   rules_ids <- get_rules_ids(rules)
 
   out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
-  out <- lapply(seq_along(out), function(x) {
-    res <- out[[x]]
+  out <- lapply(seq_along(out), function(node_idx) {
+    res <- out[[node_idx]]
     if (length(res) == 0) {
       return(NULL)
     }
     res <- unlist(res, recursive = FALSE)
-    # res <- remove_ignored_nodes(res)
+    res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
     if (is.null(res)) {
       return(list())
     } else if (!is.list(res)) {
       res <- list(res)
     }
     names(res) <- paste0("node_", seq_along(res))
-    attr(res, "other_info") <- attr(rules[[x]], "other_info")
+    attr(res, "other_info") <- attr(rules[[node_idx]], "other_info")
     res
   }) |>
     add_sgnodelist_class()
@@ -563,59 +563,17 @@ get_rules_ids <- function(rules) {
   rules_ids
 }
 
-remove_ignored_nodes <- function(nodes) {
+remove_ignored_nodes <- function(nodes, ignored_lines) {
+  if (length(ignored_lines) == 0) {
+    return(nodes)
+  }
   nodes_suppressed <- lapply(nodes, function(found) {
-
-    # A node could be positioned anywhere. Start by looking at the previous node
-    # (on the same level).
-    # If it doesn't have the comment we look for, maybe it's because the node is
-    # nested and the comment is at the same level as one of the parent nodes.
-    # So let's go up the parents gradually, and at each step, check the previous
-    # node to see if it's the comment we look for.
-    #
-    # Note that the only valid parents are those on the same line as our node.
-    # For instance:
-    #
-    # "if (any(is.na(x)))" is our text, "any(is.na(x))" is our node, and "if" is
-    # the parent. We could have the comment above the "if" condition so that
-    # works.
-    #
-    # Other example:
-    # "function(x) {
-    #   any(is.na(x))
-    # }"
-    #
-    # Here, if the comment is above the parent "function" then we consider it
-    # as invalid as our node "any(is.na(x))" is not on the same line.
-    #
-    # This could be relaxed later.
-
-    prev <- found
-    found_start_row <- found$range()[[1]][1]
-    prev_start_row <- found_start_row
-
-    while (prev_start_row == found_start_row) {
-      prev2 <- prev$prev()
-      if (length(prev2) == 0) {
-        prev2 <- prev$parent()
-        if (length(prev2) == 0) {
-          return(found)
-        } else {
-          prev2 <- prev2[[1]]
-        }
-      } else {
-        prev2 <- prev2[[1]]
-      }
-      prev_start_row <- prev2$range()[[1]][1]
-      prev <- prev2
+    line_start <- found$range()[[1]][[1]]
+    if (any(ignored_lines + 1 == line_start)) {
+      return(NULL)
+    } else {
+      found
     }
-
-    if (prev_start_row + 1 == found_start_row) {
-      if (prev$text() == "# ast-grep-ignore") {
-        return(NULL)
-      }
-    }
-    found
   })
   nodes_suppressed <- Filter(Negate(is.null), nodes_suppressed)
   if (length(nodes_suppressed) == 0) {
