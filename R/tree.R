@@ -7,6 +7,9 @@
 #' If provided, `file` must not be provided.
 #' @param file Path to file containing the code to parse. If provided, `txt`
 #' must not be provided.
+#' @param ignore_tags Character vector indicating the tags to ignore. Default is
+#' `"ast-grep-ignore"`, meaning that any line that follows `# ast-grep-ignore`
+#' will be ignored in the output of `node_*()` functions.
 #'
 #' @export
 #' @examples
