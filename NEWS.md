@@ -1,3 +1,11 @@
+# astgrepr 0.0.3
+
+* Add support to tags to ignore lines and chunks of code with `# ast-grep-ignore`,
+  `# ast-grep-ignore-start` and `# ast-grep-ignore-end`.
+* Lots of refactor.
+* Support digits in meta-variables.
+* More tests.
+
 # astgrepr 0.0.2
 
 * More robust handling of yaml files.
