@@ -244,7 +244,11 @@ node_matches <- function(x, ..., files = NULL) {
 
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
-    res <- x[[rule_idx]][[1]]$matches(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    constraints <- lapply(constraints, function(x) {
+      to_yaml(x)
+    })
+    res <- x[[rule_idx]][[1]]$matches(to_yaml(rule), constraints)
     res
   }) |>
     list()
@@ -476,13 +480,17 @@ node_find <- function(x, ..., files = NULL) {
   names(rules) <- rules_ids
 
   lapply(rules, function(rule) {
-    res <- x$find_all(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    constraints <- lapply(constraints, function(x) {
+      to_yaml(x)
+    })
+    res <- x$find_all(to_yaml(rule), constraints)
     res <- unlist(res)
     res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
     if (length(res) > 0) {
       res <- res[[1]]
+      attr(res, "other_info") <- attr(rule, "other_info")
     }
-    attr(res, "other_info") <- attr(rule, "other_info")
     res
   }) |>
     add_rulelist_class()
@@ -495,7 +503,6 @@ node_find_all <- function(x, ..., files = NULL) {
   rules <- combine_rules_and_files(rules, files)
   rules_ids <- get_rules_ids(rules)
 
-  browser()
   rules2 <- vapply(rules, to_yaml, FUN.VALUE = character(1))
   constraints <- lapply(rules, function(rul) {
     attr(rul, "other_info")$constraints
