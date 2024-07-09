@@ -495,7 +495,16 @@ node_find_all <- function(x, ..., files = NULL) {
   rules <- combine_rules_and_files(rules, files)
   rules_ids <- get_rules_ids(rules)
 
-  out <- x$find_all(vapply(rules, to_yaml, FUN.VALUE = character(1)))
+  browser()
+  rules2 <- vapply(rules, to_yaml, FUN.VALUE = character(1))
+  constraints <- lapply(rules, function(rul) {
+    attr(rul, "other_info")$constraints
+  })
+  constraints2 <- lapply(unlist(constraints, recursive = FALSE), function(x) {
+    x |> to_yaml()
+  })
+
+  out <- x$find_all(rules2, constraints2)
   out <- lapply(seq_along(out), function(node_idx) {
     res <- out[[node_idx]]
     if (length(res) == 0) {
