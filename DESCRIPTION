@@ -14,7 +14,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Config/rextendr/version: 0.3.1.9000
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
     checkmate,
     rrapply,
