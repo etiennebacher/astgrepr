@@ -518,9 +518,11 @@ node_find_all <- function(x, ..., files = NULL) {
       to_yaml()
     res
   })
-  names(constraints2) <- unlist(lapply(constraints, names))
-
-  browser()
+  for (i in seq_along(constraints2)) {
+    if (!is.null(constraints2[[i]])) {
+      names(constraints2)[i] <- names(constraints[[i]])
+    }
+  }
 
   out <- x$find_all(rules2, constraints2)
   out <- lapply(seq_along(out), function(node_idx) {

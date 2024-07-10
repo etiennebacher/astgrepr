@@ -5,6 +5,7 @@ use extendr_api::prelude::*;
 
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRule, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
+use list::KeyValue;
 
 pub struct Pos {
     /// line number starting from 0
@@ -169,7 +170,15 @@ impl SgNode {
     fn find_all(&self, rule: Strings, constraints: List) -> List {
         let list_matchers = rule
             .iter()
-            .map(|xi| get_matcher_from_rule(self.inner.lang().clone(), xi, constraints.clone()))
+            .zip(constraints)
+            .map(|xi| {
+                let mut map: HashMap<&str, Robj> = HashMap::new();
+                let foo = xi.1.key();
+                map.insert(foo.as_str(), xi.1.value());
+
+                let cons = List::from_hashmap(map).unwrap();
+                get_matcher_from_rule(self.inner.lang().clone(), xi.0, cons)
+            })
             .collect::<Vec<RuleCore<crate::language::R>>>();
 
         list_matchers
@@ -364,23 +373,28 @@ fn get_matcher_from_rule(
     constraints: List,
 ) -> RuleCore<crate::language::R> {
     let rule = crate::ser::new_rule(rule);
-    let constraints = constraints
-        .iter()
-        .map(|xi| {
-            rprintln!("{:?}", xi);
-            (
-                xi.0.to_string(),
-                crate::ser::new_rule(xi.1.as_str().unwrap()),
-            )
-        })
-        .collect::<HashMap<String, SerializableRule>>();
+    let mut m: HashMap<String, SerializableRule> = HashMap::new();
 
-    let rule_core = SerializableRuleCore {
-        rule,
-        constraints: Some(constraints),
-        utils: None,
-        transform: None,
-        fix: None,
+    let rule_core = if constraints.elt(0).unwrap().len() > 0 {
+        m.insert(
+            constraints.names().unwrap().next().unwrap().to_string(),
+            crate::ser::new_rule(constraints.elt(0).unwrap().as_str().unwrap()),
+        );
+        SerializableRuleCore {
+            rule,
+            constraints: Some(m),
+            utils: None,
+            transform: None,
+            fix: None,
+        }
+    } else {
+        SerializableRuleCore {
+            rule,
+            constraints: None,
+            utils: None,
+            transform: None,
+            fix: None,
+        }
     };
 
     let env = DeserializeEnv::new(lang);
