@@ -367,6 +367,7 @@ fn get_matcher_from_rule(
     let constraints = constraints
         .iter()
         .map(|xi| {
+            rprintln!("{:?}", xi);
             (
                 xi.0.to_string(),
                 crate::ser::new_rule(xi.1.as_str().unwrap()),

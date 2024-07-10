@@ -507,9 +507,20 @@ node_find_all <- function(x, ..., files = NULL) {
   constraints <- lapply(rules, function(rul) {
     attr(rul, "other_info")$constraints
   })
-  constraints2 <- lapply(unlist(constraints, recursive = FALSE), function(x) {
-    x |> to_yaml()
+
+  constraints2 <- lapply(seq_along(constraints), function(constraint_idx) {
+    cons <- constraints[[constraint_idx]]
+    if (is.null(cons)) {
+      return(NULL)
+    }
+    names(cons) <- NULL
+    res <- unlist(cons, recursive = FALSE) |>
+      to_yaml()
+    res
   })
+  names(constraints2) <- unlist(lapply(constraints, names))
+
+  browser()
 
   out <- x$find_all(rules2, constraints2)
   out <- lapply(seq_along(out), function(node_idx) {
