@@ -132,8 +132,7 @@ ast_rule <- function(
     all = all,
     any = any,
     not = not,
-    matches = matches,
-    id = id
+    matches = matches
   )
 
   # I can't have several arguments with the same name e.g
@@ -152,6 +151,7 @@ ast_rule <- function(
   })
 
   class(out) <- c("astgrep_rule", class(out))
+  attr(out, "id") <- id
   out
 }
 

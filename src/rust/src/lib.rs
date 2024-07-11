@@ -2,7 +2,6 @@ use extendr_api::prelude::*;
 mod language;
 pub mod node;
 mod range;
-pub mod ser;
 use ast_grep_core::Language;
 use ast_grep_core::{AstGrep, NodeMatch, StrDoc};
 
@@ -118,5 +117,4 @@ extendr_module! {
     // fn ast_grep_r;
     impl SgRoot;
     use node;
-    use ser;
 }

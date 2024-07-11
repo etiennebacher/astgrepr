@@ -245,10 +245,9 @@ node_matches <- function(x, ..., files = NULL) {
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
     constraints <- attr(rule, "other_info")$constraints
-    constraints <- lapply(constraints, function(x) {
-      to_yaml(x)
-    })
-    res <- x[[rule_idx]][[1]]$matches(to_yaml(rule), constraints)
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$matches(rule)
     res
   }) |>
     list()
@@ -481,10 +480,9 @@ node_find <- function(x, ..., files = NULL) {
 
   lapply(rules, function(rule) {
     constraints <- attr(rule, "other_info")$constraints
-    constraints <- lapply(constraints, function(x) {
-      to_yaml(x)
-    })
-    res <- x$find_all(to_yaml(rule), constraints)
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x$find_all(rule)
     res <- unlist(res)
     res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
     if (length(res) > 0) {
@@ -493,7 +491,8 @@ node_find <- function(x, ..., files = NULL) {
     }
     res
   }) |>
-    add_rulelist_class()
+    add_rulelist_class() |>
+    stats::setNames(rules_ids)
 }
 
 #' @name node-find
@@ -503,15 +502,14 @@ node_find_all <- function(x, ..., files = NULL) {
   rules <- combine_rules_and_files(rules, files)
   rules_ids <- get_rules_ids(rules)
 
-  rules2 <- vapply(rules, to_yaml, FUN.VALUE = character(1))
-  constraints <- lapply(rules, function(rul) {
-    attr(rul, "other_info")$constraints
-  })
-  constraints2 <- lapply(unlist(constraints, recursive = FALSE), function(x) {
-    x |> to_yaml()
-  })
+  rules2 <- vapply(seq_along(rules), function(x) {
+    rul <- rules[[x]]
+    cons <- attr(rul, "other_info")$constraints
+    list(rule = rul, constraints = cons) |>
+      to_yaml()
+  }, character(1))
 
-  out <- x$find_all(rules2, constraints2)
+  out <- x$find_all(rules2)
   out <- lapply(seq_along(out), function(node_idx) {
     res <- out[[node_idx]]
     if (length(res) == 0) {
@@ -548,7 +546,7 @@ combine_rules_and_files <- function(rules, files) {
       lapply(rul, function(y) {
         out <- yaml::yaml.load(y)
         res <- out$rule
-        res$id <- out$id
+        attr(res, "id") <- out$id
         class(res) <- c("astgrep_rule", class(res))
         attr(res, "other_info") <- out[-which(names(out) %in% c("rule", "id"))]
         res
@@ -562,7 +560,7 @@ combine_rules_and_files <- function(rules, files) {
 
 get_rules_ids <- function(rules) {
   rules_ids <- lapply(seq_along(rules), function(rule_idx) {
-    id <- rules[[rule_idx]][["id"]]
+    id <- attr(rules[[rule_idx]], "id")
     if (is.null(id)) {
       id <- paste0("rule_", rule_idx)
     }
