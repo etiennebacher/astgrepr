@@ -109,13 +109,13 @@ expect_equal(
   root |>
     node_find(files = temp_rule) |>
     node_text(),
-  list(rule_1 = "x+2", rule_2 = NULL)
+  list(rule_1 = "x+2", rule_2 = "any(duplicated(x))")
 )
 
 expect_equal(
   root |>
     node_find_all(files = temp_rule) |>
     node_text_all(),
-  list(rule_1 = list(node_1 = "x+2", node_2 = "y + 1"))
+  list(rule_1 = list(node_1 = "x+2", node_2 = "y + 1"), rule_2 = list(node_1 = "any(duplicated(x))"))
 )
 

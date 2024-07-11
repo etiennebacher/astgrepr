@@ -1,11 +1,8 @@
-use std::collections::HashMap;
-
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
-use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRule, SerializableRuleCore};
+use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
 use ast_grep_core::{NodeMatch, StrDoc};
-use list::KeyValue;
 
 pub struct Pos {
     /// line number starting from 0
@@ -87,28 +84,28 @@ impl SgNode {
     }
 
     /*---------- Search Refinement  ----------*/
-    fn matches(&self, rule: &str, constraints: List) -> bool {
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+    fn matches(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.matches(matcher)
     }
 
-    fn inside(&self, rule: &str, constraints: List) -> bool {
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+    fn inside(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.inside(matcher)
     }
 
-    fn has(&self, rule: &str, constraints: List) -> bool {
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+    fn has(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.has(matcher)
     }
 
-    fn precedes(&self, rule: &str, constraints: List) -> bool {
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+    fn precedes(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.precedes(matcher)
     }
 
-    fn follows(&self, rule: &str, constraints: List) -> bool {
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+    fn follows(&self, rule: &str) -> bool {
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         self.inner.follows(matcher)
     }
 
@@ -153,9 +150,9 @@ impl SgNode {
         self.root.clone()
     }
 
-    pub fn find(&self, rule: &str, constraints: List) -> List {
+    pub fn find(&self, rule: &str) -> List {
         // let matcher2 = self.get_matcher(config, rule)?;
-        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule, constraints);
+        let matcher = get_matcher_from_rule(self.inner.lang().clone(), rule);
         let inner = self.inner.find(matcher);
         if inner.is_some() {
             list!(Self {
@@ -167,18 +164,10 @@ impl SgNode {
         }
     }
 
-    fn find_all(&self, rule: Strings, constraints: List) -> List {
+    fn find_all(&self, rule: Strings) -> List {
         let list_matchers = rule
             .iter()
-            .zip(constraints)
-            .map(|xi| {
-                let mut map: HashMap<&str, Robj> = HashMap::new();
-                let foo = xi.1.key();
-                map.insert(foo.as_str(), xi.1.value());
-
-                let cons = List::from_hashmap(map).unwrap();
-                get_matcher_from_rule(self.inner.lang().clone(), xi.0, cons)
-            })
+            .map(|xi| get_matcher_from_rule(self.inner.lang().clone(), xi))
             .collect::<Vec<RuleCore<crate::language::R>>>();
 
         list_matchers
@@ -367,36 +356,9 @@ impl From<List> for Edit {
     }
 }
 
-fn get_matcher_from_rule(
-    lang: crate::language::R,
-    rule: &str,
-    constraints: List,
-) -> RuleCore<crate::language::R> {
-    let rule = crate::ser::new_rule(rule);
-    let mut m: HashMap<String, SerializableRule> = HashMap::new();
-
-    let rule_core = if constraints.elt(0).unwrap().len() > 0 {
-        m.insert(
-            constraints.names().unwrap().next().unwrap().to_string(),
-            crate::ser::new_rule(constraints.elt(0).unwrap().as_str().unwrap()),
-        );
-        SerializableRuleCore {
-            rule,
-            constraints: Some(m),
-            utils: None,
-            transform: None,
-            fix: None,
-        }
-    } else {
-        SerializableRuleCore {
-            rule,
-            constraints: None,
-            utils: None,
-            transform: None,
-            fix: None,
-        }
-    };
-
+fn get_matcher_from_rule(lang: crate::language::R, rule: &str) -> RuleCore<crate::language::R> {
+    let rule_core: SerializableRuleCore =
+        ast_grep_config::from_str(rule).expect("cannot parse rule");
     let env = DeserializeEnv::new(lang);
     rule_core.get_matcher(env).unwrap()
 }
