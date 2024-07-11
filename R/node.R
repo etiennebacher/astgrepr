@@ -505,7 +505,7 @@ node_find_all <- function(x, ..., files = NULL) {
   rules2 <- vapply(seq_along(rules), function(x) {
     rul <- rules[[x]]
     cons <- attr(rul, "other_info")$constraints
-    c(list(rule = rul, constraints = cons)) |>
+    list(rule = rul, constraints = cons) |>
       to_yaml()
   }, character(1))
 
