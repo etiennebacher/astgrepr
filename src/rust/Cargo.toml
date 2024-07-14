@@ -12,8 +12,8 @@ lto = true
 codegen-units= 1
 
 [dependencies]
-ast-grep-core = "0.24.1"
-ast-grep-config = "0.24.1"
+ast-grep-core = "0.25.0"
+ast-grep-config = "0.25.0"
 extendr-api = "0.7.0"
 once_cell = "1.19.0"
 anyhow = "1.0.75"
