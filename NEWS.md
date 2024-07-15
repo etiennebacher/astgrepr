@@ -1,3 +1,10 @@
+# astgrepr 0.0.4
+
+* Bump `ast-grep` to 0.25.0.
+* Refactor Rust code.
+* Add support for `constraints` field when using rules YAML files (#19, #21).
+* Accept digits in metavar.
+
 # astgrepr 0.0.3
 
 * Add support to tags to ignore lines and chunks of code with `# ast-grep-ignore`,
