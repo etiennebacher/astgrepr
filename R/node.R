@@ -524,6 +524,36 @@ node_find_all <- function(x, ..., files = NULL) {
     }
     names(res) <- paste0("node_", seq_along(res))
     attr(res, "other_info") <- attr(rules[[node_idx]], "other_info")
+
+    msg <- attr(res, "other_info")$message
+    meta_var <- regmatches(msg, gregexpr("~~([A-Z0-9]+)~~", msg))
+    if (length(meta_var) > 0) {
+      meta_var <- meta_var[[1]]
+      meta_var <- gsub("~~", "", meta_var)
+
+      repl <- vapply(meta_var, function(mv) {
+        matches <- node_get_match(res[[1]], mv)
+        if (length(matches[[1]]) == 0) {
+          matches <- res[[1]]$get_multiple_matches(mv)
+          txts <- unlist(node_text_all(list(matches)))
+          if (txts[length(txts)] == ",") {
+            txts <- txts[-length(txts)]
+          }
+          txts <- gsub("^,$", ", ", txts)
+          paste(txts, collapse = "")
+        } else {
+          node_text(matches)[[1]]
+        }
+      }, character(1))
+
+      if (length(repl) > 0) {
+        for (i in names(repl)) {
+          msg <- gsub(paste0("~~", i, "~~"), repl[i], msg)
+        }
+      }
+      attr(res, "other_info")$message <- msg
+    }
+
     res
   }) |>
     add_sgnodelist_class()
