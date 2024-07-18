@@ -1,3 +1,7 @@
+# astgrepr 0.0.5
+
+* Support metavars in the `message` field in YAML files.
+
 # astgrepr 0.0.4
 
 * Bump `ast-grep` to 0.25.0.
