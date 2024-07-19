@@ -1,0 +1,3 @@
+lab <- gsub("\\s+", "", lab)
+drat = any(is.na(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)))
+

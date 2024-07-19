@@ -548,7 +548,7 @@ node_find_all <- function(x, ..., files = NULL) {
 
       if (length(repl) > 0) {
         for (i in names(repl)) {
-          msg <- gsub(paste0("~~", i, "~~"), repl[i], msg)
+          msg <- gsub(paste0("~~", i, "~~"), repl[i], msg, fixed = TRUE)
         }
       }
       attr(res, "other_info")$message <- msg
@@ -875,7 +875,7 @@ node_replace <- function(x, ...) {
     new_text <- repl
     if (length(res) > 0) {
       for (i in names(res)) {
-        new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text)
+        new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text, fixed = TRUE)
       }
     }
     list(x[[y]]$replace(new_text))
@@ -908,7 +908,7 @@ node_replace_all <- function(x, ...) {
       new_text <- repl
       if (length(res) > 0) {
         for (i in names(res)) {
-          new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text)
+          new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text, fixed = TRUE)
         }
       }
       z$replace(new_text)

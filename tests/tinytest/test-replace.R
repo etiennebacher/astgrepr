@@ -135,3 +135,49 @@ expect_snapshot(
   "rewrite_digit_in_metavar",
   tree_rewrite(root, fixes)
 )
+
+# check that providing an input with escaped characters (e.g regex) doesn't
+# remove those characters ------------------------------------------
+
+src <- r'(
+lab = gsub("\\s+", "", lab)
+drat = any(is.na(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)))
+)'
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find(
+    ast_rule(id = "foo", pattern = "$A = $B")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace(
+    foo = "~~A~~ <- ~~B~~"
+  )
+
+expect_snapshot(
+  "rewrite_escaped_chars",
+  tree_rewrite(root, fixes)
+)
+
+
+# TODO: this should work
+# nodes_to_replace <- root |>
+#   node_find_all(
+#     ast_rule(id = "foo", pattern = "$A = $B"),
+#     ast_rule(id = "foo2", pattern = "any(is.na($EXPR))")
+#   )
+#
+# fixes <- nodes_to_replace |>
+#   node_replace_all(
+#     foo = "~~A~~ <- ~~B~~",
+#     foo2 = "anyNA(~~EXPR~~)"
+#   )
+#
+# expect_snapshot(
+#   "rewrite_several_rules_escaped_chars",
+#   tree_rewrite(root, fixes)
+# )
