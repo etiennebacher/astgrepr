@@ -330,15 +330,44 @@ impl SgNode {
 
         let offset = self.inner.range().start;
         let mut start = 0;
+
+        let old_length = old_content.chars().count();
+        let mut new_length = old_length;
+
+        // rprintln!("offset: {:?}", offset);
+        // rprintln!("converted: {:?}", converted);
+
         for diff in converted {
-            let pos = diff.start_pos - offset;
-            // skip overlapping edits
+            let mut pos = diff.start_pos - offset;
+            let mut end_pos = diff.end_pos;
+            // rprintln!("pos: {:?}", pos);
+            // rprintln!("start: {:?}", start);
             if start > pos {
-                continue;
+                rprintln!("here");
+                let diff_length = new_length - old_length;
+                let diff_length_i32 = (new_length - old_length) as i32;
+                rprintln!("diff_length: {:?}", diff_length);
+                rprintln!("diff_length_i32: {:?}", diff_length_i32);
+
+                if diff_length_i32 > 0 {
+                    pos = pos + diff_length;
+                    end_pos = end_pos + diff_length;
+                } else if diff_length_i32 < 0 {
+                    rprintln!("here 2");
+                    pos = pos - diff_length;
+                    end_pos = end_pos - diff_length;
+                    rprintln!("pos: {:?}", pos);
+                    rprintln!("end_pos: {:?}", end_pos);
+                } else {
+                    pos = pos;
+                    end_pos = end_pos;
+                }
+                // continue;
             }
             new_content.push_str(&old_content[start..pos]);
             new_content.push_str(&diff.inserted_text);
-            start = diff.end_pos - offset;
+            start = end_pos - offset;
+            new_length = new_content.chars().count();
         }
         // add trailing statements
         new_content.push_str(&old_content[start..]);
