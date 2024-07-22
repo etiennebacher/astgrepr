@@ -315,8 +315,8 @@ impl SgNode {
 
         edits2.sort_by_key(|edit| edit.start_pos);
 
-        let mut new_content = String::new();
         let old_content = self.text();
+        let mut new_content = old_content.clone();
         let root = &self.root;
         let conv = &root.position;
         let converted: Vec<_> = edits2
@@ -329,48 +329,30 @@ impl SgNode {
             .collect();
 
         let offset = self.inner.range().start;
-        let mut start = 0;
+        // let mut start = 0;
 
         let old_length = old_content.chars().count();
         let mut new_length = old_length;
 
-        // rprintln!("offset: {:?}", offset);
-        // rprintln!("converted: {:?}", converted);
-
         for diff in converted {
-            let mut pos = diff.start_pos - offset;
-            let mut end_pos = diff.end_pos;
-            // rprintln!("pos: {:?}", pos);
-            // rprintln!("start: {:?}", start);
-            if start > pos {
-                rprintln!("here");
-                let diff_length = new_length - old_length;
-                let diff_length_i32 = (new_length - old_length) as i32;
-                rprintln!("diff_length: {:?}", diff_length);
-                rprintln!("diff_length_i32: {:?}", diff_length_i32);
+            let mut start = diff.start_pos - offset;
+            let mut end = diff.end_pos;
 
-                if diff_length_i32 > 0 {
-                    pos = pos + diff_length;
-                    end_pos = end_pos + diff_length;
-                } else if diff_length_i32 < 0 {
-                    rprintln!("here 2");
-                    pos = pos - diff_length;
-                    end_pos = end_pos - diff_length;
-                    rprintln!("pos: {:?}", pos);
-                    rprintln!("end_pos: {:?}", end_pos);
-                } else {
-                    pos = pos;
-                    end_pos = end_pos;
-                }
-                // continue;
+            let diff_length = new_length - old_length;
+            let diff_length_i32 = (new_length - old_length) as i32;
+
+            if diff_length_i32 > 0 {
+                start = start + diff_length;
+                end = end + diff_length;
+            } else if diff_length_i32 < 0 {
+                start = start - diff_length;
+                end = end - diff_length;
             }
-            new_content.push_str(&old_content[start..pos]);
-            new_content.push_str(&diff.inserted_text);
-            start = end_pos - offset;
+
+            new_content.replace_range(start..end, &diff.inserted_text);
             new_length = new_content.chars().count();
         }
-        // add trailing statements
-        new_content.push_str(&old_content[start..]);
+
         new_content
     }
 }
