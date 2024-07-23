@@ -315,8 +315,8 @@ impl SgNode {
 
         edits2.sort_by_key(|edit| edit.start_pos);
 
-        let mut new_content = String::new();
         let old_content = self.text();
+        let mut new_content = old_content.clone();
         let root = &self.root;
         let conv = &root.position;
         let converted: Vec<_> = edits2
@@ -329,19 +329,28 @@ impl SgNode {
             .collect();
 
         let offset = self.inner.range().start;
-        let mut start = 0;
+
+        let old_length = old_content.chars().count();
+        let mut new_length = old_length;
+
         for diff in converted {
-            let pos = diff.start_pos - offset;
-            // skip overlapping edits
-            if start > pos {
-                continue;
+            let mut start = (diff.start_pos - offset) as i32;
+            let mut end = (diff.end_pos - offset) as i32;
+
+            let diff_length = (new_length - old_length) as i32;
+
+            if diff_length != 0 {
+                start += diff_length;
+                end += diff_length;
             }
-            new_content.push_str(&old_content[start..pos]);
-            new_content.push_str(&diff.inserted_text);
-            start = diff.end_pos - offset;
+
+            let start_usize = start as usize;
+            let end_usize = end as usize;
+
+            new_content.replace_range(start_usize..end_usize, &diff.inserted_text);
+            new_length = new_content.chars().count();
         }
-        // add trailing statements
-        new_content.push_str(&old_content[start..]);
+
         new_content
     }
 }

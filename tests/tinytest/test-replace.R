@@ -163,21 +163,31 @@ expect_snapshot(
   tree_rewrite(root, fixes)
 )
 
+# several replacements on the same line ---------------------------------------
 
-# TODO: this should work
-# nodes_to_replace <- root |>
-#   node_find_all(
-#     ast_rule(id = "foo", pattern = "$A = $B"),
-#     ast_rule(id = "foo2", pattern = "any(is.na($EXPR))")
-#   )
-#
-# fixes <- nodes_to_replace |>
-#   node_replace_all(
-#     foo = "~~A~~ <- ~~B~~",
-#     foo2 = "anyNA(~~EXPR~~)"
-#   )
-#
-# expect_snapshot(
-#   "rewrite_several_rules_escaped_chars",
-#   tree_rewrite(root, fixes)
-# )
+src <- r'(lab = any(is.na(x))
+drat = any(duplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg))))'
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "foo", pattern = "$A = $B"),
+    ast_rule(id = "foo2", pattern = "any(duplicated($VAR))"),
+    ast_rule(id = "foo3", pattern = "any(is.na($VAR))")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace_all(
+    foo = "~~A~~ <- ~~B~~",
+    foo2 = "anyDuplicated(~~VAR~~) > 0",
+    foo3 = "anyNA(~~VAR~~)"
+  )
+
+expect_snapshot(
+  "rewrite_one_line_several_replacements",
+  tree_rewrite(root, fixes)
+)
+
