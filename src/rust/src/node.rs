@@ -334,28 +334,21 @@ impl SgNode {
         let mut new_length = old_length;
 
         for diff in converted {
-            let mut start = diff.start_pos - offset;
-            let mut end = diff.end_pos - offset;
+            let mut start = (diff.start_pos - offset) as i32;
+            let mut end = (diff.end_pos - offset) as i32;
 
-            let diff_length = new_length - old_length;
-            let diff_length_i32 = (new_length - old_length) as i32;
+            let diff_length = (new_length - old_length) as i32;
 
-            if diff_length_i32 > 0 {
+            if diff_length != 0 {
                 start += diff_length;
                 end += diff_length;
-            } else if diff_length_i32 < 0 {
-                rprintln!("here 2");
-                rprintln!("diff_length: {:?}", diff_length);
-                start -= diff_length;
-                rprintln!("start: {:?}", start);
-                end -= diff_length;
-                rprintln!("end: {:?}", end);
             }
 
-            new_content.replace_range(start..end, &diff.inserted_text);
-            rprintln!("new_content: {:?}", new_content);
+            let start_usize = start as usize;
+            let end_usize = end as usize;
+
+            new_content.replace_range(start_usize..end_usize, &diff.inserted_text);
             new_length = new_content.chars().count();
-            rprintln!("new_length: {:?}", new_length);
         }
 
         new_content
