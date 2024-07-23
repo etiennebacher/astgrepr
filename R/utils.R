@@ -49,3 +49,7 @@ to_yaml <- function(x) {
 }
 
 seq2 <- Vectorize(seq.default, vectorize.args = c("from", "to"))
+
+drop_null_elements <- function(x) {
+  Filter(Negate(is.null), x)
+}

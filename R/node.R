@@ -619,7 +619,7 @@ remove_ignored_nodes <- function(nodes, ignored_lines) {
       found
     }
   })
-  nodes_suppressed <- Filter(Negate(is.null), nodes_suppressed)
+  nodes_suppressed <- drop_null_elements(nodes_suppressed)
   if (length(nodes_suppressed) == 0) {
     NULL
   } else {
@@ -862,6 +862,13 @@ node_replace <- function(x, ...) {
       matches <- node_get_match(x[[y]], mv)
       if (length(matches[[1]]) == 0) {
         matches <- x[[y]]$get_multiple_matches(mv)
+        if (length(matches) == 0) {
+          stop(
+            "Couldn't get value for meta-variable `", mv,
+            "`.\nAre you sure it exists in the rule `", id, "`?",
+            call. = FALSE
+          )
+        }
         txts <- unlist(node_text_all(list(matches)))
         if (txts[length(txts)] == ",") {
           txts <- txts[-length(txts)]
@@ -880,7 +887,7 @@ node_replace <- function(x, ...) {
     }
     list(x[[y]]$replace(new_text))
   })
-  out <- Filter(Negate(is.null), out)
+  out <- drop_null_elements(out)
   out <- unlist(out, recursive = FALSE)
 
   class(out) <- c("astgrep_replacement", class(out))
@@ -901,9 +908,16 @@ node_replace_all <- function(x, ...) {
     meta_var <- gsub("~~", "", meta_var)
 
     lapply(x[[y]], function(z) {
-
       res <- vapply(meta_var, function(mv) {
-        node_text(node_get_match(z, mv))[[1]]
+        mv_text <- node_text(node_get_match(z, mv))[[1]]
+        if (is.null(mv_text)) {
+          stop(
+            "Couldn't get value for meta-variable `", mv,
+            "`.\nAre you sure it exists in the rule `", id, "`?",
+            call. = FALSE
+          )
+        }
+        mv_text
       }, character(1))
       new_text <- repl
       if (length(res) > 0) {
@@ -914,7 +928,7 @@ node_replace_all <- function(x, ...) {
       z$replace(new_text)
     })
   })
-  out <- Filter(Negate(is.null), out)
+  out <- drop_null_elements(out)
   out <- unlist(out, recursive = FALSE)
 
   class(out) <- c("astgrep_replacements", class(out))
