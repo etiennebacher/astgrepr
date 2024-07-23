@@ -619,7 +619,7 @@ remove_ignored_nodes <- function(nodes, ignored_lines) {
       found
     }
   })
-  nodes_suppressed <- Filter(Negate(is.null), nodes_suppressed)
+  nodes_suppressed <- drop_null_elements(nodes_suppressed)
   if (length(nodes_suppressed) == 0) {
     NULL
   } else {
@@ -887,7 +887,7 @@ node_replace <- function(x, ...) {
     }
     list(x[[y]]$replace(new_text))
   })
-  out <- Filter(Negate(is.null), out)
+  out <- drop_null_elements(out)
   out <- unlist(out, recursive = FALSE)
 
   class(out) <- c("astgrep_replacement", class(out))
@@ -928,7 +928,7 @@ node_replace_all <- function(x, ...) {
       z$replace(new_text)
     })
   })
-  out <- Filter(Negate(is.null), out)
+  out <- drop_null_elements(out)
   out <- unlist(out, recursive = FALSE)
 
   class(out) <- c("astgrep_replacements", class(out))
