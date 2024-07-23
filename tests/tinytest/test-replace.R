@@ -191,3 +191,34 @@ expect_snapshot(
   tree_rewrite(root, fixes)
 )
 
+# error when replace uses meta var that don't exist in rule
+# # ---------------------------------------
+
+src <- "a = 1"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_error(
+  root |>
+    node_find(
+      ast_rule(id = "foo", pattern = "$A = $B")
+    ) |>
+    node_replace(
+      foo = "~~NOTEXIST~~ <- ~~B~~"
+    ),
+  "Couldn't get value for meta-variable `NOTEXIST`"
+)
+
+expect_error(
+  root |>
+    node_find_all(
+      ast_rule(id = "foo", pattern = "$A = $B")
+    ) |>
+    node_replace_all(
+      foo = "~~NOTEXIST~~ <- ~~B~~"
+    ),
+  "Couldn't get value for meta-variable `NOTEXIST`"
+)
+

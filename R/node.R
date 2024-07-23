@@ -862,6 +862,13 @@ node_replace <- function(x, ...) {
       matches <- node_get_match(x[[y]], mv)
       if (length(matches[[1]]) == 0) {
         matches <- x[[y]]$get_multiple_matches(mv)
+        if (length(matches) == 0) {
+          stop(
+            "Couldn't get value for meta-variable `", mv,
+            "`.\nAre you sure it exists in the rule `", id, "`?",
+            call. = FALSE
+          )
+        }
         txts <- unlist(node_text_all(list(matches)))
         if (txts[length(txts)] == ",") {
           txts <- txts[-length(txts)]
@@ -901,9 +908,16 @@ node_replace_all <- function(x, ...) {
     meta_var <- gsub("~~", "", meta_var)
 
     lapply(x[[y]], function(z) {
-
       res <- vapply(meta_var, function(mv) {
-        node_text(node_get_match(z, mv))[[1]]
+        mv_text <- node_text(node_get_match(z, mv))[[1]]
+        if (is.null(mv_text)) {
+          stop(
+            "Couldn't get value for meta-variable `", mv,
+            "`.\nAre you sure it exists in the rule `", id, "`?",
+            call. = FALSE
+          )
+        }
+        mv_text
       }, character(1))
       new_text <- repl
       if (length(res) > 0) {
