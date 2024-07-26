@@ -116,9 +116,8 @@
 <span><span class="co">#&gt; [1] ","</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rule_1[[3]]</span></span>
-<span><span class="co">#&gt; [1] "mean = 2"</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; [1] "mean = 2"</span></span>
+<span></span>
 <span><span class="co"># find occurrences of any(duplicated())</span></span>
 <span><span class="va">root</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/node-find.html">node_find_all</a></span><span class="op">(</span><span class="fu"><a href="reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"any(duplicated($A))"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -128,9 +127,8 @@
 <span><span class="co">#&gt; [1] "any(duplicated(y))"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rule_1$node_2</span></span>
-<span><span class="co">#&gt; [1] "any(duplicated(x))"</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; [1] "any(duplicated(x))"</span></span>
+<span></span>
 <span><span class="co"># find some nodes and replace them with something else</span></span>
 <span><span class="va">nodes_to_replace</span> <span class="op">&lt;-</span> <span class="va">root</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/node-find.html">node_find_all</a></span><span class="op">(</span></span>
@@ -151,9 +149,8 @@
 <span><span class="co">#&gt; any(duplicated(y))</span></span>
 <span><span class="co">#&gt; plot(x)</span></span>
 <span><span class="co">#&gt; any(duplicated(x))</span></span>
-<span><span class="co">#&gt; any(is.na(variable))</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; any(is.na(variable))</span></span>
+<span></span>
 <span><span class="co"># new code</span></span>
 <span><span class="fu"><a href="reference/tree_rewrite.html">tree_rewrite</a></span><span class="op">(</span><span class="va">root</span>, <span class="va">fixes</span><span class="op">)</span></span>
 <span><span class="co">#&gt; library(tidyverse)</span></span>
@@ -211,6 +208,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/etiennebacher/astgrepr?branch=main" class="external-link"><img src="https://codecov.io/gh/etiennebacher/astgrepr/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
