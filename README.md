@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/etiennebacher/astgrepr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/etiennebacher/astgrepr?branch=main)
 <!-- badges: end -->
 
 `astgrepr` provides R bindings to the
@@ -83,9 +85,6 @@ root |>
 #> 
 #> $rule_1[[3]]
 #> [1] "mean = 2"
-```
-
-``` r
 
 # find occurrences of any(duplicated())
 root |> 
@@ -97,9 +96,6 @@ root |>
 #> 
 #> $rule_1$node_2
 #> [1] "any(duplicated(x))"
-```
-
-``` r
 
 # find some nodes and replace them with something else
 nodes_to_replace <- root |>
@@ -122,9 +118,6 @@ cat(src)
 #> plot(x)
 #> any(duplicated(x))
 #> any(is.na(variable))
-```
-
-``` r
 
 # new code
 tree_rewrite(root, fixes)
