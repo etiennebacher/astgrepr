@@ -165,8 +165,10 @@ expect_snapshot(
 
 # several replacements on the same line ---------------------------------------
 
-src <- r'(lab = any(is.na(x))
-drat = any(duplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg))))'
+src <- r'(
+lab = any(is.na(x))
+drat = any(duplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)))
+)'
 
 root <- src |>
   tree_new() |>

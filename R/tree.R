@@ -165,6 +165,9 @@ tree_root <- function(x) {
 
 tree_rewrite <- function(root, replacements) {
   new_txt <- root$commit_edits(replacements)
+  # https://github.com/ast-grep/ast-grep/issues/1345
+  leading_newlines <- strrep("\n", root$range()[[1]][1])
+  new_txt <- paste0(leading_newlines, new_txt)
   class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
   new_txt
 }
