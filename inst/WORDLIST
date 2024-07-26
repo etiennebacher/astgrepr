@@ -1,10 +1,14 @@
 AST
 CMD
+Codecov
 RStudio
+YAML
 ast
 linter
 linters
 matcher
+metavar
+metavars
 rewriter
 ruleset
 stylers
