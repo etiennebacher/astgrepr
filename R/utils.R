@@ -31,15 +31,6 @@ add_rulelist_class <- function(x) {
   x
 }
 
-# Only to be called in functions that return a single node
-unwrap_list_output <- function(x) {
-  if (length(x) > 0) {
-    unlist(x, recursive = FALSE)
-  } else {
-    x
-  }
-}
-
 to_yaml <- function(x) {
   non_null <- rrapply::rrapply(x, condition = Negate(is.null), how = "prune")
   if ("id" %in% names(non_null)) {
