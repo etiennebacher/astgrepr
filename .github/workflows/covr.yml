@@ -38,5 +38,9 @@ jobs:
       - name: Test coverage
         run: |
           options(crayon.enabled = TRUE)
-          covr::codecov(quiet = FALSE)
+          covr::codecov(
+            quiet = FALSE,
+            clean = FALSE,
+            token = "${{secrets.CODECOV_TOKEN}}"
+          )
         shell: Rscript {0}
