@@ -246,6 +246,7 @@ src <- "
 # ast-grep-ignore-start: any_duplicated
 any(duplicated(x))
 any(duplicated(foo))
+any(is.na(foo))
 # ast-grep-ignore-end
 print(1)
 "
@@ -256,16 +257,22 @@ root <- src |>
 
 expect_equal(
   root |>
-    node_find(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_find(
+      ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated"),
+      ast_rule(pattern = "any(is.na($A))", id = "any_na")
+    ) |>
     node_text(),
-  list(any_duplicated = NULL)
+  list(any_duplicated = NULL, any_na = "any(is.na(foo))")
 )
 
 expect_equal(
   root |>
-    node_find_all(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_find_all(
+      ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated"),
+      ast_rule(pattern = "any(is.na($A))", id = "any_na")
+    ) |>
     node_text_all(),
-  list(any_duplicated = list())
+  list(any_duplicated = list(), any_na = list(node_1 = "any(is.na(foo))"))
 )
 
 
