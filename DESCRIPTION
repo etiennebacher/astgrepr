@@ -1,7 +1,7 @@
 Package: astgrepr
 Type: Package
 Title: Parse and Manipulate R Code
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: 
     person(given = "Etienne",
            family = "Bacher",

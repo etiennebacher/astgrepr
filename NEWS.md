@@ -1,3 +1,13 @@
+# astgrepr 0.0.6
+
+* Replacing text that contains escaping characters (e.g. in regular expressions)
+  doesn't remove those characters anymore.
+* Enable multiple replacements on the same line of code.
+* Replacing text now takes into account leading empty lines.
+* Ignore specific rules, e.g. `# ast-grep-ignore: any_duplicated` to ignore the
+  rules stored in `any_duplicated.yml` only. Accepts several rules separated
+  with a comma.
+
 # astgrepr 0.0.5
 
 * Support metavars in the `message` field in YAML files.
