@@ -213,3 +213,112 @@ expect_error(
   fixed = TRUE
 )
 
+# ignore specific rules -------------------------------
+
+src <- "
+# ast-grep-ignore: any_duplicated
+any(duplicated(x))
+print(1)
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_text(),
+  list(any_duplicated = NULL)
+)
+
+expect_equal(
+  root |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_text_all(),
+  list(any_duplicated = list())
+)
+
+
+# ignore chunks of code for specific rules only -------------------------------
+
+src <- "
+# ast-grep-ignore-start: any_duplicated
+any(duplicated(x))
+any(duplicated(foo))
+# ast-grep-ignore-end
+print(1)
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_text(),
+  list(any_duplicated = NULL)
+)
+
+expect_equal(
+  root |>
+    node_find_all(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_text_all(),
+  list(any_duplicated = list())
+)
+
+
+# ignore chunks of code for specific rules only (multiple rules) -------------------------------
+
+src <- "
+# ast-grep-ignore-start: any_duplicated, any_na
+any(duplicated(x))
+any(is.na(foo))
+# ast-grep-ignore-end
+print(1)
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(
+      ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated"),
+      ast_rule(pattern = "any(is.na($A))", id = "any_na")
+    ) |>
+    node_text(),
+  list(any_duplicated = NULL, any_na = NULL)
+)
+
+expect_equal(
+  root |>
+    node_find_all(
+      ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated"),
+      ast_rule(pattern = "any(is.na($A))", id = "any_na")
+    ) |>
+    node_text_all(),
+  list(any_duplicated = list(), any_na = list())
+)
+
+
+# specifying a rule that doesn't exist doesn't do anything -------------------------------
+
+src <- "
+# ast-grep-ignore: foobar
+any(duplicated(x))
+print(1)
+"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+expect_equal(
+  root |>
+    node_find(ast_rule(pattern = "any(duplicated($A))", id = "any_duplicated")) |>
+    node_text(),
+  list(any_duplicated = "any(duplicated(x))")
+)

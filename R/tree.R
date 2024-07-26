@@ -48,7 +48,22 @@ find_lines_to_ignore <- function(raw_txt, ignore_tags) {
   }
 
   single_lines_to_ignore <- grep(ignore_pattern, raw_txt, perl = TRUE)
-  chunks_to_ignore <- NULL
+  env_output <- new.env()
+
+  for_all_rules <- list()
+  for (i in single_lines_to_ignore) {
+    txt <- raw_txt[i]
+    if (!grepl(":", txt)) {
+      for_all_rules[[length(for_all_rules) + 1]] <- i
+    } else {
+      rule_ids <- gsub(paste0("# (", paste(ignore_tags, collapse = "|"), "):"), "", txt)
+      rule_ids <- strsplit(rule_ids, ",")[[1]]
+      rule_ids <- trimws(rule_ids)
+      for (rul in rule_ids) {
+        env_output[[rul]] <- i
+      }
+    }
+  }
 
   for (i in ignore_tags) {
     ignore_tags_start <- paste0("# ", i, "-start")
@@ -68,11 +83,29 @@ find_lines_to_ignore <- function(raw_txt, ignore_tags) {
     if (l_ignore_chunk_start == 0 && l_ignore_chunk_end == 0) {
       next
     }
-    chunks_to_ignore <- unlist(seq2(ignore_chunk_start, ignore_chunk_end))
+
+    for (i in seq_along(ignore_chunk_start)) {
+      txt <- raw_txt[ignore_chunk_start[i]]
+      if (!grepl(":", txt)) {
+        for_all_rules <- append(for_all_rules, ignore_chunk_start[i]:ignore_chunk_end[i])
+      } else {
+        rule_ids <- gsub(paste0("# (", paste(ignore_tags, collapse = "|"), ")-start:"), "", txt)
+        rule_ids <- strsplit(rule_ids, ",")[[1]]
+        rule_ids <- trimws(rule_ids)
+        for (rul in rule_ids) {
+          env_output[[rul]] <- ignore_chunk_start[i]:ignore_chunk_end[i]
+        }
+      }
+    }
   }
 
+  env_output[["all_rules"]] <- unlist(for_all_rules)
+
   # Make this 0-indexed for easier comparison with ast-grep output
-  unique(c(single_lines_to_ignore, chunks_to_ignore)) - 1
+  env_output <- eapply(env_output, function(x) {
+    x - 1
+  })
+  env_output
 }
 
 #' Get the root of the syntax tree

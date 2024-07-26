@@ -478,13 +478,15 @@ node_find <- function(x, ..., files = NULL) {
   rules_ids <- get_rules_ids(rules)
   names(rules) <- rules_ids
 
-  lapply(rules, function(rule) {
+  lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    name_rule <- rules_ids[[rule_idx]]
     constraints <- attr(rule, "other_info")$constraints
     rule <- list(rule = rule, constraints = constraints) |>
       to_yaml()
     res <- x$find_all(rule)
     res <- unlist(res)
-    res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
+    res <- remove_ignored_nodes(res, rule_id = name_rule, ignored_lines = attributes(x)$lines_to_ignore)
     if (length(res) > 0) {
       res <- res[[1]]
       attr(res, "other_info") <- attr(rule, "other_info")
@@ -512,11 +514,12 @@ node_find_all <- function(x, ..., files = NULL) {
   out <- x$find_all(rules2)
   out <- lapply(seq_along(out), function(node_idx) {
     res <- out[[node_idx]]
+    name_rule <- rules_ids[[node_idx]]
     if (length(res) == 0) {
       return(NULL)
     }
     res <- unlist(res, recursive = FALSE)
-    res <- remove_ignored_nodes(res, ignored_lines = attributes(x)$lines_to_ignore)
+    res <- remove_ignored_nodes(res, rule_id = name_rule, ignored_lines = attributes(x)$lines_to_ignore)
     if (is.null(res)) {
       return(list())
     } else if (!is.list(res)) {
@@ -607,10 +610,16 @@ get_rules_ids <- function(rules) {
   rules_ids
 }
 
-remove_ignored_nodes <- function(nodes, ignored_lines) {
+remove_ignored_nodes <- function(nodes, rule_id, ignored_lines) {
   if (length(ignored_lines) == 0) {
     return(nodes)
   }
+  ignored_lines <- unique(
+    c(
+      unlist(ignored_lines[[rule_id]]),
+      unlist(ignored_lines[["all_rules"]])
+    )
+  )
   nodes_suppressed <- lapply(nodes, function(found) {
     line_start <- found$range()[[1]][[1]]
     if (any(ignored_lines + 1 == line_start)) {
