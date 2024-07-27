@@ -1,3 +1,4 @@
+# nocov start
 test_all_astgrepr <- function() {
   tinytest::test_all(testdir = "tests/tinytest")
 }
@@ -10,6 +11,7 @@ test_this_file <- function() {
   }
   tinytest::run_test_file(file)
 }
+# nocov end
 
 #' `tinytest` helper
 #'
