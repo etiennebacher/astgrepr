@@ -486,7 +486,11 @@ node_find <- function(x, ..., files = NULL) {
       to_yaml()
     res <- x$find_all(rule)
     res <- unlist(res)
-    res <- remove_ignored_nodes(res, rule_id = name_rule, ignored_lines = attributes(x)$lines_to_ignore)
+    res <- remove_ignored_nodes(
+      res,
+      rule_id = name_rule,
+      ignored_lines = attributes(x)$lines_to_ignore
+    )
     if (length(res) > 0) {
       res <- res[[1]]
       attr(res, "other_info") <- attr(rule, "other_info")
@@ -519,7 +523,11 @@ node_find_all <- function(x, ..., files = NULL) {
       return(NULL)
     }
     res <- unlist(res, recursive = FALSE)
-    res <- remove_ignored_nodes(res, rule_id = name_rule, ignored_lines = attributes(x)$lines_to_ignore)
+    res <- remove_ignored_nodes(
+      res,
+      rule_id = name_rule,
+      ignored_lines = attributes(x)$lines_to_ignore
+    )
     if (is.null(res)) {
       return(list())
     } else if (!is.list(res)) {
@@ -864,8 +872,7 @@ node_replace <- function(x, ...) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
     repl <- replacements[[id]]
-    meta_var <- regmatches(repl, gregexpr("~~([A-Z0-9]+)~~", repl))[[1]]
-    meta_var <- gsub("~~", "", meta_var)
+    meta_var <- get_meta_var(repl)
 
     res <- vapply(meta_var, function(mv) {
       matches <- node_get_match(x[[y]], mv)
@@ -913,8 +920,7 @@ node_replace_all <- function(x, ...) {
     if (is.null(x[[y]])) return(invisible())
     id <- names(x)[y]
     repl <- replacements[[id]]
-    meta_var <- regmatches(repl, gregexpr("~~([A-Z0-9]+)~~", repl))[[1]]
-    meta_var <- gsub("~~", "", meta_var)
+    meta_var <- get_meta_var(repl)
 
     lapply(x[[y]], function(z) {
       res <- vapply(meta_var, function(mv) {
@@ -942,4 +948,9 @@ node_replace_all <- function(x, ...) {
 
   class(out) <- c("astgrep_replacements", class(out))
   out
+}
+
+get_meta_var <- function(x) {
+  meta_var <- regmatches(x, gregexpr("~~([A-Z0-9]+)~~", x))[[1]]
+  gsub("~~", "", meta_var)
 }
