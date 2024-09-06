@@ -32,6 +32,9 @@ tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
   } else {
     raw_txt <- strsplit(txt, "\\n")[[1]]
   }
+  if (!grepl("\\\n$", txt)) {
+    txt <- paste0(txt, "\n")
+  }
   out <- SgRoot$new(txt)
   attr(out, "lines_to_ignore") <- find_lines_to_ignore(raw_txt, ignore_tags)
   out
