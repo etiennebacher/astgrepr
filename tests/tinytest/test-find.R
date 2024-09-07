@@ -93,3 +93,25 @@ expect_error(
   "Rule IDs must be unique. The following are duplicated: foo (2), foo2 (2).",
   fixed = TRUE
 )
+
+# Weird case where having a trailing empty line or not influences the number of
+# nodes found. Added a newline manually when creating the tree and removed it
+# when rewriting the tree.
+
+root <- "y <- 1\ny\nx <- 1\nx" |>
+  tree_new() |>
+  tree_root()
+
+expect_length(
+  node_find_all(root, files = file.path("examples-yaml/unused-object.yml"))[[1]],
+  2
+)
+
+root <- "y <- 1\ny\nx <- 1\nx\n" |>
+  tree_new() |>
+  tree_root()
+
+expect_length(
+  node_find_all(root, files = file.path("examples-yaml/unused-object.yml"))[[1]],
+  2
+)

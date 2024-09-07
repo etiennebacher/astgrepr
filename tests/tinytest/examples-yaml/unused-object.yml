@@ -1,0 +1,13 @@
+id: unused_object-1
+language: r
+rule:
+  kind: binary_operator
+  all:
+    - has:
+        field: lhs
+        kind: identifier
+        pattern: $IDENT
+    - precedes:
+        stopBy: end
+        kind: identifier
+        pattern: $IDENT
