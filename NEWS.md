@@ -1,3 +1,9 @@
+# astgrepr 0.0.7
+
+* Fix edge case when a matched node is on the last line and there isn't an
+  empty line at the end.
+* Internals: add CI, bump ast-grep to 0.26.3.
+
 # astgrepr 0.0.6
 
 * Replacing text that contains escaping characters (e.g. in regular expressions)
