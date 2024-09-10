@@ -40,19 +40,7 @@ Key:  [new] new | [dl] download | [bld] build
 ### Windows or macOS
 
 ``` r
-install.packages(
-  'astgrepr', 
-  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
-)
-```
-
-### Linux
-
-``` r
-install.packages(
-  'astgrepr', 
-  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
-)
+install.packages('astgrepr', repos = c('https://etiennebacher.r-universe.dev'))
 ```
 
 ## Demo
