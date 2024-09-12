@@ -37,8 +37,6 @@ Key:  [new] new | [dl] download | [bld] build
 
 ## Installation
 
-### Windows or macOS
-
 ``` r
 install.packages('astgrepr', repos = c('https://etiennebacher.r-universe.dev'))
 ```
