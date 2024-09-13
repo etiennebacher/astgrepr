@@ -925,12 +925,25 @@ node_replace_all <- function(x, ...) {
     lapply(x[[y]], function(z) {
       res <- vapply(meta_var, function(mv) {
         mv_text <- node_text(node_get_match(z, mv))[[1]]
+
         if (is.null(mv_text)) {
-          stop(
-            "Couldn't get value for meta-variable `", mv,
-            "`.\nAre you sure it exists in the rule `", id, "`?",
-            call. = FALSE
-          )
+          temp <- z$get_multiple_matches(mv)
+          mv_text <- lapply(temp, function(nd) {
+            out <- node_text(nd)
+            if (out == ",") {
+              out <- ", "
+            }
+            out
+          }) |>
+            unlist() |>
+            paste(collapse = "")
+          if (is.null(mv_text) || mv_text == "") {
+            stop(
+              "Couldn't get value for meta-variable `", mv,
+              "`.\nAre you sure it exists in the rule `", id, "`?",
+              call. = FALSE
+            )
+          }
         }
         mv_text
       }, character(1))

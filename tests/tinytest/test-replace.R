@@ -224,3 +224,25 @@ expect_error(
   "Couldn't get value for meta-variable `NOTEXIST`"
 )
 
+# replace multi-metavar
+
+src <- "warning(paste('hi', 'there'))"
+
+root <- src |>
+  tree_new() |>
+  tree_root()
+
+nodes_to_replace <- root |>
+  node_find_all(
+    ast_rule(id = "foo", pattern = "warning($$$ paste($$$MSG) $$$)")
+  )
+
+fixes <- nodes_to_replace |>
+  node_replace_all(
+    foo = "warning(~~MSG~~)"
+  )
+
+expect_snapshot(
+  "rewrite_multi_metavar",
+  tree_rewrite(root, fixes)
+)
