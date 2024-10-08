@@ -1,3 +1,7 @@
+# astgrepr 0.0.8
+
+* Add support for using multi-metavars in replacement.
+
 # astgrepr 0.0.7
 
 * Fix edge case when a matched node is on the last line and there isn't an
