@@ -38,7 +38,7 @@ Key:  [new] new | [dl] download | [bld] build
 ## Installation
 
 ``` r
-install.packages('astgrepr', repos = c('https://etiennebacher.r-universe.dev'))
+install.packages('astgrepr', repos = c('https://etiennebacher.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ## Demo
@@ -53,14 +53,14 @@ plot(x)
 any(duplicated(x))
 any(is.na(variable))"
 
-root <- src |> 
-  tree_new() |> 
+root <- src |>
+  tree_new() |>
   tree_root()
 
 # get everything inside rnorm()
-root |> 
-  node_find(ast_rule(pattern = "rnorm($$$A)")) |> 
-  node_get_multiple_matches("A") |> 
+root |>
+  node_find(ast_rule(pattern = "rnorm($$$A)")) |>
+  node_get_multiple_matches("A") |>
   node_text_all()
 #> $rule_1
 #> $rule_1[[1]]
@@ -73,8 +73,8 @@ root |>
 #> [1] "mean = 2"
 
 # find occurrences of any(duplicated())
-root |> 
-  node_find_all(ast_rule(pattern = "any(duplicated($A))")) |> 
+root |>
+  node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
   node_text_all()
 #> $rule_1
 #> $rule_1$node_1
