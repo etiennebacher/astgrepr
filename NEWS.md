@@ -1,4 +1,4 @@
-# astgrepr (development)
+# astgrepr 0.0.9
 
 * Updated ast-grep crate to 0.32.2.
 
