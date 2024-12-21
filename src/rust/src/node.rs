@@ -1,3 +1,4 @@
+use crate::range::Range;
 use crate::SgRoot;
 use extendr_api::prelude::*;
 
@@ -11,16 +12,6 @@ pub struct Pos {
     pub column: u32,
     /// byte offset of the position
     pub index: u32,
-}
-
-fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
-    Pos {
-        line: pos.0 as u32,
-        // In the pyo3 implementation they have u32 / 2 but for me that
-        // doesn't work well
-        column: pos.1 as u32,
-        index: offset as u32 / 2,
-    }
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
@@ -48,18 +39,10 @@ unsafe impl Send for SgNode {}
 impl SgNode {
     /*----------  Node Inspection ----------*/
     fn range(&self) -> List {
-        let byte_range = self.inner.range();
-        let start_pos = self.inner.start_pos();
-        let end_pos = self.inner.end_pos();
-        let positioner = &self.root.position;
-        let start = positioner.byte_to_char(byte_range.start);
-        let end = positioner.byte_to_char(byte_range.end);
-
-        let start_pos = to_pos(start_pos, start);
-        let end_pos = to_pos(end_pos, end);
+        let range = Range::from(&self.inner, &self.root.position);
         list!(
-            vec![start_pos.line, start_pos.column],
-            vec![end_pos.line, end_pos.column]
+            vec![range.start.line, range.start.column],
+            vec![range.end.line, range.end.column]
         )
     }
 

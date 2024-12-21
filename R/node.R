@@ -869,7 +869,9 @@ node_replace <- function(x, ...) {
   replacements <- list(...)
 
   out <- lapply(seq_along(x), function(y) {
-    if (is.null(x[[y]])) return(invisible())
+    if (is.null(x[[y]])) {
+      return(invisible())
+    }
     id <- names(x)[y]
     repl <- replacements[[id]]
     meta_var <- get_meta_var(repl)
@@ -917,7 +919,9 @@ node_replace_all <- function(x, ...) {
   replacements <- list(...)
 
   out <- lapply(seq_along(x), function(y) {
-    if (is.null(x[[y]])) return(invisible())
+    if (is.null(x[[y]])) {
+      return(invisible())
+    }
     id <- names(x)[y]
     repl <- replacements[[id]]
     meta_var <- get_meta_var(repl)

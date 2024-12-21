@@ -1,4 +1,5 @@
-use ast_grep_core::{Doc, Node};
+use crate::unicode_position::UnicodePosition;
+use ast_grep_core::{Doc, Node, Position};
 use extendr_api::prelude::*;
 use std::collections::hash_map::DefaultHasher;
 use std::fmt::{Debug, Display, Formatter};
@@ -10,9 +11,9 @@ pub type RResult<T> = core::result::Result<T, std::fmt::Error>;
 #[extendr]
 pub struct Pos {
     /// line number starting from 0
-    line: usize,
+    pub line: usize,
     /// column number starting from 0
-    column: usize,
+    pub column: usize,
     // TODO: this should be char offset
     /// byte offset of the position
     index: usize,
@@ -52,10 +53,10 @@ impl Pos {
     }
 }
 
-fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
+pub fn to_pos<D: Doc>(node: &Node<D>, pos: Position, offset: usize) -> Pos {
     Pos {
-        line: pos.0,
-        column: pos.1,
+        line: pos.line(),
+        column: pos.column(node),
         index: offset,
     }
 }
@@ -63,9 +64,9 @@ fn to_pos(pos: (usize, usize), offset: usize) -> Pos {
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Range {
     /// starting position of the range
-    start: Pos,
+    pub start: Pos,
     /// ending position of the range
-    end: Pos,
+    pub end: Pos,
 }
 
 impl Display for Range {
@@ -82,9 +83,9 @@ impl Debug for Range {
 
 #[extendr]
 impl Range {
-    // fn __eq__(&self, other: &Self) -> bool {
-    //   self == other
-    // }
+    fn __eq__(&self, other: &Self) -> bool {
+        self == other
+    }
     fn __hash__(&self) -> u64 {
         let mut s = DefaultHasher::new();
         self.hash(&mut s);
@@ -99,13 +100,15 @@ impl Range {
 }
 
 impl Range {
-    pub fn from<D: Doc>(node: &Node<D>) -> Self {
+    pub fn from<D: Doc>(node: &Node<D>, positioner: &UnicodePosition) -> Self {
         let byte_range = node.range();
         let start_pos = node.start_pos();
         let end_pos = node.end_pos();
+        let start = positioner.byte_to_char(byte_range.start);
+        let end = positioner.byte_to_char(byte_range.end);
         Range {
-            start: to_pos(start_pos, byte_range.start),
-            end: to_pos(end_pos, byte_range.end),
+            start: to_pos(node, start_pos, start),
+            end: to_pos(node, end_pos, end),
         }
     }
 }

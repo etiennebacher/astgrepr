@@ -1,3 +1,7 @@
+# astgrepr (development)
+
+* Updated ast-grep crate to 0.32.2.
+
 # astgrepr 0.0.8
 
 * Add support for using multi-metavars in replacement.

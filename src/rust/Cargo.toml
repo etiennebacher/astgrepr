@@ -12,11 +12,11 @@ lto = true
 codegen-units= 1
 
 [dependencies]
-ast-grep-core = "0.26.3"
-ast-grep-config = "0.26.3"
+ast-grep-core = "0.32.2"
+ast-grep-config = "0.32.2"
 extendr-api = "0.7.0"
 once_cell = "1.19.0"
 anyhow = "1.0.75"
 tree-sitter-r = "1.0.1"
 serde = "1.0.197"
-tree-sitter-facade-sg = "0.22.2"
+tree-sitter-facade-sg = "0.24.5"
