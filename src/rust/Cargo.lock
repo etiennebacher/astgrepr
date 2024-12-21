@@ -50,13 +50,9 @@ dependencies = [
 name = "astgrepr"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "ast-grep-config",
  "ast-grep-core",
  "extendr-api",
- "once_cell",
- "serde",
- "tree-sitter-facade-sg",
  "tree-sitter-r",
 ]
 
