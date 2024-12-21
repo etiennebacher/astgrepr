@@ -1,4 +1,3 @@
-
-if (requireNamespace("tinytest", quietly=TRUE)){
-  tinytest::test_package("astgrepr", testdir = "tinytest")
+if (requireNamespace("tinytest", quietly = TRUE)) {
+	tinytest::test_package("astgrepr", testdir = "tinytest")
 }

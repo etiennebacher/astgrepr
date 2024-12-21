@@ -20,98 +20,113 @@
 #'
 #' tree_new(src)
 tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
-  if ((missing(txt) && missing(file)) || (!missing(txt) && !missing(file))) {
-    stop("Must pass either `txt` or `file`.")
-  }
-  if (!missing(txt) && (!all(is.character(txt)) || length(txt) != 1 )) {
-    stop("`txt` must a be a string of length 1.")
-  }
-  if (!missing(file)) {
-    raw_txt <- readLines(file, warn = FALSE)
-    txt <- paste(raw_txt, collapse = "\n")
-  } else {
-    raw_txt <- strsplit(txt, "\\n")[[1]]
-  }
-  HAS_TRAILING_NEW_LINE <- TRUE
-  if (!grepl("\\\n$", txt)) {
-    txt <- paste0(txt, "\n")
-    HAS_TRAILING_NEW_LINE <- FALSE
-  }
-  out <- SgRoot$new(txt)
-  attr(out, "lines_to_ignore") <- find_lines_to_ignore(raw_txt, ignore_tags)
-  attr(out, "has_trailing_new_line") <- HAS_TRAILING_NEW_LINE
-  out
+	if ((missing(txt) && missing(file)) || (!missing(txt) && !missing(file))) {
+		stop("Must pass either `txt` or `file`.")
+	}
+	if (!missing(txt) && (!all(is.character(txt)) || length(txt) != 1)) {
+		stop("`txt` must a be a string of length 1.")
+	}
+	if (!missing(file)) {
+		raw_txt <- readLines(file, warn = FALSE)
+		txt <- paste(raw_txt, collapse = "\n")
+	} else {
+		raw_txt <- strsplit(txt, "\\n")[[1]]
+	}
+	HAS_TRAILING_NEW_LINE <- TRUE
+	if (!grepl("\\\n$", txt)) {
+		txt <- paste0(txt, "\n")
+		HAS_TRAILING_NEW_LINE <- FALSE
+	}
+	out <- SgRoot$new(txt)
+	attr(out, "lines_to_ignore") <- find_lines_to_ignore(raw_txt, ignore_tags)
+	attr(out, "has_trailing_new_line") <- HAS_TRAILING_NEW_LINE
+	out
 }
 
-
 find_lines_to_ignore <- function(raw_txt, ignore_tags) {
-  if (length(ignore_tags) == 0) {
-    return(NULL)
-  } else if (length(ignore_tags) > 1) {
-    ignore_pattern <- paste0("# (", paste(ignore_tags, collapse = "|"), ")")
-  } else {
-    ignore_pattern <- paste0("# ", ignore_tags)
-  }
+	if (length(ignore_tags) == 0) {
+		return(NULL)
+	} else if (length(ignore_tags) > 1) {
+		ignore_pattern <- paste0("# (", paste(ignore_tags, collapse = "|"), ")")
+	} else {
+		ignore_pattern <- paste0("# ", ignore_tags)
+	}
 
-  single_lines_to_ignore <- grep(ignore_pattern, raw_txt, perl = TRUE)
-  env_output <- new.env()
+	single_lines_to_ignore <- grep(ignore_pattern, raw_txt, perl = TRUE)
+	env_output <- new.env()
 
-  for_all_rules <- list()
-  for (i in single_lines_to_ignore) {
-    txt <- raw_txt[i]
-    if (!grepl(":", txt)) {
-      for_all_rules[[length(for_all_rules) + 1]] <- i
-    } else {
-      rule_ids <- gsub(paste0("# (", paste(ignore_tags, collapse = "|"), "):"), "", txt)
-      rule_ids <- strsplit(rule_ids, ",")[[1]]
-      rule_ids <- trimws(rule_ids)
-      for (rul in rule_ids) {
-        env_output[[rul]] <- i
-      }
-    }
-  }
+	for_all_rules <- list()
+	for (i in single_lines_to_ignore) {
+		txt <- raw_txt[i]
+		if (!grepl(":", txt)) {
+			for_all_rules[[length(for_all_rules) + 1]] <- i
+		} else {
+			rule_ids <- gsub(
+				paste0("# (", paste(ignore_tags, collapse = "|"), "):"),
+				"",
+				txt
+			)
+			rule_ids <- strsplit(rule_ids, ",")[[1]]
+			rule_ids <- trimws(rule_ids)
+			for (rul in rule_ids) {
+				env_output[[rul]] <- i
+			}
+		}
+	}
 
-  for (i in ignore_tags) {
-    ignore_tags_start <- paste0("# ", i, "-start")
-    ignore_tags_end <- paste0("# ", i, "-end")
+	for (i in ignore_tags) {
+		ignore_tags_start <- paste0("# ", i, "-start")
+		ignore_tags_end <- paste0("# ", i, "-end")
 
-    ignore_chunk_start <- grep(ignore_tags_start, raw_txt, perl = TRUE)
-    ignore_chunk_end <- grep(ignore_tags_end, raw_txt, perl = TRUE)
+		ignore_chunk_start <- grep(ignore_tags_start, raw_txt, perl = TRUE)
+		ignore_chunk_end <- grep(ignore_tags_end, raw_txt, perl = TRUE)
 
-    l_ignore_chunk_start <- length(ignore_chunk_start)
-    l_ignore_chunk_end <- length(ignore_chunk_end)
+		l_ignore_chunk_start <- length(ignore_chunk_start)
+		l_ignore_chunk_end <- length(ignore_chunk_end)
 
-    if (l_ignore_chunk_start != l_ignore_chunk_end) {
-      stop("Mismatch: the number of `start` patterns (", l_ignore_chunk_start,
-           ") and of `end` patterns (", l_ignore_chunk_end, ") must be equal.")
-    }
+		if (l_ignore_chunk_start != l_ignore_chunk_end) {
+			stop(
+				"Mismatch: the number of `start` patterns (",
+				l_ignore_chunk_start,
+				") and of `end` patterns (",
+				l_ignore_chunk_end,
+				") must be equal."
+			)
+		}
 
-    if (l_ignore_chunk_start == 0 && l_ignore_chunk_end == 0) {
-      next
-    }
+		if (l_ignore_chunk_start == 0 && l_ignore_chunk_end == 0) {
+			next
+		}
 
-    for (i in seq_along(ignore_chunk_start)) {
-      txt <- raw_txt[ignore_chunk_start[i]]
-      if (!grepl(":", txt)) {
-        for_all_rules <- append(for_all_rules, ignore_chunk_start[i]:ignore_chunk_end[i])
-      } else {
-        rule_ids <- gsub(paste0("# (", paste(ignore_tags, collapse = "|"), ")-start:"), "", txt)
-        rule_ids <- strsplit(rule_ids, ",")[[1]]
-        rule_ids <- trimws(rule_ids)
-        for (rul in rule_ids) {
-          env_output[[rul]] <- ignore_chunk_start[i]:ignore_chunk_end[i]
-        }
-      }
-    }
-  }
+		for (i in seq_along(ignore_chunk_start)) {
+			txt <- raw_txt[ignore_chunk_start[i]]
+			if (!grepl(":", txt)) {
+				for_all_rules <- append(
+					for_all_rules,
+					ignore_chunk_start[i]:ignore_chunk_end[i]
+				)
+			} else {
+				rule_ids <- gsub(
+					paste0("# (", paste(ignore_tags, collapse = "|"), ")-start:"),
+					"",
+					txt
+				)
+				rule_ids <- strsplit(rule_ids, ",")[[1]]
+				rule_ids <- trimws(rule_ids)
+				for (rul in rule_ids) {
+					env_output[[rul]] <- ignore_chunk_start[i]:ignore_chunk_end[i]
+				}
+			}
+		}
+	}
 
-  env_output[["all_rules"]] <- unlist(for_all_rules)
+	env_output[["all_rules"]] <- unlist(for_all_rules)
 
-  # Make this 0-indexed for easier comparison with ast-grep output
-  env_output <- eapply(env_output, function(x) {
-    x - 1
-  })
-  env_output
+	# Make this 0-indexed for easier comparison with ast-grep output
+	env_output <- eapply(env_output, function(x) {
+		x - 1
+	})
+	env_output
 }
 
 #' Get the root of the syntax tree
@@ -131,11 +146,11 @@ find_lines_to_ignore <- function(raw_txt, ignore_tags) {
 #' tree <- tree_new(src)
 #' tree_root(tree)
 tree_root <- function(x) {
-  check_is_tree(x)
-  out <- x$root()
-  attr(out, "lines_to_ignore") <- attr(x, "lines_to_ignore")
-  attr(out, "has_trailing_new_line") <- attr(x, "has_trailing_new_line")
-  out
+	check_is_tree(x)
+	out <- x$root()
+	attr(out, "lines_to_ignore") <- attr(x, "lines_to_ignore")
+	attr(out, "has_trailing_new_line") <- attr(x, "has_trailing_new_line")
+	out
 }
 
 #' Rewrite the tree with a list of replacements
@@ -204,34 +219,33 @@ tree_root <- function(x) {
 #' tree_rewrite(root, fixes)
 
 tree_rewrite <- function(root, replacements) {
-  new_txt <- root$commit_edits(replacements)
-  # https://github.com/ast-grep/ast-grep/issues/1345
-  leading_newlines <- strrep("\n", root$range()[[1]][1])
-  new_txt <- paste0(leading_newlines, new_txt)
-  if (isFALSE(attributes(root)[["has_trailing_new_line"]])) {
-    new_txt <- gsub("\\\n$", "", new_txt)
-  }
-  class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
-  new_txt
+	new_txt <- root$commit_edits(replacements)
+	# https://github.com/ast-grep/ast-grep/issues/1345
+	leading_newlines <- strrep("\n", root$range()[[1]][1])
+	new_txt <- paste0(leading_newlines, new_txt)
+	if (isFALSE(attributes(root)[["has_trailing_new_line"]])) {
+		new_txt <- gsub("\\\n$", "", new_txt)
+	}
+	class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
+	new_txt
 }
-
 
 # Base R alternative to stringi::stri_sub()
 "my_stri_sub<-" <- function(x, start, end, value) {
-  # browser()
-  if (start == 1) {
-    part1 <- character()
-  } else {
-    part1 <- substr(x, 1, start - 1)
-  }
+	# browser()
+	if (start == 1) {
+		part1 <- character()
+	} else {
+		part1 <- substr(x, 1, start - 1)
+	}
 
-  part2 <- value
+	part2 <- value
 
-  if (end == nchar(x)) {
-    part3 <- character()
-  } else {
-    part3 <- substr(x, end + 1, stop = nchar(x))
-  }
+	if (end == nchar(x)) {
+		part3 <- character()
+	} else {
+		part3 <- substr(x, end + 1, stop = nchar(x))
+	}
 
-  paste0(part1, part2, part3)
+	paste0(part1, part2, part3)
 }
