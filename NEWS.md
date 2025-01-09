@@ -1,7 +1,9 @@
 # astgrepr 0.0.10
 
 * In several lints can be fixed but overlap, the first lint is fixed but those
-  that are nested in it are ignored (#34). 
+  that are nested in it are ignored. The text output of `tree_rewrite()` now
+  has an attribute `has_skipped_fixes` indicating if some lints were not fixed
+  because they were nested (#34). 
 
 # astgrepr 0.0.9
 
