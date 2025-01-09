@@ -290,7 +290,7 @@ impl SgNode {
         list!(edit.start_pos, edit.end_pos, edit.inserted_text)
     }
 
-    fn commit_edits(&self, edits: List) -> String {
+    fn commit_edits(&self, edits: List) -> List {
         let mut edits2 = edits
             .values()
             .map(|xi| Edit::from(xi.as_list().unwrap()))
@@ -302,6 +302,7 @@ impl SgNode {
         let mut new_content = old_content.clone();
         let root = &self.root;
         let conv = &root.position;
+        let mut has_skipped_fixes = false;
         let converted: Vec<_> = edits2
             .into_iter()
             .map(|mut e| {
@@ -319,6 +320,9 @@ impl SgNode {
 
         for diff in converted {
             if diff.start_pos < last_position_modified {
+                if !has_skipped_fixes {
+                    has_skipped_fixes = true;
+                }
                 continue;
             }
 
@@ -340,7 +344,10 @@ impl SgNode {
             last_position_modified = diff.end_pos;
         }
 
-        new_content
+        list!(
+            new_content = new_content,
+            has_skipped_fixes = has_skipped_fixes
+        )
     }
 }
 
