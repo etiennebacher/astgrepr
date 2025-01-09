@@ -1,4 +1,4 @@
 
-lab <- anyNA(x)
-drat <- anyDuplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)) > 0
+lab <- TRUE; foo <- anyNA(x)
+anyDuplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)) > 0;a <- TRUE
 

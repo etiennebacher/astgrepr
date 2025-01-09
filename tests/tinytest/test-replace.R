@@ -163,8 +163,8 @@ expect_snapshot(
 # several replacements on the same line ---------------------------------------
 
 src <- r'(
-lab = any(is.na(x))
-drat = any(duplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)))
+lab <- T; foo <- any(is.na(x))
+any(duplicated(gsub("\\d{1,}\\w\\s+(.*)", "\\1", mpg)));a <- T
 )'
 
 root <- src |>
@@ -173,14 +173,14 @@ root <- src |>
 
 nodes_to_replace <- root |>
 	node_find_all(
-		ast_rule(id = "foo", pattern = "$A = $B"),
+		ast_rule(id = "foo", pattern = "$A <- T"),
 		ast_rule(id = "foo2", pattern = "any(duplicated($VAR))"),
 		ast_rule(id = "foo3", pattern = "any(is.na($VAR))")
 	)
 
 fixes <- nodes_to_replace |>
 	node_replace_all(
-		foo = "~~A~~ <- ~~B~~",
+		foo = "~~A~~ <- TRUE",
 		foo2 = "anyDuplicated(~~VAR~~) > 0",
 		foo3 = "anyNA(~~VAR~~)"
 	)

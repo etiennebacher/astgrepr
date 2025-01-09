@@ -217,9 +217,9 @@ tree_root <- function(x) {
 #'
 #' # new code
 #' tree_rewrite(root, fixes)
-
 tree_rewrite <- function(root, replacements) {
-	new_txt <- root$commit_edits(replacements)
+	output <- root$commit_edits(replacements)
+	new_txt <- output$new_content
 	# https://github.com/ast-grep/ast-grep/issues/1345
 	leading_newlines <- strrep("\n", root$range()[[1]][1])
 	new_txt <- paste0(leading_newlines, new_txt)
@@ -227,6 +227,7 @@ tree_rewrite <- function(root, replacements) {
 		new_txt <- gsub("\\\n$", "", new_txt)
 	}
 	class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
+	attr(new_txt, "has_skipped_fixes") <- output$has_skipped_fixes
 	new_txt
 }
 
