@@ -1,20 +1,16 @@
 #!/usr/bin/env sh
+: "${R_HOME=`R RHOME`}"
+"${R_HOME}/bin/Rscript" tools/msrv.R 
 
-# https://github.com/eitsupi/prqlr/blob/main/configure
-export PATH="$PATH:$HOME/.cargo/bin"
-
-if [ ! "$(command -v cargo)" ]; then
-    echo "----------------------- [RUST NOT FOUND]---------------------------"
-    echo "The 'cargo' command was not found on the PATH. Please install rustc"
-    echo "from: https://www.rust-lang.org/tools/install"
-    echo ""
-    echo "Alternatively, you may install cargo from your OS package manager:"
-    echo " - Debian/Ubuntu: apt-get install cargo"
-    echo " - Fedora/CentOS: dnf install cargo"
-    echo " - macOS: brew install rustc"
-    echo "-------------------------------------------------------------------"
-    echo ""
-    exit 1
+# Set CRAN_FLAGS based on the NOT_CRAN value
+if [ "${NOT_CRAN}" != "true" ] && [ -f ./src/rust/vendor.tar.xz ]; then
+  export CRAN_FLAGS="-j 2 --offline"
+else
+  export CRAN_FLAGS=""
 fi
 
-exit 0
+# delete Makevars if it is present
+[ -f src/Makevars ] && rm src/Makevars
+
+# Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
+sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars
