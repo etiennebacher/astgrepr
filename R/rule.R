@@ -93,77 +93,77 @@
 #'   )
 #' )
 ast_rule <- function(
-	pattern = NULL,
-	kind = NULL,
-	regex = NULL,
-	inside = NULL,
-	has = NULL,
-	precedes = NULL,
-	follows = NULL,
-	all = NULL,
-	any = NULL,
-	not = NULL,
-	matches = NULL,
-	id = NULL
+  pattern = NULL,
+  kind = NULL,
+  regex = NULL,
+  inside = NULL,
+  has = NULL,
+  precedes = NULL,
+  follows = NULL,
+  all = NULL,
+  any = NULL,
+  not = NULL,
+  matches = NULL,
+  id = NULL
 ) {
-	check_all_null(
-		pattern,
-		kind,
-		regex,
-		inside,
-		has,
-		precedes,
-		follows,
-		all,
-		any,
-		not,
-		matches
-	)
-	assert_string_or_pattern_rule(pattern)
-	assert_string_or_null(kind)
-	assert_string_or_null(regex)
-	assert_relational_or_ast_rule(inside)
-	assert_relational_or_ast_rule(has)
-	assert_relational_or_ast_rule(precedes)
-	assert_relational_or_ast_rule(follows)
-	assert_ast_rule(all)
-	assert_ast_rule(any)
-	assert_ast_rule(not)
-	assert_string_or_null(matches)
-	assert_string_or_null(id)
+  check_all_null(
+    pattern,
+    kind,
+    regex,
+    inside,
+    has,
+    precedes,
+    follows,
+    all,
+    any,
+    not,
+    matches
+  )
+  assert_string_or_pattern_rule(pattern)
+  assert_string_or_null(kind)
+  assert_string_or_null(regex)
+  assert_relational_or_ast_rule(inside)
+  assert_relational_or_ast_rule(has)
+  assert_relational_or_ast_rule(precedes)
+  assert_relational_or_ast_rule(follows)
+  assert_ast_rule(all)
+  assert_ast_rule(any)
+  assert_ast_rule(not)
+  assert_string_or_null(matches)
+  assert_string_or_null(id)
 
-	out <- list(
-		pattern = pattern,
-		kind = kind,
-		regex = regex,
-		inside = inside,
-		has = has,
-		precedes = precedes,
-		follows = follows,
-		all = all,
-		any = any,
-		not = not,
-		matches = matches
-	)
+  out <- list(
+    pattern = pattern,
+    kind = kind,
+    regex = regex,
+    inside = inside,
+    has = has,
+    precedes = precedes,
+    follows = follows,
+    all = all,
+    any = any,
+    not = not,
+    matches = matches
+  )
 
-	# I can't have several arguments with the same name e.g
-	#
-	# any:
-	#   - kind: for_statement
-	#   - kind: while_statement
-	#
-	# So I pass those as a vector and I convert them as a sublist here
-	out <- lapply(out, function(x) {
-		if (length(x) > 1) {
-			as.list(x)
-		} else {
-			x
-		}
-	})
+  # I can't have several arguments with the same name e.g
+  #
+  # any:
+  #   - kind: for_statement
+  #   - kind: while_statement
+  #
+  # So I pass those as a vector and I convert them as a sublist here
+  out <- lapply(out, function(x) {
+    if (length(x) > 1) {
+      as.list(x)
+    } else {
+      x
+    }
+  })
 
-	class(out) <- c("astgrep_rule", class(out))
-	attr(out, "id") <- id
-	out
+  class(out) <- c("astgrep_rule", class(out))
+  attr(out, "id") <- id
+  out
 }
 
 #' Build a pattern rule
@@ -197,18 +197,18 @@ ast_rule <- function(
 #'
 #' @export
 pattern_rule <- function(
-	selector = NULL,
-	context = NULL,
-	strictness = "smart"
+  selector = NULL,
+  context = NULL,
+  strictness = "smart"
 ) {
-	checkmate::assert_choice(
-		strictness,
-		choices = c("cst", "smart", "ast", "relaxed", "signature"),
-		null.ok = TRUE
-	)
-	out <- list(selector = selector, context = context, strictness = strictness)
-	class(out) <- c("astgrep_pattern_rule", class(out))
-	out
+  checkmate::assert_choice(
+    strictness,
+    choices = c("cst", "smart", "ast", "relaxed", "signature"),
+    null.ok = TRUE
+  )
+  out <- list(selector = selector, context = context, strictness = strictness)
+  class(out) <- c("astgrep_pattern_rule", class(out))
+  out
 }
 
 #' Build a relational rule
@@ -219,74 +219,74 @@ pattern_rule <- function(
 #'
 #' @export
 relational_rule <- function(stopBy = "neighbor", field = NULL, regex = NULL) {
-	checkmate::assert_choice(
-		stopBy,
-		choices = c("end", "neighbor"),
-		null.ok = TRUE
-	)
-	out <- list(stopBy = stopBy, field = field, regex = regex)
-	class(out) <- c("astgrep_relational_rule", class(out))
-	out
+  checkmate::assert_choice(
+    stopBy,
+    choices = c("end", "neighbor"),
+    null.ok = TRUE
+  )
+  out <- list(stopBy = stopBy, field = field, regex = regex)
+  class(out) <- c("astgrep_relational_rule", class(out))
+  out
 }
 
 # assertion functions -----------------------------------------------------
 
 check_all_null <- function(
-	pattern,
-	kind,
-	regex,
-	inside,
-	has,
-	precedes,
-	follows,
-	all,
-	any,
-	not,
-	matches
+  pattern,
+  kind,
+  regex,
+  inside,
+  has,
+  precedes,
+  follows,
+  all,
+  any,
+  not,
+  matches
 ) {
-	my_args <- list(
-		pattern,
-		kind,
-		regex,
-		inside,
-		has,
-		precedes,
-		follows,
-		all,
-		any,
-		not,
-		matches
-	)
-	n_non_nulls <- sum(
-		vapply(my_args, function(x) !is.null(x), FUN.VALUE = logical(1L))
-	)
-	if (n_non_nulls == 0) {
-		stop("`ast_rule()` requires at least one non-NULL parameter.")
-	}
+  my_args <- list(
+    pattern,
+    kind,
+    regex,
+    inside,
+    has,
+    precedes,
+    follows,
+    all,
+    any,
+    not,
+    matches
+  )
+  n_non_nulls <- sum(
+    vapply(my_args, function(x) !is.null(x), FUN.VALUE = logical(1L))
+  )
+  if (n_non_nulls == 0) {
+    stop("`ast_rule()` requires at least one non-NULL parameter.")
+  }
 }
 
 check_string_or_pattern_rule <- function(x) {
-	inherits(x, "astgrep_pattern_rule") ||
-		checkmate::check_string(x, null.ok = TRUE)
+  inherits(x, "astgrep_pattern_rule") ||
+    checkmate::check_string(x, null.ok = TRUE)
 }
 assert_string_or_pattern_rule <- checkmate::makeAssertionFunction(
-	check_string_or_pattern_rule
+  check_string_or_pattern_rule
 )
 
 check_relational_or_ast_rule <- function(x) {
-	is.null(x) ||
-		inherits(x, "astgrep_relational_rule") ||
-		inherits(x, "astgrep_rule")
+  is.null(x) ||
+    inherits(x, "astgrep_relational_rule") ||
+    inherits(x, "astgrep_rule")
 }
 assert_relational_or_ast_rule <- checkmate::makeAssertionFunction(
-	check_relational_or_ast_rule
+  check_relational_or_ast_rule
 )
 
 check_ast_rule <- function(x) {
-	is.null(x) || inherits(x, "astgrep_rule")
+  is.null(x) || inherits(x, "astgrep_rule")
 }
 assert_ast_rule <- checkmate::makeAssertionFunction(check_ast_rule)
 
 assert_string_or_null <- function(x) {
-	is.null(x) || all(is.character(x))
+  is.null(x) || all(is.character(x))
 }
