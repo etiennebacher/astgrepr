@@ -33,27 +33,27 @@
 #'   ) |>
 #'   node_range_all()
 node_range <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	out <- lapply(x, function(y) {
-		res <- y$range()
-		names(res) <- c("start", "end")
-		res
-	})
-	out
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  out <- lapply(x, function(y) {
+    res <- y$range()
+    names(res) <- c("start", "end")
+    res
+  })
+  out
 }
 
 #' @name node-range
 #' @export
 node_range_all <- function(x) {
-	check_all_nodes(x)
-	lapply(x, function(rule) {
-		lapply(rule, function(node) {
-			out <- node$range()
-			names(out) <- c("start", "end")
-			out
-		})
-	})
+  check_all_nodes(x)
+  lapply(x, function(rule) {
+    lapply(rule, function(node) {
+      out <- node$range()
+      names(out) <- c("start", "end")
+      out
+    })
+  })
 }
 
 #' Get information on nodes
@@ -88,32 +88,32 @@ node_range_all <- function(x) {
 #'   node_find(ast_rule(pattern = "z")) |>
 #'   node_is_named()
 node_is_leaf <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$is_leaf())
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_leaf())
 }
 
 #' @name node-is
 #' @export
 node_is_named <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$is_named())
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_named())
 }
 
 #' @name node-is
 #' @export
 node_is_named_leaf <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$is_named_leaf())
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$is_named_leaf())
 }
 
 node_to_list <- function(x) {
-	if (length(x) == 1 && inherits(x, "SgNode")) {
-		x <- list(x)
-	}
-	x
+  if (length(x) == 1 && inherits(x, "SgNode")) {
+    x <- list(x)
+  }
+  x
 }
 
 #' Find the kind of a node
@@ -139,15 +139,15 @@ node_to_list <- function(x) {
 #'   node_find(ast_rule(pattern = "$X + $VALUE")) |>
 #'   node_kind()
 node_kind <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) {
-		if (length(y) > 0) {
-			y$kind()
-		} else {
-			NULL
-		}
-	})
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) {
+    if (length(y) > 0) {
+      y$kind()
+    } else {
+      NULL
+    }
+  })
 }
 
 #' Extract the code corresponding to one or several nodes
@@ -185,30 +185,30 @@ node_kind <- function(x) {
 #'   node_find_all(ast_rule(pattern = "any(duplicated($A))")) |>
 #'   node_text_all()
 node_text <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) {
-		if (length(y) > 0) {
-			if (is.list(y)) {
-				y[[1]]$text()
-			} else {
-				y$text()
-			}
-		} else {
-			NULL
-		}
-	})
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) {
+    if (length(y) > 0) {
+      if (is.list(y)) {
+        y[[1]]$text()
+      } else {
+        y$text()
+      }
+    } else {
+      NULL
+    }
+  })
 }
 
 #' @name node-text
 #' @export
 node_text_all <- function(x) {
-	check_all_nodes(x)
-	lapply(x, function(rule) {
-		lapply(rule, function(node) {
-			node$text()
-		})
-	})
+  check_all_nodes(x)
+  lapply(x, function(rule) {
+    lapply(rule, function(node) {
+      node$text()
+    })
+  })
 }
 
 #' Get more precise information on a node
@@ -239,85 +239,85 @@ node_text_all <- function(x) {
 #'   node_get_match("A") |>
 #'   node_matches(ast_rule(kind = "argument"))
 node_matches <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
 
-	out <- lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		constraints <- attr(rule, "other_info")$constraints
-		rule <- list(rule = rule, constraints = constraints) |>
-			to_yaml()
-		res <- x[[rule_idx]][[1]]$matches(rule)
-		res
-	}) |>
-		list()
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$matches(rule)
+    res
+  }) |>
+    list()
 
-	names(out) <- names(x)
-	out
+  names(out) <- names(x)
+  out
 }
 
 #' @name node-info
 #' @export
 node_inside <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
 
-	out <- lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		res <- x[[rule_idx]][[1]]$inside(to_yaml(rule))
-		res
-	}) |>
-		list()
-	names(out) <- names(rules)
-	out
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$inside(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
 node_has <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
 
-	out <- lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		res <- x[[rule_idx]][[1]]$has(to_yaml(rule))
-		res
-	}) |>
-		list()
-	names(out) <- names(rules)
-	out
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$has(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
 node_precedes <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
 
-	out <- lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		res <- x[[rule_idx]][[1]]$precedes(to_yaml(rule))
-		res
-	}) |>
-		list()
-	names(out) <- names(rules)
-	out
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$precedes(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' @name node-info
 #' @export
 node_follows <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
 
-	out <- lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		res <- x[[rule_idx]][[1]]$follows(to_yaml(rule))
-		res
-	}) |>
-		list()
-	names(out) <- names(rules)
-	out
+  out <- lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    res <- x[[rule_idx]][[1]]$follows(to_yaml(rule))
+    res
+  }) |>
+    list()
+  names(out) <- names(rules)
+  out
 }
 
 #' Get the match(es) from a meta-variable
@@ -360,20 +360,20 @@ node_follows <- function(x, ..., files = NULL) {
 #'   node_find(ast_rule(pattern = "rnorm($$$A)")) |>
 #'   node_get_multiple_matches("A")
 node_get_match <- function(x, meta_var) {
-	check_is_rulelist_or_node(x)
-	if (length(x) == 1 && inherits(x, "SgNode")) {
-		x <- list(x)
-	}
-	lapply(x, function(y) y$get_match(meta_var)) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  if (length(x) == 1 && inherits(x, "SgNode")) {
+    x <- list(x)
+  }
+  lapply(x, function(y) y$get_match(meta_var)) |>
+    add_rulelist_class()
 }
 
 #' @name node-get-match
 #' @export
 node_get_multiple_matches <- function(x, meta_var) {
-	check_is_rulelist_or_node(x)
-	lapply(x, function(y) y$get_multiple_matches(meta_var)) |>
-		add_sgnodelist_class()
+  check_is_rulelist_or_node(x)
+  lapply(x, function(y) y$get_multiple_matches(meta_var)) |>
+    add_sgnodelist_class()
 }
 
 #' Recover the tree root from a node
@@ -398,8 +398,8 @@ node_get_multiple_matches <- function(x, meta_var) {
 #'   tree_root() |>
 #'   node_text()
 node_get_root <- function(x) {
-	check_is_rulelist_or_node(x)
-	x[[1]]$get_root()
+  check_is_rulelist_or_node(x)
+  x[[1]]$get_root()
 }
 
 #' Find node(s) matching a pattern
@@ -473,183 +473,183 @@ node_get_root <- function(x) {
 #'     ast_rule(kind = "while_statement")
 #'   )
 node_find <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
-	rules_ids <- get_rules_ids(rules)
-	names(rules) <- rules_ids
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+  rules_ids <- get_rules_ids(rules)
+  names(rules) <- rules_ids
 
-	lapply(seq_along(rules), function(rule_idx) {
-		rule <- rules[[rule_idx]]
-		name_rule <- rules_ids[[rule_idx]]
-		constraints <- attr(rule, "other_info")$constraints
-		rule <- list(rule = rule, constraints = constraints) |>
-			to_yaml()
-		res <- x$find_all(rule)
-		res <- unlist(res)
-		res <- remove_ignored_nodes(
-			res,
-			rule_id = name_rule,
-			ignored_lines = attributes(x)$lines_to_ignore
-		)
-		if (length(res) > 0) {
-			res <- res[[1]]
-			attr(res, "other_info") <- attr(rule, "other_info")
-		}
-		res
-	}) |>
-		add_rulelist_class() |>
-		stats::setNames(rules_ids)
+  lapply(seq_along(rules), function(rule_idx) {
+    rule <- rules[[rule_idx]]
+    name_rule <- rules_ids[[rule_idx]]
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x$find_all(rule)
+    res <- unlist(res)
+    res <- remove_ignored_nodes(
+      res,
+      rule_id = name_rule,
+      ignored_lines = attributes(x)$lines_to_ignore
+    )
+    if (length(res) > 0) {
+      res <- res[[1]]
+      attr(res, "other_info") <- attr(rule, "other_info")
+    }
+    res
+  }) |>
+    add_rulelist_class() |>
+    stats::setNames(rules_ids)
 }
 
 #' @name node-find
 #' @export
 node_find_all <- function(x, ..., files = NULL) {
-	rules <- list(...)
-	rules <- combine_rules_and_files(rules, files)
-	rules_ids <- get_rules_ids(rules)
+  rules <- list(...)
+  rules <- combine_rules_and_files(rules, files)
+  rules_ids <- get_rules_ids(rules)
 
-	rules2 <- vapply(
-		seq_along(rules),
-		function(x) {
-			rul <- rules[[x]]
-			cons <- attr(rul, "other_info")$constraints
-			list(rule = rul, constraints = cons) |>
-				to_yaml()
-		},
-		character(1)
-	)
+  rules2 <- vapply(
+    seq_along(rules),
+    function(x) {
+      rul <- rules[[x]]
+      cons <- attr(rul, "other_info")$constraints
+      list(rule = rul, constraints = cons) |>
+        to_yaml()
+    },
+    character(1)
+  )
 
-	out <- x$find_all(rules2)
-	out <- lapply(seq_along(out), function(node_idx) {
-		res <- out[[node_idx]]
-		name_rule <- rules_ids[[node_idx]]
-		if (length(res) == 0) {
-			return(NULL)
-		}
-		res <- unlist(res, recursive = FALSE)
-		res <- remove_ignored_nodes(
-			res,
-			rule_id = name_rule,
-			ignored_lines = attributes(x)$lines_to_ignore
-		)
-		if (is.null(res)) {
-			return(list())
-		} else if (!is.list(res)) {
-			res <- list(res)
-		}
-		names(res) <- paste0("node_", seq_along(res))
-		attr(res, "other_info") <- attr(rules[[node_idx]], "other_info")
+  out <- x$find_all(rules2)
+  out <- lapply(seq_along(out), function(node_idx) {
+    res <- out[[node_idx]]
+    name_rule <- rules_ids[[node_idx]]
+    if (length(res) == 0) {
+      return(NULL)
+    }
+    res <- unlist(res, recursive = FALSE)
+    res <- remove_ignored_nodes(
+      res,
+      rule_id = name_rule,
+      ignored_lines = attributes(x)$lines_to_ignore
+    )
+    if (is.null(res)) {
+      return(list())
+    } else if (!is.list(res)) {
+      res <- list(res)
+    }
+    names(res) <- paste0("node_", seq_along(res))
+    attr(res, "other_info") <- attr(rules[[node_idx]], "other_info")
 
-		msg <- attr(res, "other_info")$message
-		meta_var <- regmatches(msg, gregexpr("~~([A-Z0-9]+)~~", msg))
-		if (length(meta_var) > 0) {
-			meta_var <- meta_var[[1]]
-			meta_var <- gsub("~~", "", meta_var)
+    msg <- attr(res, "other_info")$message
+    meta_var <- regmatches(msg, gregexpr("~~([A-Z0-9]+)~~", msg))
+    if (length(meta_var) > 0) {
+      meta_var <- meta_var[[1]]
+      meta_var <- gsub("~~", "", meta_var)
 
-			repl <- vapply(
-				meta_var,
-				function(mv) {
-					matches <- node_get_match(res[[1]], mv)
-					if (length(matches[[1]]) == 0) {
-						matches <- res[[1]]$get_multiple_matches(mv)
-						txts <- unlist(node_text_all(list(matches)))
-						if (txts[length(txts)] == ",") {
-							txts <- txts[-length(txts)]
-						}
-						txts <- gsub("^,$", ", ", txts)
-						paste(txts, collapse = "")
-					} else {
-						node_text(matches)[[1]]
-					}
-				},
-				character(1)
-			)
+      repl <- vapply(
+        meta_var,
+        function(mv) {
+          matches <- node_get_match(res[[1]], mv)
+          if (length(matches[[1]]) == 0) {
+            matches <- res[[1]]$get_multiple_matches(mv)
+            txts <- unlist(node_text_all(list(matches)))
+            if (txts[length(txts)] == ",") {
+              txts <- txts[-length(txts)]
+            }
+            txts <- gsub("^,$", ", ", txts)
+            paste(txts, collapse = "")
+          } else {
+            node_text(matches)[[1]]
+          }
+        },
+        character(1)
+      )
 
-			if (length(repl) > 0) {
-				for (i in names(repl)) {
-					msg <- gsub(paste0("~~", i, "~~"), repl[i], msg, fixed = TRUE)
-				}
-			}
-			attr(res, "other_info")$message <- msg
-		}
+      if (length(repl) > 0) {
+        for (i in names(repl)) {
+          msg <- gsub(paste0("~~", i, "~~"), repl[i], msg, fixed = TRUE)
+        }
+      }
+      attr(res, "other_info")$message <- msg
+    }
 
-		res
-	}) |>
-		add_sgnodelist_class()
+    res
+  }) |>
+    add_sgnodelist_class()
 
-	names(out) <- rules_ids
-	out
+  names(out) <- rules_ids
+  out
 }
 
 combine_rules_and_files <- function(rules, files) {
-	if (is.null(files) && length(rules) == 0) {
-		stop("Must be specify either argument `files` or some rules in `...`.")
-	}
-	if (!is.null(files)) {
-		files_char <- lapply(files, function(x) {
-			rul <- readLines(x, warn = FALSE)
-			rul <- rul[grep("^#", rul, invert = TRUE)]
-			rul <- paste(rul, collapse = "\n")
-			rul <- strsplit(rul, "---")[[1]]
-			lapply(rul, function(y) {
-				out <- yaml::yaml.load(y)
-				res <- out$rule
-				attr(res, "id") <- out$id
-				class(res) <- c("astgrep_rule", class(res))
-				attr(res, "other_info") <- out[-which(names(out) %in% c("rule", "id"))]
-				res
-			})
-		})
-		files_char <- unlist(files_char, recursive = FALSE)
-		rules <- append(rules, files_char)
-	}
-	rules
+  if (is.null(files) && length(rules) == 0) {
+    stop("Must be specify either argument `files` or some rules in `...`.")
+  }
+  if (!is.null(files)) {
+    files_char <- lapply(files, function(x) {
+      rul <- readLines(x, warn = FALSE)
+      rul <- rul[grep("^#", rul, invert = TRUE)]
+      rul <- paste(rul, collapse = "\n")
+      rul <- strsplit(rul, "---")[[1]]
+      lapply(rul, function(y) {
+        out <- yaml::yaml.load(y)
+        res <- out$rule
+        attr(res, "id") <- out$id
+        class(res) <- c("astgrep_rule", class(res))
+        attr(res, "other_info") <- out[-which(names(out) %in% c("rule", "id"))]
+        res
+      })
+    })
+    files_char <- unlist(files_char, recursive = FALSE)
+    rules <- append(rules, files_char)
+  }
+  rules
 }
 
 get_rules_ids <- function(rules) {
-	rules_ids <- lapply(seq_along(rules), function(rule_idx) {
-		id <- attr(rules[[rule_idx]], "id")
-		if (is.null(id)) {
-			id <- paste0("rule_", rule_idx)
-		}
-		id
-	})
-	if (anyDuplicated(rules_ids) > 0) {
-		name_count <- table(factor(unlist(rules_ids)))
-		name_count <- name_count[name_count > 1]
-		stop(
-			"Rule IDs must be unique. The following are duplicated: ",
-			paste0(names(name_count), " (", name_count, ")", collapse = ", "),
-			"."
-		)
-	}
-	rules_ids
+  rules_ids <- lapply(seq_along(rules), function(rule_idx) {
+    id <- attr(rules[[rule_idx]], "id")
+    if (is.null(id)) {
+      id <- paste0("rule_", rule_idx)
+    }
+    id
+  })
+  if (anyDuplicated(rules_ids) > 0) {
+    name_count <- table(factor(unlist(rules_ids)))
+    name_count <- name_count[name_count > 1]
+    stop(
+      "Rule IDs must be unique. The following are duplicated: ",
+      paste0(names(name_count), " (", name_count, ")", collapse = ", "),
+      "."
+    )
+  }
+  rules_ids
 }
 
 remove_ignored_nodes <- function(nodes, rule_id, ignored_lines) {
-	if (length(ignored_lines) == 0) {
-		return(nodes)
-	}
-	ignored_lines <- unique(
-		c(
-			unlist(ignored_lines[[rule_id]]),
-			unlist(ignored_lines[["all_rules"]])
-		)
-	)
-	nodes_suppressed <- lapply(nodes, function(found) {
-		line_start <- found$range()[[1]][[1]]
-		if (any(ignored_lines + 1 == line_start)) {
-			return(NULL)
-		} else {
-			found
-		}
-	})
-	nodes_suppressed <- drop_null_elements(nodes_suppressed)
-	if (length(nodes_suppressed) == 0) {
-		NULL
-	} else {
-		nodes_suppressed
-	}
+  if (length(ignored_lines) == 0) {
+    return(nodes)
+  }
+  ignored_lines <- unique(
+    c(
+      unlist(ignored_lines[[rule_id]]),
+      unlist(ignored_lines[["all_rules"]])
+    )
+  )
+  nodes_suppressed <- lapply(nodes, function(found) {
+    line_start <- found$range()[[1]][[1]]
+    if (any(ignored_lines + 1 == line_start)) {
+      return(NULL)
+    } else {
+      found
+    }
+  })
+  nodes_suppressed <- drop_null_elements(nodes_suppressed)
+  if (length(nodes_suppressed) == 0) {
+    NULL
+  } else {
+    nodes_suppressed
+  }
 }
 
 #' Navigate the tree
@@ -738,80 +738,80 @@ remove_ignored_nodes <- function(nodes, rule_id, ignored_lines) {
 #'   node_children() |>
 #'   node_text_all()
 node_parent <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$parent()[[1]]) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$parent()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_child <- function(x, nth) {
-	if (length(nth) != 1 || !is.numeric(nth) || (nth != 0 && nth %% 1 != 0)) {
-		stop("`nth` must be an integer of length 1.")
-	}
-	x <- node_to_list(x)
-	lapply(x, function(y) {
-		res <- y$child(nth)
-		if (length(res) > 0) {
-			res[[1]]
-		} else {
-			NULL
-		}
-	}) |>
-		add_rulelist_class()
+  if (length(nth) != 1 || !is.numeric(nth) || (nth != 0 && nth %% 1 != 0)) {
+    stop("`nth` must be an integer of length 1.")
+  }
+  x <- node_to_list(x)
+  lapply(x, function(y) {
+    res <- y$child(nth)
+    if (length(res) > 0) {
+      res[[1]]
+    } else {
+      NULL
+    }
+  }) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_ancestors <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$ancestors()) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$ancestors()) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_children <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$children()) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$children()) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_next <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$next_()[[1]]) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$next_()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_next_all <- function(x) {
-	check_is_rulelist_or_node(x)
-	lapply(x, function(y) y$next_all()) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  lapply(x, function(y) y$next_all()) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_prev <- function(x) {
-	check_is_rulelist_or_node(x)
-	x <- node_to_list(x)
-	lapply(x, function(y) y$prev()[[1]]) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  x <- node_to_list(x)
+  lapply(x, function(y) y$prev()[[1]]) |>
+    add_rulelist_class()
 }
 
 #' @name node-traversal
 #' @export
 node_prev_all <- function(x) {
-	check_is_rulelist_or_node(x)
-	lapply(x, function(y) y$prev_all()) |>
-		add_rulelist_class()
+  check_is_rulelist_or_node(x)
+  lapply(x, function(y) y$prev_all()) |>
+    add_rulelist_class()
 }
 
 #' Change the code in the tree
@@ -873,128 +873,128 @@ node_prev_all <- function(x) {
 #'     any_dup = "anyDuplicated(~~VAR~~) > 0"
 #'   )
 node_replace <- function(x, ...) {
-	check_is_rulelist_or_node(x)
-	replacements <- list(...)
+  check_is_rulelist_or_node(x)
+  replacements <- list(...)
 
-	out <- lapply(seq_along(x), function(y) {
-		if (is.null(x[[y]])) {
-			return(invisible())
-		}
-		id <- names(x)[y]
-		repl <- replacements[[id]]
-		meta_var <- get_meta_var(repl)
+  out <- lapply(seq_along(x), function(y) {
+    if (is.null(x[[y]])) {
+      return(invisible())
+    }
+    id <- names(x)[y]
+    repl <- replacements[[id]]
+    meta_var <- get_meta_var(repl)
 
-		res <- vapply(
-			meta_var,
-			function(mv) {
-				matches <- node_get_match(x[[y]], mv)
-				if (length(matches[[1]]) == 0) {
-					matches <- x[[y]]$get_multiple_matches(mv)
-					if (length(matches) == 0) {
-						stop(
-							"Couldn't get value for meta-variable `",
-							mv,
-							"`.\nAre you sure it exists in the rule `",
-							id,
-							"`?",
-							call. = FALSE
-						)
-					}
-					txts <- unlist(node_text_all(list(matches)))
-					if (txts[length(txts)] == ",") {
-						txts <- txts[-length(txts)]
-					}
-					txts <- gsub("^,$", ", ", txts)
-					paste(txts, collapse = "")
-				} else {
-					node_text(matches)[[1]]
-				}
-			},
-			character(1)
-		)
-		new_text <- repl
-		if (length(res) > 0) {
-			for (i in names(res)) {
-				new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text, fixed = TRUE)
-			}
-		}
-		list(x[[y]]$replace(new_text))
-	})
-	out <- drop_null_elements(out)
-	out <- unlist(out, recursive = FALSE)
+    res <- vapply(
+      meta_var,
+      function(mv) {
+        matches <- node_get_match(x[[y]], mv)
+        if (length(matches[[1]]) == 0) {
+          matches <- x[[y]]$get_multiple_matches(mv)
+          if (length(matches) == 0) {
+            stop(
+              "Couldn't get value for meta-variable `",
+              mv,
+              "`.\nAre you sure it exists in the rule `",
+              id,
+              "`?",
+              call. = FALSE
+            )
+          }
+          txts <- unlist(node_text_all(list(matches)))
+          if (txts[length(txts)] == ",") {
+            txts <- txts[-length(txts)]
+          }
+          txts <- gsub("^,$", ", ", txts)
+          paste(txts, collapse = "")
+        } else {
+          node_text(matches)[[1]]
+        }
+      },
+      character(1)
+    )
+    new_text <- repl
+    if (length(res) > 0) {
+      for (i in names(res)) {
+        new_text <- gsub(paste0("~~", i, "~~"), res[i], new_text, fixed = TRUE)
+      }
+    }
+    list(x[[y]]$replace(new_text))
+  })
+  out <- drop_null_elements(out)
+  out <- unlist(out, recursive = FALSE)
 
-	class(out) <- c("astgrep_replacement", class(out))
-	out
+  class(out) <- c("astgrep_replacement", class(out))
+  out
 }
 
 #' @name node-fix
 #' @export
 node_replace_all <- function(x, ...) {
-	check_all_nodes(x)
-	replacements <- list(...)
+  check_all_nodes(x)
+  replacements <- list(...)
 
-	out <- lapply(seq_along(x), function(y) {
-		if (is.null(x[[y]])) {
-			return(invisible())
-		}
-		id <- names(x)[y]
-		repl <- replacements[[id]]
-		meta_var <- get_meta_var(repl)
+  out <- lapply(seq_along(x), function(y) {
+    if (is.null(x[[y]])) {
+      return(invisible())
+    }
+    id <- names(x)[y]
+    repl <- replacements[[id]]
+    meta_var <- get_meta_var(repl)
 
-		lapply(x[[y]], function(z) {
-			res <- vapply(
-				meta_var,
-				function(mv) {
-					mv_text <- node_text(node_get_match(z, mv))[[1]]
+    lapply(x[[y]], function(z) {
+      res <- vapply(
+        meta_var,
+        function(mv) {
+          mv_text <- node_text(node_get_match(z, mv))[[1]]
 
-					if (is.null(mv_text)) {
-						temp <- z$get_multiple_matches(mv)
-						mv_text <- lapply(temp, function(nd) {
-							out <- node_text(nd)
-							if (out == ",") {
-								out <- ", "
-							}
-							out
-						}) |>
-							unlist() |>
-							paste(collapse = "")
-						if (is.null(mv_text) || mv_text == "") {
-							stop(
-								"Couldn't get value for meta-variable `",
-								mv,
-								"`.\nAre you sure it exists in the rule `",
-								id,
-								"`?",
-								call. = FALSE
-							)
-						}
-					}
-					mv_text
-				},
-				character(1)
-			)
-			new_text <- repl
-			if (length(res) > 0) {
-				for (i in names(res)) {
-					new_text <- gsub(
-						paste0("~~", i, "~~"),
-						res[i],
-						new_text,
-						fixed = TRUE
-					)
-				}
-			}
-			z$replace(new_text)
-		})
-	})
-	out <- drop_null_elements(out)
-	out <- unlist(out, recursive = FALSE)
+          if (is.null(mv_text)) {
+            temp <- z$get_multiple_matches(mv)
+            mv_text <- lapply(temp, function(nd) {
+              out <- node_text(nd)
+              if (out == ",") {
+                out <- ", "
+              }
+              out
+            }) |>
+              unlist() |>
+              paste(collapse = "")
+            if (is.null(mv_text) || mv_text == "") {
+              stop(
+                "Couldn't get value for meta-variable `",
+                mv,
+                "`.\nAre you sure it exists in the rule `",
+                id,
+                "`?",
+                call. = FALSE
+              )
+            }
+          }
+          mv_text
+        },
+        character(1)
+      )
+      new_text <- repl
+      if (length(res) > 0) {
+        for (i in names(res)) {
+          new_text <- gsub(
+            paste0("~~", i, "~~"),
+            res[i],
+            new_text,
+            fixed = TRUE
+          )
+        }
+      }
+      z$replace(new_text)
+    })
+  })
+  out <- drop_null_elements(out)
+  out <- unlist(out, recursive = FALSE)
 
-	class(out) <- c("astgrep_replacements", class(out))
-	out
+  class(out) <- c("astgrep_replacements", class(out))
+  out
 }
 
 get_meta_var <- function(x) {
-	meta_var <- regmatches(x, gregexpr("~~([A-Z0-9]+)~~", x))[[1]]
-	gsub("~~", "", meta_var)
+  meta_var <- regmatches(x, gregexpr("~~([A-Z0-9]+)~~", x))[[1]]
+  gsub("~~", "", meta_var)
 }
