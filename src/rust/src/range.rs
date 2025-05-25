@@ -61,6 +61,7 @@ pub fn to_pos<D: Doc>(node: &Node<D>, pos: Position, offset: usize) -> Pos {
     }
 }
 
+#[extendr]
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Range {
     /// starting position of the range

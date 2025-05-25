@@ -24,3 +24,5 @@
 ^test_long_fixed\.R$
 ^src/Makevars$
 ^src/Makevars\.win$
+^\.vscode$
+^air\.toml$

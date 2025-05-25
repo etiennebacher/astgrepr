@@ -16,6 +16,8 @@ pub struct Offset {
     byte_offset: usize,
     len: u8,
 }
+
+#[extendr]
 #[derive(Clone)]
 pub struct SgRoot {
     inner: AstGrep<StrDoc<crate::language::R>>,
