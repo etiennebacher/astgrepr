@@ -1,10 +1,9 @@
 TARGET_DIR = ./rust/target
 LIBDIR = $(TARGET_DIR)/@LIBDIR@
 STATLIB = $(LIBDIR)/libastgrepr.a
-PKG_LIBS = -L$(LIBDIR) -lastgrepr lR -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc
+PKG_LIBS = -L$(LIBDIR) -lastgrepr -lR -lgcc_s -lutil -lrt -lpthread -lm -ldl -lc
 
 all: $(SHLIB) rust_clean
-	rm -f $(CURDIR)/Makevars
 
 .PHONY: $(STATLIB)
 
@@ -40,4 +39,4 @@ rust_clean: $(SHLIB)
 	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
