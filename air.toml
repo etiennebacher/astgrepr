@@ -4,4 +4,4 @@ indent-width = 2
 indent-style = "space"
 line-ending = "auto"
 persistent-line-breaks = true
-exclude = ["R/extendr-wrappers.R"]
+exclude = ["R/extendr-wrappers.R", "tools/msrv.R"]
