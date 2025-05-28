@@ -35,6 +35,9 @@ function.}
 \item{nth}{Integer. The child node to find. This is 0-indexed, so setting
 \code{nth = 0} gets the first child.}
 }
+\value{
+A node
+}
 \description{
 This is a collection of functions used to navigate the tree. Some of
 them have a variant that applies on a single node (e.g. \code{node_next()}) and

@@ -14,6 +14,10 @@ node_text_all(x)
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 }
+\value{
+A list with as many elements as there are in the input. Each element
+is a list itself with the text corresponding to the input.
+}
 \description{
 Those functions extract the code corresponding to the node(s):
 \itemize{
