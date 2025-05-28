@@ -8,7 +8,7 @@ Authors@R:
            role = c("aut", "cre", "cph"),
            email = "etienne.bacher@protonmail.com")
 Description: Parsing R code is key to build tools such as linters and stylers.
-    This package provides a binding to the Rust crate 'ast-grep' so that one
+    This package provides a binding to the 'Rust' crate 'ast-grep' so that one
     can parse and explore R code.
 License: MIT + file LICENSE
 Encoding: UTF-8
