@@ -17,6 +17,9 @@ must not be provided.}
 \code{"ast-grep-ignore"}, meaning that any line that follows \verb{# ast-grep-ignore}
 will be ignored in the output of \verb{node_*()} functions.}
 }
+\value{
+An abstract syntax tree containing nodes
+}
 \description{
 This function takes R code as string and creates the corresponding abstract
 syntax tree (AST) from which we can query nodes.

@@ -13,6 +13,9 @@ relational_rule(stopBy = "neighbor", field = NULL, regex = NULL)
 
 \item{regex}{todo}
 }
+\value{
+An list of class \code{astgrep_relational_rule}
+}
 \description{
 Build a relational rule
 }

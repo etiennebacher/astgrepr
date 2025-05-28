@@ -121,6 +121,8 @@ node_to_list <- function(x) {
 #' @inheritParams node-range
 #'
 #' @export
+#' @return A list with as many elements as in the input. Each element is a
+#' character value.
 #' @examples
 #' src <- "x <- rnorm(100, mean = 2)
 #'     any(duplicated(y))
@@ -163,6 +165,8 @@ node_kind <- function(x) {
 #'
 #' @export
 #' @name node-text
+#' @return A list with as many elements as there are in the input. Each element
+#' is a list itself with the text corresponding to the input.
 #'
 #' @examples
 #' src <- "x <- rnorm(100, mean = 2)
@@ -219,6 +223,8 @@ node_text_all <- function(x) {
 #' @export
 #' @name node-info
 #'
+#' @return A list containing as many elements as there are nodes as input.
+#'
 #' @examples
 #' src <- "
 #' print('hi')
@@ -235,9 +241,15 @@ node_text_all <- function(x) {
 #'
 #' node_text(some_node)
 #'
+#' # Check if a node matches a specific rule
 #' some_node |>
 #'   node_get_match("A") |>
 #'   node_matches(ast_rule(kind = "argument"))
+#'
+#' # Check if a node is inside another one
+#' some_node |>
+#'   node_get_match("A") |>
+#'   node_inside(ast_rule(kind = "call"))
 node_matches <- function(x, ..., files = NULL) {
   rules <- list(...)
   rules <- combine_rules_and_files(rules, files)
@@ -264,7 +276,10 @@ node_inside <- function(x, ..., files = NULL) {
 
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
-    res <- x[[rule_idx]][[1]]$inside(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$inside(rule)
     res
   }) |>
     list()
@@ -280,7 +295,10 @@ node_has <- function(x, ..., files = NULL) {
 
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
-    res <- x[[rule_idx]][[1]]$has(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$has(rule)
     res
   }) |>
     list()
@@ -296,7 +314,10 @@ node_precedes <- function(x, ..., files = NULL) {
 
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
-    res <- x[[rule_idx]][[1]]$precedes(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$precedes(rule)
     res
   }) |>
     list()
@@ -312,7 +333,10 @@ node_follows <- function(x, ..., files = NULL) {
 
   out <- lapply(seq_along(rules), function(rule_idx) {
     rule <- rules[[rule_idx]]
-    res <- x[[rule_idx]][[1]]$follows(to_yaml(rule))
+    constraints <- attr(rule, "other_info")$constraints
+    rule <- list(rule = rule, constraints = constraints) |>
+      to_yaml()
+    res <- x[[rule_idx]][[1]]$follows(rule)
     res
   }) |>
     list()
@@ -334,6 +358,14 @@ node_follows <- function(x, ..., files = NULL) {
 #'   `node_find()`.
 #'
 #' @export
+#' @return
+#' `node_get_match()` returns a list of depth 1, where each element is the node
+#' corresponding to the `rule` passed (this can be of length 0 if no node is
+#' matched).
+#' `node_get_multiple_matches()` also returns a list of depth 1, but each
+#' element can contain multiple nodes when the meta-variable captures all
+#' elements in a pattern.
+#'
 #' @name node-get-match
 #'
 #' @examples
@@ -378,7 +410,7 @@ node_get_multiple_matches <- function(x, meta_var) {
 
 #' Recover the tree root from a node
 #'
-#' @inheritParams node-range
+#' @inherit node-range params return
 #'
 #' @export
 #' @examples
@@ -672,6 +704,8 @@ remove_ignored_nodes <- function(nodes, rule_id, ignored_lines) {
 #'
 #' @name node-traversal
 #' @export
+#'
+#' @return A node
 #' @examples
 #'
 #' ### get the previous/next node ---------------------------
@@ -830,6 +864,12 @@ node_prev_all <- function(x) {
 #'
 #' @name node-fix
 #' @export
+#'
+#' @return A list where each element is the replacement for a piece of the code.
+#' Each element is a list containing 3 sub-elements:
+#' - the start position for the replacement
+#' - the end position for the replacement
+#' - the text used as replacement
 #'
 #' @examples
 #' src <- "

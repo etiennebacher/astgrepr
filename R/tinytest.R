@@ -18,7 +18,6 @@ test_this_file <- function() {
 #' @param label Snapshot name
 #' @param current Code that outputs some text
 #'
-#' @export
 #' @keywords internal
 expect_snapshot <- function(label, current) {
   snapshot_file <- file.path("_snapshots", paste0(label, ".txt"))

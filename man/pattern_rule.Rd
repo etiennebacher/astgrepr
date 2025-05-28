@@ -16,6 +16,9 @@ of the pattern.}
 \item{strictness}{Optional, defines how strictly pattern will match against
 nodes. See 'Details'.}
 }
+\value{
+An list of class \code{astgrep_pattern_rule}
+}
 \description{
 This is a specific type of rule. It can be used in the more general ruleset
 built with \code{ast_rule()}.

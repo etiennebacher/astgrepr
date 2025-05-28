@@ -19,6 +19,15 @@ character string indicating the replacement to apply to nodes that match this
 rule. Meta-variables are accepted but the syntax is different: they must be
 wrapped in \verb{~~}, e.g \code{"anyNA(~~VAR~~)"}.}
 }
+\value{
+A list where each element is the replacement for a piece of the code.
+Each element is a list containing 3 sub-elements:
+\itemize{
+\item the start position for the replacement
+\item the end position for the replacement
+\item the text used as replacement
+}
+}
 \description{
 \code{node_replace()} gives the replacement for a particular node.
 \code{node_replace_all()} does the same but for several nodes (e.g. the output of

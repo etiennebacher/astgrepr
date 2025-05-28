@@ -9,6 +9,9 @@ tree_root(x)
 \arguments{
 \item{x}{A tree created by \code{\link[=tree_new]{tree_new()}}.}
 }
+\value{
+A node corresponding to the root of the abstract syntax tree
+}
 \description{
 This function takes a tree created by \code{\link[=tree_new]{tree_new()}} and returns the root node
 containing all subsequent nodes.

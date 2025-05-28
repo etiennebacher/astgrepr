@@ -1,5 +1,6 @@
-# astgrepr 0.0.10.9000
+# astgrepr 0.1.0
 
+* This is the first CRAN release.
 * Update `extendr` to 0.8.0 (#40).
 
 # astgrepr 0.0.10
