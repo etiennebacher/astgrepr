@@ -1,4 +1,4 @@
-# astgrepr (development version)
+# astgrepr 0.1.1
 
 * Fixed build on Fedora, no user visible changes on other platforms (#42).
 
