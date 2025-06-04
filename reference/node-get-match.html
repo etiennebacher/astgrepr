@@ -21,7 +21,7 @@ elements in a pattern, e.g. "plot($$$A)".
 
     <a class="navbar-brand me-2" href="../index.html">astgrepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.10.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@ elements in a pattern, e.g. "plot($$$A)".
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get the match(es) from a meta-variable</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/main/R/node.R" class="external-link"><code>R/node.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/v0.1.0/R/node.R" class="external-link"><code>R/node.R</code></a></small>
       <div class="d-none name"><code>node-get-match.Rd</code></div>
     </div>
 
@@ -77,6 +77,15 @@ function.</p></dd>
 <code><a href="node-find.html">node_find()</a></code>.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>node_get_match()</code> returns a list of depth 1, where each element is the node
+corresponding to the <code>rule</code> passed (this can be of length 0 if no node is
+matched).
+<code>node_get_multiple_matches()</code> also returns a list of depth 1, but each
+element can contain multiple nodes when the meta-variable captures all
+elements in a pattern.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -119,7 +128,7 @@ function.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

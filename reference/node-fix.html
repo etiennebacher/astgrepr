@@ -13,7 +13,7 @@ tree_rewrite() to rewrite the entire input code with those replacements."></head
 
     <a class="navbar-brand me-2" href="../index.html">astgrepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.10.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@ tree_rewrite() to rewrite the entire input code with those replacements."></head
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Change the code in the tree</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/main/R/node.R" class="external-link"><code>R/node.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/v0.1.0/R/node.R" class="external-link"><code>R/node.R</code></a></small>
       <div class="d-none name"><code>node-fix.Rd</code></div>
     </div>
 
@@ -70,6 +70,13 @@ rule. Meta-variables are accepted but the syntax is different: they must be
 wrapped in <code>~~</code>, e.g <code>"anyNA(~~VAR~~)"</code>.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A list where each element is the replacement for a piece of the code.
+Each element is a list containing 3 sub-elements:</p><ul><li><p>the start position for the replacement</p></li>
+<li><p>the end position for the replacement</p></li>
+<li><p>the text used as replacement</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -172,7 +179,7 @@ wrapped in <code>~~</code>, e.g <code>"anyNA(~~VAR~~)"</code>.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
