@@ -28,6 +28,9 @@ function.}
 \item{files}{A vector of filenames containing rules. Those must be \code{.yaml}
 files.}
 }
+\value{
+A list containing as many elements as there are nodes as input.
+}
 \description{
 Get more precise information on a node
 }
@@ -47,7 +50,13 @@ some_node <- root |>
 
 node_text(some_node)
 
+# Check if a node matches a specific rule
 some_node |>
   node_get_match("A") |>
   node_matches(ast_rule(kind = "argument"))
+
+# Check if a node is inside another one
+some_node |>
+  node_get_match("A") |>
+  node_inside(ast_rule(kind = "call"))
 }

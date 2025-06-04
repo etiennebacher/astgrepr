@@ -17,6 +17,14 @@ function.}
 \item{meta_var}{The name given to one of the meta-variable(s) in
 \code{node_find()}.}
 }
+\value{
+\code{node_get_match()} returns a list of depth 1, where each element is the node
+corresponding to the \code{rule} passed (this can be of length 0 if no node is
+matched).
+\code{node_get_multiple_matches()} also returns a list of depth 1, but each
+element can contain multiple nodes when the meta-variable captures all
+elements in a pattern.
+}
 \description{
 Those functions extract the content of the meta-variable specified in
 \code{\link[=node_find]{node_find()}}:

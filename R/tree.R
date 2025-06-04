@@ -12,6 +12,7 @@
 #' will be ignored in the output of `node_*()` functions.
 #'
 #' @export
+#' @return An abstract syntax tree containing nodes
 #' @examples
 #' src <- "x <- rnorm(100, mean = 2)
 #'     any(duplicated(y))
@@ -137,6 +138,7 @@ find_lines_to_ignore <- function(raw_txt, ignore_tags) {
 #' @param x A tree created by [tree_new()].
 #'
 #' @export
+#' @return A node corresponding to the root of the abstract syntax tree
 #' @examples
 #' src <- "x <- rnorm(100, mean = 2)
 #'     any(duplicated(y))

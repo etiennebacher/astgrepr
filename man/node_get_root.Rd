@@ -10,6 +10,10 @@ node_get_root(x)
 \item{x}{A node, either from \code{\link[=tree_root]{tree_root()}} or from another \verb{node_*()}
 function.}
 }
+\value{
+A list of two elements: \code{start} and \code{end}. Each of those is a vector
+with two values indicating the row and column. Those are 0-indexed.
+}
 \description{
 Recover the tree root from a node
 }

@@ -196,6 +196,7 @@ ast_rule <- function(
 #' More information: <https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern-object>
 #'
 #' @export
+#' @return An list of class `astgrep_pattern_rule`
 pattern_rule <- function(
   selector = NULL,
   context = NULL,
@@ -218,6 +219,7 @@ pattern_rule <- function(
 #' @param regex todo
 #'
 #' @export
+#' @return An list of class `astgrep_relational_rule`
 relational_rule <- function(stopBy = "neighbor", field = NULL, regex = NULL) {
   checkmate::assert_choice(
     stopBy,

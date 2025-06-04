@@ -1,21 +1,11 @@
-## R CMD check results
+This is the first CRAN release of this package.
 
-0 errors | 0 warnings | 1 note
+This is the third try. Thank you for the review, one of the comments received after the second try is adressed below.
 
-* This is a new release.
+> Please ensure that your functions do not write by default or in your
+examples/vignettes/tests in the user's home filespace [...]
+> -> tools/config.R; R/tinytest.R
 
-On Windows only, I see 2 additional NOTEs:
+The code in `tools/config.R` is internal only, it is used for the development of the package and is not exposed to the users.
 
-1. Found the following sources/headers not terminated with a newline:
-   src/rust/target/x86_64-pc-windows-gnu/release/build/tree-sitter-139dcded71f8f57b/out/flag_check.c
-   
-2. Files which contain pragma(s) suppressing diagnostics:
-  'src/vendor/tree-sitter-r/src/parser.c'
-  'src/vendor/tree-sitter-r/src/tree_sitter/array.h'
-  
-The three files mentioned in those NOTEs are from upstream dependencies. While
-I have access to them in the vendored dependencies, I cannot modify them without
-altering the checksums that were put in place by Cargo (Rust's package manager),
-making the installation procedure fail.
-  
-Therefore, I don't see a way to remove those NOTEs.
+Functions in `R/tinytest.R` that write to the user's working directory are not exported anymore as their usage is also internal only.
