@@ -1,3 +1,7 @@
+# astgrepr (development version)
+
+* Fixed build on Fedora, no user visible changes on other platforms (#42).
+
 # astgrepr 0.1.0
 
 * This is the first CRAN release.
