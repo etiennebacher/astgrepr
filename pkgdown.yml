@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   astgrepr: astgrepr.html
-last_built: 2025-06-04T18:00Z
+last_built: 2025-06-05T21:31Z
 urls:
   reference: https://astgrepr.etiennebacher.com/reference
   article: https://astgrepr.etiennebacher.com/articles
