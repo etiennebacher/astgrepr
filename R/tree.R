@@ -33,14 +33,8 @@ tree_new <- function(txt, file, ignore_tags = "ast-grep-ignore") {
   } else {
     raw_txt <- strsplit(txt, "\\n")[[1]]
   }
-  HAS_TRAILING_NEW_LINE <- TRUE
-  if (!grepl("\\\n$", txt)) {
-    txt <- paste0(txt, "\n")
-    HAS_TRAILING_NEW_LINE <- FALSE
-  }
   out <- SgRoot$new(txt)
   attr(out, "lines_to_ignore") <- find_lines_to_ignore(raw_txt, ignore_tags)
-  attr(out, "has_trailing_new_line") <- HAS_TRAILING_NEW_LINE
   out
 }
 
@@ -151,7 +145,6 @@ tree_root <- function(x) {
   check_is_tree(x)
   out <- x$root()
   attr(out, "lines_to_ignore") <- attr(x, "lines_to_ignore")
-  attr(out, "has_trailing_new_line") <- attr(x, "has_trailing_new_line")
   out
 }
 
@@ -225,9 +218,6 @@ tree_rewrite <- function(root, replacements) {
   # https://github.com/ast-grep/ast-grep/issues/1345
   leading_newlines <- strrep("\n", root$range()[[1]][1])
   new_txt <- paste0(leading_newlines, new_txt)
-  if (isFALSE(attributes(root)[["has_trailing_new_line"]])) {
-    new_txt <- gsub("\\\n$", "", new_txt)
-  }
   class(new_txt) <- c("astgrep_rewritten_tree", class(new_txt))
   attr(new_txt, "has_skipped_fixes") <- output$has_skipped_fixes
   new_txt
