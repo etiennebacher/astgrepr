@@ -3,7 +3,7 @@ LIBDIR = $(TARGET_DIR)/debug
 STATLIB = $(LIBDIR)/libastgrepr.a
 PKG_LIBS = -L$(LIBDIR) -lastgrepr
 
-export MACOSX_DEPLOYMENT_TARGET=15.0
+export MACOSX_DEPLOYMENT_TARGET=15.5
 
 all: $(SHLIB) rust_clean
 
