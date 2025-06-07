@@ -17,3 +17,6 @@ ast-grep-core = "0.32.2"
 ast-grep-config = "0.32.2"
 extendr-api = "0.8.0"
 tree-sitter-r = "1.0.1"
+
+[env]
+MACOSX_DEPLOYMENT_TARGET = "15.0"
