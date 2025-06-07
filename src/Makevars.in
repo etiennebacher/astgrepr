@@ -12,6 +12,8 @@ $(SHLIB): $(STATLIB)
 CARGOTMP = $(CURDIR)/.cargo
 VENDOR_DIR = $(CURDIR)/vendor
 
+export MACOSX_DEPLOYMENT_TARGET=15.5
+
 
 # RUSTFLAGS appends --print=native-static-libs to ensure that
 # the correct linkers are used. Use this for debugging if need.
