@@ -1,6 +1,7 @@
 # astgrepr 0.1.1
 
-* Fixed build on Fedora, no user visible changes on other platforms (#42).
+* Fix build on Fedora, no user visible changes on other platforms (#42).
+* Fix warning when building package on macOS 15.4 (#45).
 
 # astgrepr 0.1.0
 
