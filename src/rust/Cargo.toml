@@ -19,4 +19,4 @@ extendr-api = "0.8.0"
 tree-sitter-r = "1.0.1"
 
 [env]
-MACOSX_DEPLOYMENT_TARGET = "15.0"
+MACOSX_DEPLOYMENT_TARGET = "15.4"
