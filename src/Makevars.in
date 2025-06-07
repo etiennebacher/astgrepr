@@ -28,6 +28,17 @@ $(STATLIB):
 		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
 	fi
 
+# Setting MACOSX_DEPLOYMENT_TARGET=15.0 to avoid the message
+# ld: warning: object file
+# (/private/tmp/astgrepr.Rcheck/00_pkg_src/astgrepr/src/rust/target/release/libastgrepr.a[3](ea708c7824d36062-parser.o))
+# was built for newer 'macOS' version (15.5) than being linked (15.0)
+#
+# See Uwe's email on 2025-06-05.
+# See also https://users.rust-lang.org/t/compile-rust-binary-for-older-versions-of-mac-osx/38695/5
+# This might need to be updated in the future depending on the settings of
+# BDR's M1 Mac.
+# https://www.stats.ox.ac.uk/pub/bdr/M1mac/README.txt
+
 	export MACOSX_DEPLOYMENT_TARGET=15.0 && \
 	export CARGO_HOME=$(CARGOTMP) && \
 	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
