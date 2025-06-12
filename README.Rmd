@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/etiennebacher/astgrepr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/etiennebacher/astgrepr?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/astgrepr)](https://CRAN.R-project.org/package=astgrepr)
 <!-- badges: end -->
 
 `astgrepr` provides R bindings to the [ast-grep](https://ast-grep.github.io/) 
@@ -47,9 +48,14 @@ Key:  [new] new | [dl] download | [bld] build
 ## Installation
 
 ``` r
-install.packages('astgrepr', repos = c('https://etiennebacher.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages("astgrepr")
 ```
 
+Development version (you might need to install [Rust](https://www.rust-lang.org/tools/install)):
+```r
+# install.packages("remotes")
+remotes::install_github("etienne/astgrepr")
+```
 
 ## Demo
 
