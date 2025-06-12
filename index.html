@@ -68,12 +68,16 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'astgrepr'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://etiennebacher.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"astgrepr"</span><span class="op">)</span></span></code></pre></div>
+<p>Development version (you might need to install <a href="https://www.rust-lang.org/tools/install" class="external-link">Rust</a>):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"etienne/astgrepr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demo">Demo<a class="anchor" aria-label="anchor" href="#demo"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/astgrepr" class="external-link">astgrepr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">src</span> <span class="op">&lt;-</span> <span class="st">"library(tidyverse)</span></span>
@@ -194,6 +198,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/etiennebacher/astgrepr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/etiennebacher/astgrepr?branch=main" class="external-link"><img src="https://codecov.io/gh/etiennebacher/astgrepr/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://CRAN.R-project.org/package=astgrepr" class="external-link"><img src="https://www.r-pkg.org/badges/version/astgrepr" alt="CRAN status"></a></li>
 </ul>
 </div>
 
