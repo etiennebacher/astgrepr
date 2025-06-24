@@ -48,7 +48,7 @@ Development version (you might need to install
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("etienne/astgrepr")
+remotes::install_github("etiennebacher/astgrepr")
 ```
 
 ## Demo
