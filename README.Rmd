@@ -54,7 +54,7 @@ install.packages("astgrepr")
 Development version (you might need to install [Rust](https://www.rust-lang.org/tools/install)):
 ```r
 # install.packages("remotes")
-remotes::install_github("etienne/astgrepr")
+remotes::install_github("etiennebacher/astgrepr")
 ```
 
 ## Demo
