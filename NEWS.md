@@ -1,3 +1,7 @@
+# astgrepr (development)
+
+* Fix build on Windows ARM64, bumped to `extendr` 0.8.2 (#49, @jeroen).
+
 # astgrepr 0.1.1
 
 * Fix build on Fedora, no user visible changes on other platforms (#42).
