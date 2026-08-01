@@ -27,6 +27,7 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
+          - {os: windows-11-arm, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -40,6 +41,9 @@ jobs:
       
 
     steps:
+      - run: rustup target add aarch64-pc-windows-gnullvm
+        if: matrix.config.os == 'windows-11-arm'
+
       - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
