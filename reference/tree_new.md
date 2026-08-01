@@ -41,7 +41,7 @@ src <- "x <- rnorm(100, mean = 2)
     any(duplicated(x))"
 
 tree_new(src)
-#> <pointer: 0x561988299e40>
+#> <pointer: 0x5604e084dff0>
 #> attr(,"class")
 #> [1] "SgRoot"
 #> attr(,"lines_to_ignore")
