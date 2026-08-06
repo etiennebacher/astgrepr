@@ -39,5 +39,5 @@ Comments and unnamed nodes are ignored.
 nodes and text are ignored.
 }
 
-More information: \url{https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern-object}
+More information: \url{https://astgrep.com/guide/rule-config/atomic-rule.html#pattern-object}
 }

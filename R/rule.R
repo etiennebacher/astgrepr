@@ -193,7 +193,7 @@ ast_rule <- function(
 #' * `signature`: Only named AST nodes' kinds are matched. Comments, unnamed
 #'   nodes and text are ignored.
 #'
-#' More information: <https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern-object>
+#' More information: <https://astgrep.com/guide/rule-config/atomic-rule.html#pattern-object>
 #'
 #' @export
 #' @return An list of class `astgrep_pattern_rule`

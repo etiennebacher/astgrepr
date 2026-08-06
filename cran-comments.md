@@ -1,8 +1,7 @@
-This is the second try for 0.1.1 release.
+This is the second submission for 0.1.2. The previous one failed
+because of two NOTEs:
+1. moved URLs (now fixed).
+2. "'cc' is not on the path" on Windows only. I was able to
+   reproduce this on `devtools::check_win_devel()` but I didn't find any
+   find any related discussion in the R-package-devel mailing list.
 
-This is patch release to fix the build error on Fedora.
-It also includes a fix for the following warning reported in the installation logs of M1 Mac:
-
-ld: warning: object file
-(/private/tmp/astgrepr.Rcheck/00_pkg_src/astgrepr/src/rust/target/release/libastgrepr.a[3](ea708c7824d36062-parser.o))
-was built for newer 'macOS' version (15.5) than being linked (15.0)

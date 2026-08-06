@@ -1,4 +1,4 @@
-# astgrepr (development)
+# astgrepr 0.1.2
 
 * Fix build on Windows ARM64, bumped to `extendr` 0.8.2 (#49, @jeroen).
 
