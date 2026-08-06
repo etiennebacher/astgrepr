@@ -52,4 +52,4 @@ matcher should consider. It has the following values:
   unnamed nodes and text are ignored.
 
 More information:
-<https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern-object>
+<https://astgrep.com/guide/rule-config/atomic-rule.html#pattern-object>

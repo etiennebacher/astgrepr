@@ -8,15 +8,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/etiennebacher/astgrepr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/etiennebacher/astgrepr/blob/v0.1.2/DESCRIPTION)
 
 Bacher E (2026). *astgrepr: Parse and Manipulate R Code*. R package
-version 0.1.1.9000, <https://github.com/etiennebacher/astgrepr>.
+version 0.1.2, <https://github.com/etiennebacher/astgrepr>.
 
     @Manual{,
       title = {astgrepr: Parse and Manipulate R Code},
       author = {Etienne Bacher},
       year = {2026},
-      note = {R package version 0.1.1.9000},
+      note = {R package version 0.1.2},
       url = {https://github.com/etiennebacher/astgrepr},
     }

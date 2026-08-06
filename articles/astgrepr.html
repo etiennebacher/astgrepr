@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">astgrepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
       <h1>Getting started</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/main/vignettes/astgrepr.Rmd" class="external-link"><code>vignettes/astgrepr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/astgrepr/blob/v0.1.2/vignettes/astgrepr.Rmd" class="external-link"><code>vignettes/astgrepr.Rmd</code></a></small>
       <div class="d-none name"><code>astgrepr.Rmd</code></div>
     </div>
 
@@ -65,7 +65,7 @@
 <p>This vignette will give you the basic knowledge so that you can start
 using <code>astgrepr</code>. If you want to know more about advanced
 rules and other topics, I invite you to read the docs of the Rust crate
-<a href="https://ast-grep.github.io/guide/pattern-syntax.html" class="external-link"><code>ast-grep</code></a>,
+<a href="https://astgrep.com/guide/pattern-syntax.html" class="external-link"><code>ast-grep</code></a>,
 on which this package is built.</p>
 <div class="section level2">
 <h2 id="first-steps">First steps<a class="anchor" aria-label="anchor" href="#first-steps"></a>
@@ -116,7 +116,7 @@ include <code><a href="../reference/pattern_rule.html">pattern_rule()</a></code>
 but we keep it simple for now. Once a rule is created, it can be applied
 on a node:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">root</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">root</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/node-find.html">node_find</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_dup"</span>, pattern <span class="op">=</span> <span class="st">"any(duplicated($VAR))"</span><span class="op">)</span></span>
@@ -133,7 +133,7 @@ of them contains a single node. This is expected:
 rule. If we want to look for all nodes that match this rule, we can use
 <code><a href="../reference/node-find.html">node_find_all()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">&lt;-</span> <span class="va">root</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">&lt;-</span> <span class="va">root</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/node-find.html">node_find_all</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_na"</span>, pattern <span class="op">=</span> <span class="st">"any(is.na($VAR))"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="../reference/ast_rule.html">ast_rule</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"any_dup"</span>, pattern <span class="op">=</span> <span class="st">"any(duplicated($VAR))"</span><span class="op">)</span></span>
@@ -151,7 +151,7 @@ the original code<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" d
 row and second one to the column. Also, those values are 0-indexed, so
 &lt;code&gt;1&lt;/code&gt; corresponds to the second row/column.&lt;/p&gt;"><sup>1</sup></a>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">found_nodes</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/node-text.html">node_text_all</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $any_na</span></span>
 <span><span class="co">#&gt; $any_na$node_1</span></span>
@@ -164,7 +164,7 @@ row and second one to the column. Also, those values are 0-indexed, so
 <span><span class="co">#&gt; $any_dup</span></span>
 <span><span class="co">#&gt; $any_dup$node_1</span></span>
 <span><span class="co">#&gt; [1] "any(duplicated(variable))"</span></span>
-<span><span class="va">found_nodes</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">found_nodes</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/node-range.html">node_range_all</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $any_na</span></span>
 <span><span class="co">#&gt; $any_na$node_1</span></span>

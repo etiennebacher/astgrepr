@@ -1,5 +1,13 @@
 # Changelog
 
+## astgrepr 0.1.2
+
+CRAN release: 2026-08-04
+
+- Fix build on Windows ARM64, bumped to `extendr` 0.8.2
+  ([\#49](https://github.com/etiennebacher/astgrepr/issues/49),
+  [@jeroen](https://github.com/jeroen)).
+
 ## astgrepr 0.1.1
 
 CRAN release: 2025-06-07

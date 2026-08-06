@@ -8,8 +8,8 @@ library(astgrepr)
 This vignette will give you the basic knowledge so that you can start
 using `astgrepr`. If you want to know more about advanced rules and
 other topics, I invite you to read the docs of the Rust crate
-[`ast-grep`](https://ast-grep.github.io/guide/pattern-syntax.html), on
-which this package is built.
+[`ast-grep`](https://astgrep.com/guide/pattern-syntax.html), on which
+this package is built.
 
 ## First steps
 
@@ -76,7 +76,7 @@ on a node:
 
 ``` r
 
-root |> 
+root |>
   node_find(
     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
@@ -101,7 +101,7 @@ all nodes that match this rule, we can use
 
 ``` r
 
-found_nodes <- root |> 
+found_nodes <- root |>
   node_find_all(
     ast_rule(id = "any_na", pattern = "any(is.na($VAR))"),
     ast_rule(id = "any_dup", pattern = "any(duplicated($VAR))")
@@ -122,7 +122,7 @@ to get their start and end coordinates in the original code[^1]:
 
 ``` r
 
-found_nodes |> 
+found_nodes |>
   node_text_all()
 #> $any_na
 #> $any_na$node_1
@@ -135,7 +135,7 @@ found_nodes |>
 #> $any_dup
 #> $any_dup$node_1
 #> [1] "any(duplicated(variable))"
-found_nodes |> 
+found_nodes |>
   node_range_all()
 #> $any_na
 #> $any_na$node_1
